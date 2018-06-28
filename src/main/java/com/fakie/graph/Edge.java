@@ -1,4 +1,4 @@
-package com.fakie.graph.model;
+package com.fakie.graph;
 
 import org.neo4j.graphdb.Node;
 
@@ -13,7 +13,7 @@ public class Edge {
     public Edge(Node source, Node destination, Map<String, Object> properties) {
         this.source = source;
         this.destination = destination;
-        this.properties = properties;
+        this.properties = new HashMap<>(properties);
     }
 
     public Node getSource() {

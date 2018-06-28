@@ -1,7 +1,7 @@
-package com.fakie.graph.mapping;
+package com.fakie.input;
 
-import com.fakie.graph.model.Graph;
-import com.fakie.graph.model.Vertex;
+import com.fakie.graph.Graph;
+import com.fakie.graph.Vertex;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,10 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class Neo4jMappingTest {
+public class Neo4jTest {
     private static final Label appLabel = Label.label("App");
     private GraphDatabaseService graphDatabaseService;
     private File dir;
@@ -53,10 +52,10 @@ public class Neo4jMappingTest {
     }
 
     @Test
-    public void name() {
+    public void noEdgesAndOneVertex() {
         Map<String, Object> expected = new HashMap<>();
         expected.put("name", "wikipedia");
-        try (Neo4jMapping neo4jMapping = new Neo4jMapping(dir.toPath())) {
+        try (Neo4j neo4jMapping = new Neo4j(dir.toPath())) {
             Graph graph = neo4jMapping.convertToGraph();
             List<Vertex> vertices = graph.getVertices();
             assertEquals(1, vertices.size());

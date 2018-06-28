@@ -1,8 +1,8 @@
-package com.fakie.graph.mapping;
+package com.fakie.input;
 
-import com.fakie.graph.model.Edge;
-import com.fakie.graph.model.Graph;
-import com.fakie.graph.model.Vertex;
+import com.fakie.graph.Edge;
+import com.fakie.graph.Graph;
+import com.fakie.graph.Vertex;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -11,21 +11,21 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
 import java.nio.file.Path;
 
-public class Neo4jMapping implements GraphMapping {
-    private final GraphDatabaseService neo4j;
+public class Neo4j implements InputFormat {
+    private final GraphDatabaseService database;
 
-    public Neo4jMapping(Path path) {
-        neo4j = new GraphDatabaseFactory().newEmbeddedDatabase(path.toFile());
+    public Neo4j(Path path) {
+        database = new GraphDatabaseFactory().newEmbeddedDatabase(path.toFile());
     }
 
     @Override
     public Graph convertToGraph() {
         Graph graph = new Graph();
-        try (Transaction transaction = neo4j.beginTx()) {
-            for (Node node : neo4j.getAllNodes()) {
+        try (Transaction transaction = database.beginTx()) {
+            for (Node node : database.getAllNodes()) {
                 graph.addVertex(new Vertex(node.getAllProperties()));
             }
-            for (Relationship rs : neo4j.getAllRelationships()) {
+            for (Relationship rs : database.getAllRelationships()) {
                 graph.addEdge(new Edge(rs.getStartNode(), rs.getEndNode(), rs.getAllProperties()));
             }
         }
@@ -34,6 +34,6 @@ public class Neo4jMapping implements GraphMapping {
 
     @Override
     public void close() {
-        neo4j.shutdown();
+        database.shutdown();
     }
 }
