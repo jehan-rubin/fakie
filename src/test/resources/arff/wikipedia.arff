@@ -1,0 +1,29 @@
+@relation wikipedia
+
+@attribute is_class {true, false}
+@attribute number_of_methods_below_9 {true, false}
+@attribute number_of_methods_between_10_and_19 {true, false}
+@attribute number_of_methods_between_20_and_29 {true, false}
+@attribute number_of_methods_between_30_and_39 {true, false}
+@attribute number_of_methods_greater_than_40 {true, false}
+@attribute blob {true, false}
+
+@data
+true,true,false,false,false,false,false
+true,false,false,true,false,false,false
+true,false,false,false,false,true,true
+true,true,false,false,false,false,false
+true,false,false,false,true,false,false
+true,false,true,false,false,false,false
+true,false,false,true,false,false,true
+true,false,true,false,false,false,false
+true,false,false,true,false,false,false
+true,false,false,false,true,false,false
+true,false,true,false,false,false,false
+true,false,false,false,true,false,true
+true,true,false,false,false,false,false
+true,false,false,false,false,true,true
+true,false,false,true,false,false,false
+true,false,false,false,false,true,false
+true,false,false,false,true,false,true
+true,true,false,false,false,false,false
