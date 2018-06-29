@@ -1,30 +1,36 @@
 package com.fakie.graph;
 
-import org.neo4j.graphdb.Node;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class Edge {
-    private final Node source;
-    private final Node destination;
+    private final Vertex source;
+    private final Vertex destination;
+    private final String type;
     private final Map<String, Object> properties;
 
-    public Edge(Node source, Node destination, Map<String, Object> properties) {
+    public Edge(Vertex source, Vertex destination, String type, Map<String, Object> properties) {
         this.source = source;
         this.destination = destination;
+        this.type = type;
         this.properties = new HashMap<>(properties);
     }
 
-    public Node getSource() {
+    public Vertex getSource() {
         return source;
     }
 
-    public Node getDestination() {
+    public Vertex getDestination() {
         return destination;
     }
 
     public Map<String, Object> getProperties() {
         return new HashMap<>(properties);
+    }
+
+    @Override
+    public String toString() {
+        return source.shortRepresentation() + " --" + type + "-> " + destination.shortRepresentation() +
+                ", properties=" + properties;
     }
 }

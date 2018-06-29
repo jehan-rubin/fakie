@@ -55,8 +55,8 @@ public class Neo4jTest {
     public void noEdgesAndOneVertex() {
         Map<String, Object> expected = new HashMap<>();
         expected.put("name", "wikipedia");
-        try (Neo4j neo4jMapping = new Neo4j(dir.toPath())) {
-            Graph graph = neo4jMapping.convertToGraph();
+        try (Neo4j neo4j = new Neo4j(dir.toPath())) {
+            Graph graph = neo4j.convertToGraph();
             List<Vertex> vertices = graph.getVertices();
             assertEquals(1, vertices.size());
             assertEquals(expected, vertices.get(0).getProperties());
