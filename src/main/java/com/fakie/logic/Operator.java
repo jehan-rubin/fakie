@@ -22,6 +22,10 @@ public abstract class Operator {
         return getExpressions().stream().map(Expression::negation).collect(Collectors.toList());
     }
 
+    protected String formatExpressions(String separator) {
+        return expressions.stream().map(Expression::toString).collect(Collectors.joining(separator));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -33,10 +37,7 @@ public abstract class Operator {
         if (operator.expressions.size() <= 1 && sameExpressions) {
             return true;
         }
-        if (getClass() != o.getClass()) {
-            return false;
-        }
-        return sameExpressions;
+        return getClass() == o.getClass() && sameExpressions;
     }
 
     @Override

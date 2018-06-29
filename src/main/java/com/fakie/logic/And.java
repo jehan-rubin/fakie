@@ -1,7 +1,6 @@
 package com.fakie.logic;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class And extends Operator {
     public And(List<Expression> expressions) {
@@ -25,6 +24,6 @@ public class And extends Operator {
 
     @Override
     public String toString() {
-        return getExpressions().stream().map(Expression::toString).collect(Collectors.joining(" ∧ "));
+        return "(" + formatExpressions(" ∧ ") + ")";
     }
 }

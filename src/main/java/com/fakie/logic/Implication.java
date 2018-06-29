@@ -38,6 +38,6 @@ public class Implication {
 
     @Override
     public String toString() {
-        return left + " => " + right;
+        return "(" + left + " => " + right + ")";
     }
 }
