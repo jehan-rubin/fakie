@@ -1,4 +1,4 @@
-package com.fakie.logic;
+package com.fakie.utils.logic;
 
 import java.util.Objects;
 

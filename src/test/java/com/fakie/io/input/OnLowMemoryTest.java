@@ -1,8 +1,9 @@
-package com.fakie.input;
+package com.fakie.io.input;
 
-import com.fakie.graph.Edge;
-import com.fakie.graph.Graph;
-import com.fakie.graph.Vertex;
+import com.fakie.io.input.graphloader.Neo4j;
+import com.fakie.model.graph.Edge;
+import com.fakie.model.graph.Graph;
+import com.fakie.model.graph.Vertex;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
@@ -41,8 +42,8 @@ public class OnLowMemoryTest {
 
     @Test
     public void noEdgesAndOneVertex() {
-        try (Neo4j neo4j = new Neo4j(dir.toPath())) {
-            Graph graph = neo4j.convertToGraph();
+        try (Neo4j neo4j = new Neo4j()) {
+            Graph graph = neo4j.load(dir.toPath());
             List<Vertex> vertices = graph.getVertices();
             List<Edge> edges = graph.getEdges();
             assertEquals(15, vertices.size());

@@ -1,30 +1,32 @@
 package com.fakie.learning.association;
 
+import com.fakie.io.input.dataset.DatasetHolder;
 import com.fakie.learning.Algorithm;
 import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
-import com.fakie.logic.And;
-import com.fakie.logic.Expression;
-import com.fakie.logic.Implication;
+import com.fakie.utils.logic.And;
+import com.fakie.utils.logic.Expression;
+import com.fakie.utils.logic.Implication;
 import weka.associations.*;
+import weka.core.Instances;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Association implements Algorithm {
-    private final InstancesCreator instancesCreator;
+    private final DatasetHolder<Instances> holder;
     private final Associator associator;
     private final AssociationRulesProducer producer;
 
-    public Association(InstancesCreator instancesCreator, Associator associator, AssociationRulesProducer producer) {
-        this.instancesCreator = instancesCreator;
+    public Association(DatasetHolder<Instances> holder, Associator associator, AssociationRulesProducer producer) {
+        this.holder = holder;
         this.associator = associator;
         this.producer = producer;
     }
 
     public List<Rule> generateRules() throws LearningException {
         try {
-            associator.buildAssociations(instancesCreator.createInstances());
+            associator.buildAssociations(holder.getDataset());
             return produceRules();
         }
         catch (Exception e) {

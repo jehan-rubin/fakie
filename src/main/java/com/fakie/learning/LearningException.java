@@ -1,6 +1,6 @@
 package com.fakie.learning;
 
-import com.fakie.utils.FakieException;
+import com.fakie.utils.exceptions.FakieException;
 
 public class LearningException extends FakieException {
     public LearningException() {

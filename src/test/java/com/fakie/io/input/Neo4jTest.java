@@ -1,7 +1,8 @@
-package com.fakie.input;
+package com.fakie.io.input;
 
-import com.fakie.graph.Graph;
-import com.fakie.graph.Vertex;
+import com.fakie.io.input.graphloader.Neo4j;
+import com.fakie.model.graph.Graph;
+import com.fakie.model.graph.Vertex;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,8 +56,8 @@ public class Neo4jTest {
     public void noEdgesAndOneVertex() {
         Map<String, Object> expected = new HashMap<>();
         expected.put("name", "wikipedia");
-        try (Neo4j neo4j = new Neo4j(dir.toPath())) {
-            Graph graph = neo4j.convertToGraph();
+        try (Neo4j neo4j = new Neo4j()) {
+            Graph graph = neo4j.load(dir.toPath());
             List<Vertex> vertices = graph.getVertices();
             assertEquals(1, vertices.size());
             assertEquals(expected, vertices.get(0).getProperties());

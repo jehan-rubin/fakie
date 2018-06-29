@@ -1,4 +1,4 @@
-package com.fakie.utils;
+package com.fakie.utils.exceptions;
 
 public class FakieException extends Exception {
     public FakieException() {

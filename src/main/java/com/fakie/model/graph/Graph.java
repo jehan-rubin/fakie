@@ -1,4 +1,4 @@
-package com.fakie.graph;
+package com.fakie.model.graph;
 
 import java.util.ArrayList;
 import java.util.List;

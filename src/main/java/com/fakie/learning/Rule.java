@@ -1,6 +1,6 @@
 package com.fakie.learning;
 
-import com.fakie.logic.Implication;
+import com.fakie.utils.logic.Implication;
 
 import java.util.Objects;
 
