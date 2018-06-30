@@ -2,6 +2,7 @@ package com.fakie.model.processor;
 
 import com.fakie.model.MockedGraph;
 import com.fakie.model.graph.Graph;
+import com.fakie.model.graph.Vertex;
 import org.junit.Before;
 import org.junit.Test;
 

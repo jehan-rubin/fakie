@@ -39,6 +39,10 @@ public class Graph {
         return result;
     }
 
+    public Set<String> getLabels() {
+        return new HashSet<>(labels.keySet());
+    }
+
     private void addLabels(Vertex vertex) {
         for (String label : vertex.getLabels()) {
             labels.putIfAbsent(label, new HashSet<>());

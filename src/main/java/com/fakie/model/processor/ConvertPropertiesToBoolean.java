@@ -3,17 +3,17 @@ package com.fakie.model.processor;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ConvertPropertiesToBoolean implements Processor {
     private static final String FORMAT = "%s_is_%s";
+    private static final String LABEL = "label";
 
     @Override
     public Graph process(Graph graph) {
         Graph converted = new Graph();
         Map<String, Set<Object>> properties = graph.getProperties();
+        properties.put(LABEL, new HashSet<>(graph.getLabels()));
         for (Vertex vertex : graph.getVertices()) {
             converted.addVertex(convertVertex(properties, vertex));
         }
@@ -22,8 +22,15 @@ public class ConvertPropertiesToBoolean implements Processor {
 
     private Vertex convertVertex(Map<String, Set<Object>> properties, Vertex vertex) {
         Map<String, Boolean> booleanProperties = mapNominalToBoolean(properties, vertex);
+        addLabelsToProperties(booleanProperties, vertex.getLabels());
         fillEmptyProperties(properties, booleanProperties);
         return new Vertex(vertex.getId(), vertex.getLabels(), booleanProperties);
+    }
+
+    private void addLabelsToProperties(Map<String, Boolean> booleanProperties, List<String> labels) {
+        for (String label : labels) {
+            booleanProperties.put(format(LABEL, label), Boolean.TRUE);
+        }
     }
 
     private Map<String, Boolean> mapNominalToBoolean(Map<String, Set<Object>> properties, Vertex vertex) {
