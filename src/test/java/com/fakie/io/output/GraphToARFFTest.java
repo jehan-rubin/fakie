@@ -4,8 +4,8 @@ import com.fakie.io.IOPath;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.dataset.ARFFReader;
 import com.fakie.io.input.dataset.DatasetHolder;
+import com.fakie.model.MockedGraph;
 import com.fakie.model.graph.Graph;
-import com.fakie.model.graph.Vertex;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +17,6 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,11 +27,7 @@ public class GraphToARFFTest {
 
     @Before
     public void setUp() throws URISyntaxException {
-        graph = new Graph();
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("wikipedia", "Wikipedia");
-        properties.put("number_of_classes", 0);
-        graph.addVertex(new Vertex(0, new ArrayList<>(), properties));
+        graph = MockedGraph.wikipedia();
         Path graphPath = IOPath.GRAPH_DIRECTORY.asPath().resolve(IOPath.GRAPH_FILENAME.asPath());
 
         URL url = getClass().getClassLoader().getResource(".");
@@ -55,10 +48,19 @@ public class GraphToARFFTest {
         ARFFReader arffReader = new ARFFReader();
         DatasetHolder<Instances> holder = arffReader.readDataSet(path);
         Instances instances = holder.getDataset();
-        Instance wikipedia = instances.get(0);
-        assertEquals(1, instances.numInstances());
-        assertEquals(2, wikipedia.numAttributes());
-        assertEquals("0", wikipedia.toString(0));
-        assertEquals("Wikipedia", wikipedia.toString(1));
+        Instance app = instances.get(0);
+        assertEquals(3, instances.numInstances());
+        assertEquals(3, app.numAttributes());
+        assertEquals("?", app.toString(0));
+        assertEquals("0", app.toString(1));
+        assertEquals("Wikipedia", app.toString(2));
+        Instance main = instances.get(1);
+        assertEquals("1", main.toString(0));
+        assertEquals("?", main.toString(1));
+        assertEquals("Main", main.toString(2));
+        Instance searchEngine = instances.get(2);
+        assertEquals("42", searchEngine.toString(0));
+        assertEquals("?", searchEngine.toString(1));
+        assertEquals("SearchEngine", searchEngine.toString(2));
     }
 }

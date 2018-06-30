@@ -7,7 +7,7 @@ public class Edge extends Element {
     private final Vertex destination;
     private final String type;
 
-    public Edge(Vertex source, Vertex destination, String type, Map<String, Object> properties) {
+    public Edge(Vertex source, Vertex destination, String type, Map<String, ?> properties) {
         super(properties);
         this.source = source;
         this.destination = destination;

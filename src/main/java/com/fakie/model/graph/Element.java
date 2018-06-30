@@ -6,7 +6,7 @@ import java.util.Map;
 public class Element {
     private final Map<String, Object> properties;
 
-    Element(Map<String, Object> properties) {
+    Element(Map<String, ?> properties) {
         this.properties = new HashMap<>(properties);
     }
 

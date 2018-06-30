@@ -8,10 +8,14 @@ public class Vertex extends Element {
     private final long id;
     private final List<String> labels;
 
-    public Vertex(long id, List<String> labels, Map<String, Object> properties) {
+    public Vertex(long id, List<String> labels, Map<String, ?> properties) {
         super(properties);
         this.id = id;
         this.labels = new ArrayList<>(labels);
+    }
+
+    public long getId() {
+        return id;
     }
 
     public List<String> getLabels() {
