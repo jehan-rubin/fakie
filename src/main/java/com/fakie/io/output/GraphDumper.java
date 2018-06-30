@@ -1,11 +1,13 @@
 package com.fakie.io.output;
 
+import com.fakie.io.IOPath;
 import com.fakie.model.graph.Graph;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -28,8 +30,10 @@ public interface GraphDumper {
     void dump(Path path, Graph graph) throws FakieOutputException;
 
     default String createName() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy MM dd - HH mm ss");
         LocalDateTime now = LocalDateTime.now();
-        return dtf.format(now);
+        String directory = IOPath.GRAPH_DIRECTORY.asString();
+        String filename = IOPath.GRAPH_FILENAME.asString();
+        return Paths.get(directory, dtf.format(now), filename).toString();
     }
 }

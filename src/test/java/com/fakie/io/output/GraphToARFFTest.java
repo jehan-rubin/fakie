@@ -41,6 +41,13 @@ public class GraphToARFFTest {
     }
 
     @Test
+    public void generatedPathIsCorrect() throws FakieOutputException {
+        GraphToARFF graphToARFF = new GraphToARFF();
+        Path dataset = graphToARFF.dump(graph);
+        assertTrue(dataset.endsWith("graph.fakie"));
+    }
+
+    @Test
     public void oneLineARFF() throws FakieOutputException, FakieInputException {
         GraphToARFF graphToARFF = new GraphToARFF();
         graphToARFF.dump(path, graph);
