@@ -46,7 +46,7 @@ public class GraphToARFFTest {
         graphToARFF.dump(path, graph);
         assertTrue(path.toFile().exists());
         ARFFReader arffReader = new ARFFReader();
-        DatasetHolder<Instances> holder = arffReader.readDataSet(path);
+        DatasetHolder<Instances> holder = arffReader.readDataset(path);
         Instances instances = holder.getDataset();
         Instance app = instances.get(0);
         assertEquals(3, instances.numInstances());

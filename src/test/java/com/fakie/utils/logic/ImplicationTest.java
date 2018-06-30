@@ -5,13 +5,14 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class ImplicationTest {
     private static final String LM = "LONG_METHOD";
     private static final String LONG_METHOD = "method_contains_between_40_and_59_instructions";
     private static final String VERY_LONG_METHOD = "method_contains_more_than_60_instructions";
-    
+
     @Test
     public void anImplicationIsEqualsToItsContrapositive() {
         And left = new And(Collections.singletonList(new Expression(LM, false)));
@@ -24,7 +25,8 @@ public class ImplicationTest {
     @Test
     public void anImplicationIsEqualsToAnotherIfThereAreInContraposition() {
         Operator left = new And(Collections.singletonList(new Expression(LM, false)));
-        Operator right = new And(Arrays.asList(new Expression(VERY_LONG_METHOD, false), new Expression(LONG_METHOD, false)));
+        Operator right = new And(Arrays.asList(new Expression(VERY_LONG_METHOD, false), new Expression(LONG_METHOD,
+                false)));
         Implication implication = new Implication(left, right);
 
         left = new Or(Arrays.asList(new Expression(VERY_LONG_METHOD, true), new Expression(LONG_METHOD, true)));
@@ -37,7 +39,8 @@ public class ImplicationTest {
     @Test
     public void anImplicationIsNotEqualsToOthersContrapositive() {
         Operator left = new And(Collections.singletonList(new Expression(LM, false)));
-        Operator right = new And(Arrays.asList(new Expression(VERY_LONG_METHOD, false), new Expression(LONG_METHOD, false)));
+        Operator right = new And(Arrays.asList(new Expression(VERY_LONG_METHOD, false), new Expression(LONG_METHOD,
+                false)));
         Implication implication = new Implication(left, right);
 
         left = new Or(Arrays.asList(new Expression(VERY_LONG_METHOD, false), new Expression(LONG_METHOD, true)));

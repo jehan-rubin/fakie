@@ -42,7 +42,7 @@ public class Neo4jTest {
                 .newGraphDatabase();
         try (Transaction transaction = graphDatabaseService.beginTx()) {
             Node node = graphDatabaseService.createNode(appLabel);
-            node.setProperty("wikipedia", "wikipedia");
+            node.setProperty("name", "wikipedia");
             transaction.success();
         }
         graphDatabaseService.shutdown();
@@ -54,14 +54,15 @@ public class Neo4jTest {
     }
 
     @Test
-    public void noEdgesAndOneVertex() {
+    public void noEdgesAndOneVertex() throws FakieInputException {
         Map<String, Object> expected = new HashMap<>();
-        expected.put("wikipedia", "wikipedia");
-        Neo4j neo4j = new Neo4j();
-        Graph graph = neo4j.load(dir.toPath());
-        List<Vertex> vertices = graph.getVertices();
-        assertEquals(1, vertices.size());
-        assertEquals(expected, vertices.get(0).getProperties());
-        assertTrue(graph.getEdges().isEmpty());
+        expected.put("name", "wikipedia");
+        try (Neo4j neo4j = new Neo4j(dir.toPath())) {
+            Graph graph = neo4j.load();
+            List<Vertex> vertices = graph.getVertices();
+            assertEquals(1, vertices.size());
+            assertEquals(expected, vertices.get(0).getProperties());
+            assertTrue(graph.getEdges().isEmpty());
+        }
     }
 }

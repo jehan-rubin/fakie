@@ -8,14 +8,12 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GraphToARFF implements GraphDumper {
@@ -25,12 +23,6 @@ public class GraphToARFF implements GraphDumper {
         Instances dataSet = new Instances(createName(), new ArrayList<>(attributes), 0);
         dataSet.addAll(createInstances(graph, dataSet));
         save(path, dataSet);
-    }
-
-    private String createName() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        return dtf.format(now);
     }
 
     private List<Attribute> createAttributes(Graph graph) {

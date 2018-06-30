@@ -22,7 +22,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class OnLowMemoryTest {
-    private static final String name = "onlowmemory";
+    private static final String NAME = "onlowmemory";
     private File dir;
 
     @Before
@@ -30,8 +30,8 @@ public class OnLowMemoryTest {
         URL db = getClass().getClassLoader().getResource(Paths.get("db").toString());
         assert db != null : "Could not locate the db directory";
         Path path = new File(db.toURI()).toPath();
-        ZipFile zipFile = new ZipFile(path.resolve(name + ".zip").toFile());
-        dir = path.resolve(name).toFile();
+        ZipFile zipFile = new ZipFile(path.resolve(NAME + ".zip").toFile());
+        dir = path.resolve(NAME).toFile();
         zipFile.extractAll(path.toString());
     }
 
@@ -41,12 +41,13 @@ public class OnLowMemoryTest {
     }
 
     @Test
-    public void noEdgesAndOneVertex() {
-        Neo4j neo4j = new Neo4j();
-        Graph graph = neo4j.load(dir.toPath());
-        List<Vertex> vertices = graph.getVertices();
-        List<Edge> edges = graph.getEdges();
-        assertEquals(15, vertices.size());
-        assertEquals(16, edges.size());
+    public void noEdgesAndOneVertex() throws FakieInputException {
+        try (Neo4j neo4j = new Neo4j(dir.toPath())) {
+            Graph graph = neo4j.load();
+            List<Vertex> vertices = graph.getVertices();
+            List<Edge> edges = graph.getEdges();
+            assertEquals(15, vertices.size());
+            assertEquals(16, edges.size());
+        }
     }
 }

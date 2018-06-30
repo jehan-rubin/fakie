@@ -8,9 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class ARFFReader implements DataSetReader<Instances> {
+public class ARFFReader implements DatasetReader<Instances> {
     @Override
-    public DatasetHolder<Instances> readDataSet(Path path) throws FakieInputException {
+    public DatasetHolder<Instances> readDataset(Path path) throws FakieInputException {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()))) {
             return new DatasetHolder<>(new Instances(bufferedReader));
         }

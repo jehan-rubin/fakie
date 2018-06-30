@@ -1,5 +1,6 @@
 package com.fakie.io.input.graphloader;
 
+import com.fakie.io.input.FakieInputException;
 import com.fakie.model.graph.Edge;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
@@ -13,18 +14,25 @@ import java.util.List;
 import java.util.Map;
 
 public class Neo4j implements GraphLoader {
-    private GraphDatabaseService database;
-    private Graph graph;
+    private final GraphDatabaseService database;
+    private final Graph graph;
+
+    public Neo4j(Path path) {
+        this.database = new GraphDatabaseFactory().newEmbeddedDatabase(path.toFile());
+        this.graph = new Graph();
+    }
 
     @Override
-    public Graph load(Path path) {
-        database = new GraphDatabaseFactory().newEmbeddedDatabase(path.toFile());
-        graph = new Graph();
+    public Graph load() {
         try (Transaction transaction = database.beginTx()) {
             populateGraph();
         }
-        database.shutdown();
         return graph;
+    }
+
+    @Override
+    public void close() throws FakieInputException {
+        database.shutdown();
     }
 
     private void populateGraph() {

@@ -26,7 +26,7 @@ public class AssociationTest {
         URL iris = getClass().getClassLoader().getResource("arff/wikipedia.arff");
         assert iris != null : "Could not find wikipedia data set";
         ARFFReader arffReader = new ARFFReader();
-        DatasetHolder<Instances> holder = arffReader.readDataSet(Paths.get(iris.toURI()));
+        DatasetHolder<Instances> holder = arffReader.readDataset(Paths.get(iris.toURI()));
         FPGrowth fpGrowth = new FPGrowth();
         Algorithm algorithm = new Association(holder, fpGrowth, fpGrowth);
         List<Rule> rules = algorithm.generateRules();
