@@ -5,9 +5,6 @@ import com.fakie.model.graph.Graph;
 
 import java.nio.file.Path;
 
-public interface GraphLoader extends AutoCloseable {
+public interface GraphLoader {
     Graph load(Path path) throws FakieInputException;
-
-    @Override
-    void close() throws FakieInputException;
 }

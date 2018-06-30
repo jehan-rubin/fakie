@@ -42,12 +42,11 @@ public class OnLowMemoryTest {
 
     @Test
     public void noEdgesAndOneVertex() {
-        try (Neo4j neo4j = new Neo4j()) {
-            Graph graph = neo4j.load(dir.toPath());
-            List<Vertex> vertices = graph.getVertices();
-            List<Edge> edges = graph.getEdges();
-            assertEquals(15, vertices.size());
-            assertEquals(16, edges.size());
-        }
+        Neo4j neo4j = new Neo4j();
+        Graph graph = neo4j.load(dir.toPath());
+        List<Vertex> vertices = graph.getVertices();
+        List<Edge> edges = graph.getEdges();
+        assertEquals(15, vertices.size());
+        assertEquals(16, edges.size());
     }
 }

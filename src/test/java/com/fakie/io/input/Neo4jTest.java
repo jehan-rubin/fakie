@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class Neo4jTest {
     private static final Label appLabel = Label.label("App");
@@ -41,7 +42,7 @@ public class Neo4jTest {
                 .newGraphDatabase();
         try (Transaction transaction = graphDatabaseService.beginTx()) {
             Node node = graphDatabaseService.createNode(appLabel);
-            node.setProperty("name", "wikipedia");
+            node.setProperty("wikipedia", "wikipedia");
             transaction.success();
         }
         graphDatabaseService.shutdown();
@@ -55,13 +56,12 @@ public class Neo4jTest {
     @Test
     public void noEdgesAndOneVertex() {
         Map<String, Object> expected = new HashMap<>();
-        expected.put("name", "wikipedia");
-        try (Neo4j neo4j = new Neo4j()) {
-            Graph graph = neo4j.load(dir.toPath());
-            List<Vertex> vertices = graph.getVertices();
-            assertEquals(1, vertices.size());
-            assertEquals(expected, vertices.get(0).getProperties());
-            assertTrue(graph.getEdges().isEmpty());
-        }
+        expected.put("wikipedia", "wikipedia");
+        Neo4j neo4j = new Neo4j();
+        Graph graph = neo4j.load(dir.toPath());
+        List<Vertex> vertices = graph.getVertices();
+        assertEquals(1, vertices.size());
+        assertEquals(expected, vertices.get(0).getProperties());
+        assertTrue(graph.getEdges().isEmpty());
     }
 }

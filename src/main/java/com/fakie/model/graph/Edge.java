@@ -1,19 +1,17 @@
 package com.fakie.model.graph;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class Edge {
+public class Edge extends Element {
     private final Vertex source;
     private final Vertex destination;
     private final String type;
-    private final Map<String, Object> properties;
 
     public Edge(Vertex source, Vertex destination, String type, Map<String, Object> properties) {
+        super(properties);
         this.source = source;
         this.destination = destination;
         this.type = type;
-        this.properties = new HashMap<>(properties);
     }
 
     public Vertex getSource() {
@@ -24,13 +22,9 @@ public class Edge {
         return destination;
     }
 
-    public Map<String, Object> getProperties() {
-        return new HashMap<>(properties);
-    }
-
     @Override
     public String toString() {
         return source.shortRepresentation() + " --" + type + "-> " + destination.shortRepresentation() +
-                ", properties=" + properties;
+                ", properties=" + getProperties();
     }
 }

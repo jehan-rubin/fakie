@@ -23,6 +23,7 @@ public class Neo4j implements GraphLoader {
         try (Transaction transaction = database.beginTx()) {
             populateGraph();
         }
+        database.shutdown();
         return graph;
     }
 
@@ -55,10 +56,5 @@ public class Neo4j implements GraphLoader {
             Vertex destination = mapping.get(rs.getEndNode());
             graph.addEdge(new Edge(source, destination, rs.getType().name(), rs.getAllProperties()));
         }
-    }
-
-    @Override
-    public void close() {
-        database.shutdown();
     }
 }
