@@ -10,15 +10,16 @@ import picocli.CommandLine;
 import java.util.List;
 
 @CommandLine.Command(
-        name = "Fakie",
+        name = "fakie",
         header = {
                 "%n ███████╗ █████╗ ██╗  ██╗██╗███████╗" +
-                "%n ██╔════╝██╔══██╗██║ ██╔╝██║██╔════╝" +
-                "%n █████╗  ███████║█████╔╝ ██║█████╗  " +
-                "%n ██╔══╝  ██╔══██║██╔═██╗ ██║██╔══╝  " +
-                "%n ██║     ██║  ██║██║  ██╗██║███████╗" +
-                "%n ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝%n"},
+                        "%n ██╔════╝██╔══██╗██║ ██╔╝██║██╔════╝" +
+                        "%n █████╗  ███████║█████╔╝ ██║█████╗  " +
+                        "%n ██╔══╝  ██╔══██║██╔═██╗ ██║██╔══╝  " +
+                        "%n ██║     ██║  ██║██║  ██╗██║███████╗" +
+                        "%n ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝%n"},
         description = {"Mining Mobile Apps to Learn Design Patterns and Code Smells."},
+        customSynopsis = "fakie [-hV] GRAPH_LOADER",
         subcommands = {LoadNeo4jDatabase.class})
 public class FakieCLI extends FakieCommand {
     private static final Logger logger = LogManager.getFormatterLogger();

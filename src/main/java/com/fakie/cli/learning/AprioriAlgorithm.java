@@ -5,15 +5,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "fpgrowth", aliases = {"fpg"}, description = "Use the  FPGrowth algorithm on the dataset")
-public class FPGrowthAlgorithm extends FakieLearningCommand {
+@CommandLine.Command(name = "apriori", description = "Use the  Apriori algorithm on the dataset")
+public class AprioriAlgorithm extends FakieLearningCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 
     @Override
     public void applyAlgorithm() {
-        logger.debug("Using FPGrowth algorithm");
+        logger.debug("Using Apriori algorithm");
         try {
-            fakie().fpGrowth();
+            fakie().apriori();
         }
         catch (FakieException e) {
             logger.error(e);

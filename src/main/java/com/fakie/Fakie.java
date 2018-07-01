@@ -40,12 +40,16 @@ public class Fakie {
 
     public List<Rule> fpGrowth() throws FakieException {
         logger.debug("Applying FPGrowth algorithm to dataset...");
-        return association(new FPGrowth());
+        List<Rule> rules = association(new FPGrowth());
+        logRules(rules);
+        return rules;
     }
 
     public List<Rule> apriori() throws FakieException {
         logger.debug("Applying Apriori algorithm to dataset...");
-        return association(new Apriori());
+        List<Rule> rules = association(new Apriori());
+        logRules(rules);
+        return rules;
     }
 
     private <T extends Associator & AssociationRulesProducer> List<Rule> association(T t) throws FakieException {
@@ -66,5 +70,12 @@ public class Fakie {
 
     private Path dumpGraphToFile(GraphDumper graphDumper) throws FakieOutputException {
         return graphDumper.dump(graph);
+    }
+
+    private void logRules(List<Rule> rules) {
+        logger.info("Generated rules : ");
+        for (Rule rule : rules) {
+            logger.info("\t %s", rule);
+        }
     }
 }

@@ -8,7 +8,7 @@ import picocli.CommandLine;
         descriptionHeading = "@|bold %nDescription|@:%n  ",
         parameterListHeading = "@|bold %nParameters|@:%n",
         optionListHeading = "@|bold %nOptions|@:%n",
-        commandListHeading = "@|bold %nCommands|@:%n")
+        commandListHeading = "@|bold %nGraph Loader|@:%n")
 public abstract class FakieCommand implements Runnable {
     public abstract Std std();
 
