@@ -5,7 +5,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "apriori", description = "Use the  Apriori algorithm on the dataset")
+@CommandLine.Command(
+        name = "apriori",
+        customSynopsis = "fakie GRAPH_LOADER apriori [-hV] QUERY_LANGUAGE",
+        description = "Use the  Apriori algorithm on the dataset")
 public class AprioriAlgorithm extends FakieLearningCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 

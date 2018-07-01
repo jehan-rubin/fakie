@@ -3,6 +3,7 @@ package com.fakie.io.output;
 import com.fakie.io.IOPath;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.dataset.ARFFReader;
+import com.fakie.io.output.graphdumper.GraphToARFF;
 import com.fakie.model.MockedGraph;
 import com.fakie.model.graph.Graph;
 import org.junit.After;

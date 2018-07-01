@@ -5,7 +5,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
-@CommandLine.Command(name = "fpgrowth", aliases = {"fpg"}, description = "Use the  FPGrowth algorithm on the dataset")
+@CommandLine.Command(
+        name = "fpgrowth", aliases = {"fpg"},
+        customSynopsis = "fakie GRAPH_LOADER fpgrowth [-hV] QUERY_LANGUAGE",
+        description = "Use the  FPGrowth algorithm on the dataset")
 public class FPGrowthAlgorithm extends FakieLearningCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 

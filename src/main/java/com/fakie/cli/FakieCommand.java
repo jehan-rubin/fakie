@@ -13,4 +13,6 @@ public abstract class FakieCommand implements Runnable {
     public abstract Std std();
 
     public abstract Fakie fakie();
+
+    public abstract CommandLine.ParseResult getSubResult();
 }

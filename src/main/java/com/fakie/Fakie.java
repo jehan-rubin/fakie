@@ -5,8 +5,9 @@ import com.fakie.io.input.dataset.ARFFReader;
 import com.fakie.io.input.dataset.DatasetReader;
 import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.io.output.FakieOutputException;
-import com.fakie.io.output.GraphDumper;
-import com.fakie.io.output.GraphToARFF;
+import com.fakie.io.output.graphdumper.GraphDumper;
+import com.fakie.io.output.graphdumper.GraphToARFF;
+import com.fakie.io.output.queries.Cypher;
 import com.fakie.learning.Rule;
 import com.fakie.learning.association.Association;
 import com.fakie.model.graph.Graph;
@@ -29,6 +30,7 @@ public class Fakie {
     private static final Logger logger = LogManager.getFormatterLogger();
 
     private Graph graph;
+    private List<Rule> rules;
 
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {
         logger.info("Loading Neo4j Database");
@@ -38,18 +40,16 @@ public class Fakie {
         logger.info("Correctly loaded Graph from neo4j database");
     }
 
-    public List<Rule> fpGrowth() throws FakieException {
+    public void fpGrowth() throws FakieException {
         logger.debug("Applying FPGrowth algorithm to dataset...");
-        List<Rule> rules = association(new FPGrowth());
+        rules = association(new FPGrowth());
         logRules(rules);
-        return rules;
     }
 
-    public List<Rule> apriori() throws FakieException {
+    public void apriori() throws FakieException {
         logger.debug("Applying Apriori algorithm to dataset...");
-        List<Rule> rules = association(new Apriori());
+        rules = association(new Apriori());
         logRules(rules);
-        return rules;
     }
 
     private <T extends Associator & AssociationRulesProducer> List<Rule> association(T t) throws FakieException {
@@ -77,5 +77,10 @@ public class Fakie {
         for (Rule rule : rules) {
             logger.info("\t %s", rule);
         }
+    }
+
+    public void saveRulesAsCypherQueries() {
+        Cypher cypher = new Cypher();
+        cypher.saveRulesAsQueries(rules);
     }
 }

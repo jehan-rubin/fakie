@@ -1,5 +1,6 @@
-package com.fakie.io.output;
+package com.fakie.io.output.graphdumper;
 
+import com.fakie.io.output.FakieOutputException;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
 import org.apache.logging.log4j.LogManager;

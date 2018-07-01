@@ -1,6 +1,7 @@
-package com.fakie.io.output;
+package com.fakie.io.output.graphdumper;
 
 import com.fakie.io.IOPath;
+import com.fakie.io.output.FakieOutputException;
 import com.fakie.model.graph.Graph;
 
 import java.io.File;

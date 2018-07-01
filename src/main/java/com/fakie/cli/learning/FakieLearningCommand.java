@@ -1,27 +1,19 @@
 package com.fakie.cli.learning;
 
-import com.fakie.Fakie;
-import com.fakie.cli.FakieCommand;
-import com.fakie.cli.Std;
-import com.fakie.cli.dataset.GraphLoaderCommand;
+import com.fakie.cli.FakieSubCommand;
+import com.fakie.cli.query.CypherLanguage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
-public abstract class FakieLearningCommand extends FakieCommand {
-    @CommandLine.ParentCommand
-    private GraphLoaderCommand parent;
+@CommandLine.Command(
+        commandListHeading = "@|bold %nQuery Language|@:%n",
+        subcommands = {CypherLanguage.class})
+public abstract class FakieLearningCommand extends FakieSubCommand {
+    private static final Logger logger = LogManager.getFormatterLogger();
 
     @Override
-    public Std std() {
-        return parent.std();
-    }
-
-    @Override
-    public Fakie fakie() {
-        return parent.fakie();
-    }
-
-    @Override
-    public void run() {
+    protected void process() {
         applyAlgorithm();
     }
 
