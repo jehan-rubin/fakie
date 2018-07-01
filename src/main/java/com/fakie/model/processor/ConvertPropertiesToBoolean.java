@@ -2,10 +2,13 @@ package com.fakie.model.processor;
 
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class ConvertPropertiesToBoolean implements Processor {
+    private static final Logger logger = LogManager.getFormatterLogger();
     private static final String FORMAT = "%s_is_%s";
     private static final String LABEL = "label";
 

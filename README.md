@@ -1,5 +1,7 @@
 # Fakie
 
+Mining Mobile Apps to Learn Design Patterns and Code Smells. 
+
 ## Getting Started
 
 ### Build with [Maven](https://maven.apache.org/) - Dependency Management

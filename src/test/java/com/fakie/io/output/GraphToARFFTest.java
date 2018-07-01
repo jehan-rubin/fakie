@@ -3,7 +3,6 @@ package com.fakie.io.output;
 import com.fakie.io.IOPath;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.dataset.ARFFReader;
-import com.fakie.io.input.dataset.DatasetHolder;
 import com.fakie.model.MockedGraph;
 import com.fakie.model.graph.Graph;
 import org.junit.After;
@@ -53,8 +52,7 @@ public class GraphToARFFTest {
         graphToARFF.dump(path, graph);
         assertTrue(path.toFile().exists());
         ARFFReader arffReader = new ARFFReader();
-        DatasetHolder<Instances> holder = arffReader.readDataset(path);
-        Instances instances = holder.getDataset();
+        Instances instances = arffReader.readDataset(path);
         Instance app = instances.get(0);
         assertEquals(3, instances.numInstances());
         assertEquals(3, app.numAttributes());

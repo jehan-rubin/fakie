@@ -2,22 +2,28 @@ package com.fakie.cli.learning;
 
 import com.fakie.learning.Rule;
 import com.fakie.utils.exceptions.FakieException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
 import java.util.List;
 
 @CommandLine.Command(name = "FPGrowth", aliases = {"FPG"}, description = "Use the  FPGrowth algorithm on the dataset")
 public class FPGrowthAlgorithm extends FakieLearningCommand {
+    private static final Logger logger = LogManager.getFormatterLogger();
+
     @Override
-    public void run() {
+    public void applyAlgorithm() {
+        logger.debug("Using FPGrowth algorithm");
         try {
             List<Rule> rules = fakie().fpGrowth();
+            logger.info("Generated rules : ");
             for (Rule rule : rules) {
-                std().out().println(rule);
+                logger.info("\t %s", rule);
             }
         }
         catch (FakieException e) {
-            std().err().println(e.getMessage());
+            logger.error(e);
         }
     }
 }

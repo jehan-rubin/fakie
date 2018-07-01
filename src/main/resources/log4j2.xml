@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <ScriptPatternSelector defaultPattern="">
+                    <Script name="LevelSelector" language="javascript">
+                        <![CDATA[result = logEvent.getLevel();]]>
+                    </Script>
+                    <PatternMatch key="DEBUG" pattern="%d [%p] %30.30M | %m%n"/>
+                    <PatternMatch key="INFO" pattern="%d  [%p] %30.30M | %m%n"/>
+                    <PatternMatch key="TRACE" pattern="%d [%p] %30.30M | %m%n"/>
+                    <PatternMatch key="WARN" pattern="%d  [%p] %30.30M | %m%n"/>
+                    <PatternMatch key="ERROR" pattern="%d [%p] %30.30M | %m%n"/>
+                    <PatternMatch key="FATAL" pattern="%d [%p] %30.30M | %m%n"/>
+                </ScriptPatternSelector>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

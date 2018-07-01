@@ -19,4 +19,11 @@ public abstract class FakieLearningCommand extends FakieCommand {
     public Fakie fakie() {
         return parent.fakie();
     }
+
+    @Override
+    public void run() {
+        applyAlgorithm();
+    }
+
+    protected abstract void applyAlgorithm();
 }

@@ -1,7 +1,6 @@
 package com.fakie.learning.association;
 
 import com.fakie.io.input.dataset.ARFFReader;
-import com.fakie.io.input.dataset.DatasetHolder;
 import com.fakie.learning.Algorithm;
 import com.fakie.learning.Rule;
 import com.fakie.utils.exceptions.FakieException;
@@ -26,9 +25,9 @@ public class AssociationTest {
         URL iris = getClass().getClassLoader().getResource("arff/wikipedia.arff");
         assert iris != null : "Could not find wikipedia data set";
         ARFFReader arffReader = new ARFFReader();
-        DatasetHolder<Instances> holder = arffReader.readDataset(Paths.get(iris.toURI()));
+        Instances dataset = arffReader.readDataset(Paths.get(iris.toURI()));
         FPGrowth fpGrowth = new FPGrowth();
-        Algorithm algorithm = new Association(holder, fpGrowth, fpGrowth);
+        Algorithm algorithm = new Association(dataset, fpGrowth, fpGrowth);
         List<Rule> rules = algorithm.generateRules();
 
         And left = new And(Collections.singletonList(new Expression("number_of_methods_greater_than_40", true)));

@@ -56,4 +56,9 @@ public class Graph {
             properties.get(property.getKey()).add(property.getValue());
         }
     }
+
+    @Override
+    public String toString() {
+        return "Graph{vertices=" + vertices.size() + ", edges=" + edges.size() + "}";
+    }
 }
