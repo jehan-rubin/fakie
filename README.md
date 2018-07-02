@@ -1,12 +1,14 @@
 # Fakie
 
-Mining Mobile Apps to Learn Design Patterns and Code Smells. 
+Mining Mobile Apps to Learn Design Patterns and Code Smells.
+Fakie is a tool to automatically generate the Antipattern Queries from the Graph DB for [Paprika](https://raw.githubusercontent.com/Sriki13/paprika).  
 
 ## Table of contents
 *   [Getting Started](#getting-started)
 *   [Usage](#usage)
 *   [Overview](#overview)
 *   [Development](#development)
+*   [Troubleshooting](#troubleshooting)
 
 ## Getting Started
 
@@ -19,11 +21,11 @@ Mining Mobile Apps to Learn Design Patterns and Code Smells.
 
 ## Usage
 
-Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_LANGUAGE`
+Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 
 ### Graph loader
 * Neo4j `load-neo4j` : Load graph from a Neo4j database
-    * Usage : `fakie load-neo4j [-hV] DB_PATH LEARNING_ALGORITHM learning_algorithm_argument...`
+    * Usage : `fakie load-neo4j [-hV] DB_PATH LEARNING_ALGORITHM QUERY_EXPORTER`
     * Parameters :
         ```
       DB_PATH     Path to the Neo4j database
@@ -41,45 +43,45 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_LANGUAGE`
 
 ### Learning Algorithm
 * FPGrowth `fpgrowth` : Use the FPGrowth algorithm on the dataset
-    * Usage : `fakie GRAPH_LOADER fpgrowth [-hV] QUERY_LANGUAGE`
+    * Usage : `fakie GRAPH_LOADER fpgrowth [-hV] QUERY_EXPORTER`
     * Options :
         ```
           -h, --help      Show this help message and exit.
           -V, --version   Print version information and exit.
         ```
-    * Query Language :
+    * Query Exporter :
         ```
-          cypher  Save the generated rules in the Cypher query language
+          cypher  Export the generated rules in the Cypher query language
         ```
 
 * Apriori `apriori` : Use the Apriori algorithm on the dataset :warning: NOT RECOMMENDED : VERY SLOW :snail:
-    * Usage : `fakie GRAPH_LOADER apriori [-hV] QUERY_LANGUAGE`
+    * Usage : `fakie GRAPH_LOADER apriori [-hV] QUERY_EXPORTER`
     * Options :
         ```
           -h, --help      Show this help message and exit.
           -V, --version   Print version information and exit.
         ```
-    * Query Language :
+    * Query Exporter :
         ```
           cypher  Save the generated rules in the Cypher query language
         ```
         
-### Query Language
+### Query Exporter
 
-* Cypher `cypher` : Save the generated rules in the Cypher query language
-    * Usage : `fakie GRAPH_LOADER LEARNING_ALGORITHM [-hV] cypher [-o=<path>]`
+* Cypher `cypher` : Export the generated rules in the Cypher query language
+    * Usage : `fakie GRAPH_LOADER LEARNING_ALGORITHM cypher [-hV] [-o=<path>]`
     * Options :
         ```
           -h, --help            Show this help message and exit.
-          -o, --output=<path>   Path to the generated queries folder
+          -o, --output=<path>   Destination folder for the generated queries
           -V, --version         Print version information and exit.
         ```
 
 ### Examples
 
-* To run the FPGrowth algorithm on a neo4j database, and then save the generated rules as Cypher queries, use :
+* To run the FPGrowth algorithm on a neo4j database, and then export the generated rules as Cypher queries, use :
 `load-neo4j ./path/to/your/neo4j/db fpgrowth cypher -o queries/destination/folder`
-* To run the Apriori algorithm on a neo4j database, and then save the generated rules as Cypher queries, use :
+* To run the Apriori algorithm on a neo4j database, and then export the generated rules as Cypher queries, use :
 `load-neo4j ./path/to/your/neo4j/db apriori cypher --output="queries/destination/folder`
 
 ## Overview
@@ -109,6 +111,11 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_LANGUAGE`
 ### Filter Rules
 * Filter the rules to keep only those that identify a smell code :x:
 
-### Convert Rules to Queries
+### Export Rules to Queries
 * Convert Fakie rules to Cypher queries to allow a reuse by Paprika :x:
 
+## Troubleshooting
+
+Fakie is still in development.
+Found a bug? We'd love to know about it!
+Please report all issues on the github issue tracker.

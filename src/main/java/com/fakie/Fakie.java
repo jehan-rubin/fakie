@@ -7,7 +7,7 @@ import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.io.output.FakieOutputException;
 import com.fakie.io.output.graphdumper.GraphDumper;
 import com.fakie.io.output.graphdumper.GraphToARFF;
-import com.fakie.io.output.queries.Cypher;
+import com.fakie.io.output.queryexporter.Cypher;
 import com.fakie.learning.Rule;
 import com.fakie.learning.association.Association;
 import com.fakie.model.graph.Graph;
@@ -79,8 +79,8 @@ public class Fakie {
         }
     }
 
-    public void saveRulesAsCypherQueries() {
+    public void exportRulesAsCypherQueries() {
         Cypher cypher = new Cypher();
-        cypher.saveRulesAsQueries(rules);
+        cypher.exportRulesAsQueries(rules);
     }
 }
