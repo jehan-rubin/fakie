@@ -4,7 +4,7 @@ import java.util.List;
 
 public class And extends Operator {
     public And(List<Expression> expressions) {
-        super(expressions);
+        super(Type.AND, expressions);
     }
 
     @Override

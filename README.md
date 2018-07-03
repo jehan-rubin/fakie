@@ -1,7 +1,7 @@
 # Fakie
 
 Mining Mobile Apps to Learn Design Patterns and Code Smells.
-Fakie is a tool to automatically generate the Antipattern Queries from the Graph DB for [Paprika](https://raw.githubusercontent.com/Sriki13/paprika).  
+Fakie is a tool to automatically generate the Antipattern Queries from the Graph DB for [Paprika](https://github.com/Sriki13/paprika).  
 
 ## Table of contents
 *   [Getting Started](#getting-started)
@@ -80,8 +80,10 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 ### Examples
 
 * To run the FPGrowth algorithm on a neo4j database, and then export the generated rules as Cypher queries, use :
+
 `load-neo4j ./path/to/your/neo4j/db fpgrowth cypher -o queries/destination/folder`
 * To run the Apriori algorithm on a neo4j database, and then export the generated rules as Cypher queries, use :
+
 `load-neo4j ./path/to/your/neo4j/db apriori cypher --output="queries/destination/folder`
 
 ## Overview

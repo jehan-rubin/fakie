@@ -13,6 +13,14 @@ public class Implication {
         this.right = right;
     }
 
+    public Operator getLeft() {
+        return left;
+    }
+
+    public Operator getRight() {
+        return right;
+    }
+
     public Implication contrapositive() {
         return new Implication(right.negation(), left.negation());
     }

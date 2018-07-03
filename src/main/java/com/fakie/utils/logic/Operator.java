@@ -6,10 +6,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class Operator {
+    private final Type type;
     private final List<Expression> expressions;
 
-    public Operator(List<Expression> expressions) {
+    protected Operator(Type type, List<Expression> expressions) {
+        this.type = type;
         this.expressions = new ArrayList<>(expressions);
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public List<Expression> getExpressions() {
@@ -43,5 +49,10 @@ public abstract class Operator {
     @Override
     public int hashCode() {
         return Objects.hash(expressions);
+    }
+
+    public enum Type {
+        AND,
+        OR
     }
 }

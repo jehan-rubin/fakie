@@ -12,8 +12,8 @@ public class Main {
     private static final Logger logger = LogManager.getFormatterLogger();
 
     public static void main(String[] args) {
-        logger.info("Running fakie %s", () -> Arrays.stream(args).collect(Collectors.joining(" ")));
+        logger.trace("Running fakie %s", () -> Arrays.stream(args).collect(Collectors.joining(" ")));
         new FakieCLI().parse(args);
-        logger.info("Exiting fakie");
+        logger.trace("Exiting fakie");
     }
 }

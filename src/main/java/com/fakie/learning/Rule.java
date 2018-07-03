@@ -1,6 +1,7 @@
 package com.fakie.learning;
 
 import com.fakie.utils.logic.Implication;
+import com.fakie.utils.logic.Operator;
 
 import java.util.Objects;
 
@@ -13,8 +14,12 @@ public class Rule {
         this.confidence = confidence;
     }
 
-    public Implication getImplication() {
-        return implication;
+    public Operator premises() {
+        return implication.getLeft();
+    }
+
+    public Operator consequences() {
+        return implication.getRight();
     }
 
     public double getConfidence() {

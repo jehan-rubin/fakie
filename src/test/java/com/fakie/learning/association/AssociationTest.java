@@ -36,6 +36,9 @@ public class AssociationTest {
         Implication implication = new Implication(left, right);
 
         Rule expectedRule = new Rule(implication, 0.9230769230769231);
+        for (Rule rule : rules) {
+            System.out.println(rule);
+        }
         assertTrue(rules.contains(expectedRule));
     }
 

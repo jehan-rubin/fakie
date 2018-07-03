@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Or extends Operator {
     public Or(List<Expression> expressions) {
-        super(expressions);
+        super(Type.OR, expressions);
     }
 
     @Override

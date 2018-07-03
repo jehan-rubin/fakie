@@ -14,6 +14,7 @@ public class ConvertPropertiesToBoolean implements Processor {
 
     @Override
     public Graph process(Graph graph) {
+        logger.info("Converting %s properties to boolean", graph);
         Graph converted = new Graph();
         Map<String, Set<Object>> properties = graph.getProperties();
         properties.put(LABEL, new HashSet<>(graph.getLabels()));

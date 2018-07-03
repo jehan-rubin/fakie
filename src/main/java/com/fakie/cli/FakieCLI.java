@@ -40,7 +40,7 @@ public class FakieCLI extends FakieCommand {
 
     @Override
     public void run() {
-        logger.info("Parsing commandline");
+        logger.trace("Parsing commandline");
         CommandLine.ParseResult result = commandLine.getParseResult();
         if (!result.hasSubcommand() && !commandLine.isUsageHelpRequested()) {
             logger.warn("Fakie CLI requires at least one command");

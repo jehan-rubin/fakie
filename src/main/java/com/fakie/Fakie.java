@@ -28,7 +28,6 @@ import java.util.List;
 
 public class Fakie {
     private static final Logger logger = LogManager.getFormatterLogger();
-
     private Graph graph;
     private List<Rule> rules;
 
@@ -41,15 +40,15 @@ public class Fakie {
     }
 
     public void fpGrowth() throws FakieException {
-        logger.debug("Applying FPGrowth algorithm to dataset...");
+        logger.info("Applying FPGrowth algorithm to dataset");
         rules = association(new FPGrowth());
-        logRules(rules);
+        generatedRules(rules);
     }
 
     public void apriori() throws FakieException {
-        logger.debug("Applying Apriori algorithm to dataset...");
+        logger.info("Applying Apriori algorithm to dataset");
         rules = association(new Apriori());
-        logRules(rules);
+        generatedRules(rules);
     }
 
     private <T extends Associator & AssociationRulesProducer> List<Rule> association(T t) throws FakieException {
@@ -72,15 +71,17 @@ public class Fakie {
         return graphDumper.dump(graph);
     }
 
-    private void logRules(List<Rule> rules) {
+    private void generatedRules(List<Rule> rules) {
         logger.info("Generated rules : ");
         for (Rule rule : rules) {
             logger.info("\t %s", rule);
         }
     }
 
-    public void exportRulesAsCypherQueries() {
+    public void exportRulesAsCypherQueries(Path path) throws FakieOutputException {
+        logger.info("Exporting rules as Cypher queries in \'" + path + '\'');
         Cypher cypher = new Cypher();
-        cypher.exportRulesAsQueries(rules);
+        cypher.exportRulesAsQueries(path, rules);
+        logger.info("Successfully exported rules as Cypher queries");
     }
 }
