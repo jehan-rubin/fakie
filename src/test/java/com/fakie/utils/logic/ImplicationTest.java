@@ -71,10 +71,10 @@ public class ImplicationTest {
     @Test
     public void blobImplication() {
         Operator left = new And(Collections.singletonList(new Expression("number_of_methods_greater_than_40", true)));
-        Operator right = new And(Collections.singletonList(new Expression("blob", true)));
+        Operator right = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
 
-        left = new Or(Collections.singletonList(new Expression("blob", false)));
+        left = new Or(Collections.singletonList(new Expression("CODE_SMELL_BLOB", false)));
         right = new Or(Collections.singletonList(new Expression("number_of_methods_greater_than_40", false)));
         Implication contraposition = new Implication(left, right);
 

@@ -8,6 +8,11 @@ public class Or extends Operator {
     }
 
     @Override
+    public Or newInstance(List<Expression> expressions) {
+        return new Or(expressions);
+    }
+
+    @Override
     public Operator negation() {
         return new And(getExpressionsNegations());
     }

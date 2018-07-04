@@ -58,6 +58,6 @@ public class Association implements Algorithm {
             expressions.add(new Expression(item.getAttribute().name(), Boolean.valueOf(item.getItemValueAsString())));
         }
         And right = new And(expressions);
-        return new Rule(new Implication(left, right), associationRule.getPrimaryMetricValue());
+        return new Rule(new Implication(left, right), associationRule.getTotalSupport());
     }
 }

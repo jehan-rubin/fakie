@@ -3,6 +3,7 @@ package com.fakie.utils.logic;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public abstract class Operator {
@@ -30,6 +31,18 @@ public abstract class Operator {
 
     protected String formatExpressions(String separator) {
         return expressions.stream().map(Expression::toString).collect(Collectors.joining(separator));
+    }
+
+    public abstract Operator newInstance(List<Expression> expressions);
+
+    public Operator filter(Predicate<Expression> predicate) {
+        List<Expression> filtered = new ArrayList<>();
+        for (Expression expression : expressions) {
+            if (predicate.test(expression)) {
+                filtered.add(expression);
+            }
+        }
+        return newInstance(filtered);
     }
 
     @Override

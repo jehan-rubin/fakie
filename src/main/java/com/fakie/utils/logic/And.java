@@ -13,6 +13,11 @@ public class And extends Operator {
     }
 
     @Override
+    public And newInstance(List<Expression> expressions) {
+        return new And(expressions);
+    }
+
+    @Override
     public boolean equals(Object o) {
         return super.equals(o);
     }

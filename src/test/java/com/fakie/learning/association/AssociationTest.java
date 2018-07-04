@@ -32,13 +32,10 @@ public class AssociationTest {
         List<Rule> rules = algorithm.generateRules();
 
         And left = new And(Collections.singletonList(new Expression("number_of_methods_greater_than_40", true)));
-        And right = new And(Collections.singletonList(new Expression("blob", true)));
+        And right = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
 
-        Rule expectedRule = new Rule(implication, 0.9230769230769231);
-        for (Rule rule : rules) {
-            System.out.println(rule);
-        }
+        Rule expectedRule = new Rule(implication, 12);
         assertTrue(rules.contains(expectedRule));
     }
 
@@ -53,9 +50,10 @@ public class AssociationTest {
         List<Rule> rules = algorithm.generateRules();
 
         And left = new And(Collections.singletonList(new Expression("number_of_methods_greater_than_40", true)));
-        And right = new And(Collections.singletonList(new Expression("blob", true)));
+        And right = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
-        Rule expectedRule = new Rule(implication, 0.9230769230769231);
+
+        Rule expectedRule = new Rule(implication, 12);
         assertTrue(rules.contains(expectedRule));
     }
 }

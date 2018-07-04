@@ -114,7 +114,7 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 * Filter the rules to keep only those that identify a smell code :x:
 
 ### Export Rules to Queries
-* Convert Fakie rules to Cypher queries to allow a reuse by Paprika :x:
+* Convert Fakie rules to Cypher queries to allow a reuse by Paprika :heavy_check_mark:
 
 ## Troubleshooting
 

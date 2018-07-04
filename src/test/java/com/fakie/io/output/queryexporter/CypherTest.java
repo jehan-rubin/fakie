@@ -45,13 +45,13 @@ public class CypherTest {
         Operator left = new Or(Arrays.asList(
                 new Expression("number_of_methods_greater_than_40", true),
                 new Expression("number_of_methods_between_than_30_and_39", true)));
-        Or right = new Or(Collections.singletonList(new Expression("blob", true)));
+        Or right = new Or(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
 
         URL db = getClass().getClassLoader().getResource(".");
         assert db != null : "Could not locate the resources directory";
-        Rule expectedRule = new Rule(implication, 0.9230769230769231);
+        Rule expectedRule = new Rule(implication, 1);
         cypher.exportRulesAsQueries(path, Collections.singletonList(expectedRule));
-        assertEquals(1, FileUtils.countFilesInDirectoryPath(path.resolve("blob")));
+        assertEquals(1, FileUtils.countFilesInDirectoryPath(path.resolve("CODE_SMELL_BLOB")));
     }
 }

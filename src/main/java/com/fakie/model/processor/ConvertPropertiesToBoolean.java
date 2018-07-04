@@ -10,14 +10,13 @@ import java.util.*;
 public class ConvertPropertiesToBoolean implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
     private static final String FORMAT = "%s_is_%s";
-    private static final String LABEL = "label";
 
     @Override
     public Graph process(Graph graph) {
         logger.info("Converting %s properties to boolean", graph);
         Graph converted = new Graph();
         Map<String, Set<Object>> properties = graph.getProperties();
-        properties.put(LABEL, new HashSet<>(graph.getLabels()));
+        properties.put(Keyword.LABEL.toString(), new HashSet<>(graph.getLabels()));
         for (Vertex vertex : graph.getVertices()) {
             converted.addVertex(convertVertex(properties, vertex));
         }
@@ -33,7 +32,7 @@ public class ConvertPropertiesToBoolean implements Processor {
 
     private void addLabelsToProperties(Map<String, Boolean> booleanProperties, List<String> labels) {
         for (String label : labels) {
-            booleanProperties.put(format(LABEL, label), Boolean.TRUE);
+            booleanProperties.put(format(Keyword.LABEL.toString(), label), Boolean.TRUE);
         }
     }
 
