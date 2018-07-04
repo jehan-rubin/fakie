@@ -1,8 +1,8 @@
 package com.fakie.model.processor;
 
-import com.fakie.utils.exceptions.FakieException;
+import com.fakie.model.FakieModelException;
 
-public class ProcessingException extends FakieException {
+public class ProcessingException extends FakieModelException {
     public ProcessingException() {
     }
 

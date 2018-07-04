@@ -2,6 +2,7 @@ package com.fakie.model.graph;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Element {
     private final Map<String, Object> properties;
@@ -14,7 +15,18 @@ public class Element {
         return new HashMap<>(properties);
     }
 
-    public void addProperty(String key, Object value) {
-        properties.putIfAbsent(key, value);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Element element = (Element) o;
+        return Objects.equals(properties, element.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(properties);
     }
 }

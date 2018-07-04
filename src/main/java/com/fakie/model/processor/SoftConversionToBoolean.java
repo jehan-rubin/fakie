@@ -13,26 +13,29 @@ public class SoftConversionToBoolean implements Processor {
     @Override
     public Graph process(Graph graph) {
         logger.info("Softly converting %s properties to boolean", graph);
-        Graph converted = new Graph();
+        Graph temp = new Graph();
         for (Vertex vertex : graph.getVertices()) {
             if (containsACodeSmell(vertex)) {
-                converted.addVertex(convertVertex(vertex));
+                temp.addVertex(convertVertex(vertex));
             }
         }
-        Map<String, Set<Object>> properties = converted.getProperties();
-        properties.put(Keyword.LABEL.toString(), new HashSet<>(converted.getLabels()));
-        fillProperties(converted, properties);
-        return converted;
+        Map<String, Set<Object>> properties = temp.getProperties();
+        properties.put(Keyword.LABEL.toString(), new HashSet<>(temp.getLabels()));
+        return fillProperties(temp, properties);
     }
 
-    private void fillProperties(Graph graph, Map<String, Set<Object>> properties) {
+    private Graph fillProperties(Graph graph, Map<String, Set<Object>> properties) {
+        Graph result = new Graph();
         for (Vertex vertex : graph.getVertices()) {
+            Map<String, Object> normalized = new HashMap<>(vertex.getProperties());
             for (Map.Entry<String, Set<Object>> property : properties.entrySet()) {
                 for (Object value : property.getValue()) {
-                    vertex.addProperty(format(property.getKey(), value), Boolean.FALSE);
+                    normalized.put(format(property.getKey(), value), Boolean.FALSE);
                 }
             }
+            result.addVertex(new Vertex(vertex.getId(), vertex.getLabels(), normalized));
         }
+        return result;
     }
 
     private Vertex convertVertex(Vertex vertex) {

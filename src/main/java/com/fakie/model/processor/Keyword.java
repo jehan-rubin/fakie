@@ -1,9 +1,10 @@
 package com.fakie.model.processor;
 
 public enum Keyword {
+    SEPARATOR("_"),
     LABEL,
     CODE_SMELL,
-    IS("%s_is_%s");
+    IS("%s_IS_%s");
 
     private final String name;
 

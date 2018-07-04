@@ -1,6 +1,7 @@
 package com.fakie;
 
 import com.fakie.io.input.FakieInputException;
+import com.fakie.io.input.codesmell.JsonCodeSmellParser;
 import com.fakie.io.input.dataset.ARFFReader;
 import com.fakie.io.input.dataset.DatasetReader;
 import com.fakie.io.input.graphloader.Neo4j;
@@ -15,11 +16,9 @@ import com.fakie.learning.filter.Filter;
 import com.fakie.learning.filter.FilterNonCodeSmellRule;
 import com.fakie.learning.filter.ManyToOne;
 import com.fakie.learning.filter.RemoveNonCodeSmellConsequences;
+import com.fakie.model.processor.CodeSmell;
 import com.fakie.model.graph.Graph;
-import com.fakie.model.processor.ConvertPropertiesToBoolean;
-import com.fakie.model.processor.ProcessingException;
-import com.fakie.model.processor.Processor;
-import com.fakie.model.processor.SoftConversionToBoolean;
+import com.fakie.model.processor.*;
 import com.fakie.utils.exceptions.FakieException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +28,7 @@ import weka.associations.Associator;
 import weka.associations.FPGrowth;
 import weka.core.Instances;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -36,6 +36,7 @@ public class Fakie {
     private static final Logger logger = LogManager.getFormatterLogger();
     private Graph graph;
     private List<Rule> rules;
+    private List<CodeSmell> codeSmells;
 
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {
         logger.info("Loading Neo4j Database");
@@ -43,6 +44,10 @@ public class Fakie {
             this.graph = neo4j.load();
         }
         logger.info("Correctly loaded Graph from neo4j database");
+    }
+
+    public void addCodeSmellToGraph(File file) throws FakieInputException {
+        codeSmells = new JsonCodeSmellParser().parse(file);
     }
 
     public void fpGrowth() throws FakieException {
@@ -54,7 +59,11 @@ public class Fakie {
     }
 
     private <T extends Associator & AssociationRulesProducer> void association(T t) throws FakieException {
-        convertGraphProperties(new SoftConversionToBoolean());
+        if (graph == null) {
+            logger.info("The graph could not be found. Aborting association algorithm");
+            return;
+        }
+        applyProcessors(new ApplyCodeSmellOnGraph(codeSmells), new SoftConversionToBoolean());
         Path datasetPath = dumpGraphToFile(new GraphToARFF());
         Instances dataset = readDataset(new ARFFReader(), datasetPath);
         Association association = new Association(dataset, t, t);
@@ -67,8 +76,10 @@ public class Fakie {
         return reader.readDataset(datasetPath);
     }
 
-    private void convertGraphProperties(Processor processor) throws ProcessingException {
-        this.graph = processor.process(graph);
+    private void applyProcessors(Processor... processors) throws ProcessingException {
+        for (Processor processor : processors) {
+            this.graph = processor.process(graph);
+        }
     }
 
     private Path dumpGraphToFile(GraphDumper graphDumper) throws FakieOutputException {
@@ -93,6 +104,10 @@ public class Fakie {
     }
 
     public void exportRulesAsCypherQueries(Path path) throws FakieOutputException {
+        if (rules == null) {
+            logger.info("No rules found. Aborting export to Cypher");
+            return;
+        }
         logger.info("Exporting rules as Cypher queries in \'" + path + '\'');
         Cypher cypher = new Cypher();
         cypher.exportRulesAsQueries(path, rules);

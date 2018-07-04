@@ -16,6 +16,7 @@ import java.util.List;
 
 public class Association implements Algorithm {
     private static final Logger logger = LogManager.getFormatterLogger();
+    private static final int MIN_INSTANCES = 10;
     private final Instances dataset;
     private final Associator associator;
     private final AssociationRulesProducer producer;
@@ -29,6 +30,9 @@ public class Association implements Algorithm {
     @Override
     public List<Rule> generateRules() throws LearningException {
         logger.info("Generating rules from the " + producer.getClass().getSimpleName() + " algorithm");
+        if (dataset.numInstances() < MIN_INSTANCES) {
+            throw new LearningException("Not enough instances in the dataset to apply the association algorithm");
+        }
         try {
             associator.buildAssociations(dataset);
             return produceRules();

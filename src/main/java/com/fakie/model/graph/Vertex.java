@@ -3,6 +3,7 @@ package com.fakie.model.graph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Vertex extends Element {
     private final long id;
@@ -25,6 +26,23 @@ public class Vertex extends Element {
     @Override
     public String toString() {
         return shortRepresentation() + labels + getProperties();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        Vertex vertex = (Vertex) o;
+        return id == vertex.id && Objects.equals(labels, vertex.labels);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id, labels);
     }
 
     public String shortRepresentation() {

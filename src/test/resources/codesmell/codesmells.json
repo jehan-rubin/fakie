@@ -1,0 +1,9 @@
+{
+  "codeSmells": [
+    {
+      "labels": ["Class"],
+      "properties": {"name": "Main"},
+      "name": "God Class"
+    }
+  ]
+}

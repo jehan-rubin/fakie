@@ -46,8 +46,9 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
     * Usage : `fakie GRAPH_LOADER fpgrowth [-hV] QUERY_EXPORTER`
     * Options :
         ```
-          -h, --help      Show this help message and exit.
-          -V, --version   Print version information and exit.
+          -f, --file=<file>   Path to the file containing the code smells in the database
+          -h, --help          Show this help message and exit.
+          -V, --version       Print version information and exit.
         ```
     * Query Exporter :
         ```
@@ -58,8 +59,9 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
     * Usage : `fakie GRAPH_LOADER apriori [-hV] QUERY_EXPORTER`
     * Options :
         ```
-          -h, --help      Show this help message and exit.
-          -V, --version   Print version information and exit.
+          -f, --file=<file>   Path to the file containing the code smells in the database
+          -h, --help          Show this help message and exit.
+          -V, --version       Print version information and exit.
         ```
     * Query Exporter :
         ```
@@ -100,6 +102,7 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 * Convert arrays properties values to boolean :x:
 * Convert edges properties values to boolean :x:
 * Resolution of collision among properties :x:
+* Add code smell to the Fakie model :heavy_check_mark:
 
 ### Dump Fakie Model
 * Dump Fakie Model to an ARFF dataset :heavy_check_mark:
