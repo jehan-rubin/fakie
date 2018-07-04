@@ -1,16 +1,22 @@
 package com.fakie.learning.filter;
 
-import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
 import com.fakie.model.processor.Keyword;
-import com.fakie.utils.logic.*;
+import com.fakie.utils.logic.Expression;
+import com.fakie.utils.logic.Implication;
+import com.fakie.utils.logic.Operator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FilterNonCodeSmellRule implements Filter {
+    private static final Logger logger = LogManager.getFormatterLogger();
+
     @Override
     public List<Rule> filter(List<Rule> rules) {
+        logger.info("Filtering rules which does not contain a code smell");
         List<Rule> filtered = new ArrayList<>();
         for (Rule rule : rules) {
             addRuleIfItContainsACodeSmell(filtered, rule);

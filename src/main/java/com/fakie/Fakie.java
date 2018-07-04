@@ -8,8 +8,11 @@ import com.fakie.io.output.FakieOutputException;
 import com.fakie.io.output.graphdumper.GraphDumper;
 import com.fakie.io.output.graphdumper.GraphToARFF;
 import com.fakie.io.output.queryexporter.Cypher;
+import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
 import com.fakie.learning.association.Association;
+import com.fakie.learning.filter.Filter;
+import com.fakie.learning.filter.FilterNonCodeSmellRule;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.ConvertPropertiesToBoolean;
 import com.fakie.model.processor.ProcessingException;
@@ -40,23 +43,21 @@ public class Fakie {
     }
 
     public void fpGrowth() throws FakieException {
-        logger.info("Applying FPGrowth algorithm to dataset");
-        rules = association(new FPGrowth());
-        generatedRules(rules);
+        association(new FPGrowth());
     }
 
     public void apriori() throws FakieException {
-        logger.info("Applying Apriori algorithm to dataset");
-        rules = association(new Apriori());
-        generatedRules(rules);
+        association(new Apriori());
     }
 
-    private <T extends Associator & AssociationRulesProducer> List<Rule> association(T t) throws FakieException {
+    private <T extends Associator & AssociationRulesProducer> void association(T t) throws FakieException {
         convertGraphProperties(new ConvertPropertiesToBoolean());
         Path datasetPath = dumpGraphToFile(new GraphToARFF());
         Instances dataset = readDataset(new ARFFReader(), datasetPath);
         Association association = new Association(dataset, t, t);
-        return association.generateRules();
+        rules = association.generateRules();
+        filterRules(new FilterNonCodeSmellRule());
+        generatedRules(rules);
     }
 
     private <T> T readDataset(DatasetReader<T> reader, Path datasetPath) throws FakieInputException {
@@ -71,10 +72,20 @@ public class Fakie {
         return graphDumper.dump(graph);
     }
 
+    private void filterRules(Filter... filters) throws LearningException {
+        for (Filter filter : filters) {
+            rules = filter.filter(rules);
+        }
+    }
+
     private void generatedRules(List<Rule> rules) {
-        logger.info("Generated rules : ");
-        for (Rule rule : rules) {
-            logger.info("\t %s", rule);
+        if (rules.isEmpty()) {
+            logger.info("Could not generate rules from the dataset");
+        } else {
+            logger.info("Generated rules : ");
+            for (Rule rule : rules) {
+                logger.info("\t %s", rule);
+            }
         }
     }
 

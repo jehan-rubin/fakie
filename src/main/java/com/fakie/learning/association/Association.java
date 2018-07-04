@@ -26,7 +26,9 @@ public class Association implements Algorithm {
         this.producer = producer;
     }
 
+    @Override
     public List<Rule> generateRules() throws LearningException {
+        logger.info("Generating rules from the " + producer.getClass().getSimpleName() + " algorithm");
         try {
             associator.buildAssociations(dataset);
             return produceRules();
