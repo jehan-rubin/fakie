@@ -19,6 +19,7 @@ import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.ConvertPropertiesToBoolean;
 import com.fakie.model.processor.ProcessingException;
 import com.fakie.model.processor.Processor;
+import com.fakie.model.processor.SoftConversionToBoolean;
 import com.fakie.utils.exceptions.FakieException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +54,7 @@ public class Fakie {
     }
 
     private <T extends Associator & AssociationRulesProducer> void association(T t) throws FakieException {
-        convertGraphProperties(new ConvertPropertiesToBoolean());
+        convertGraphProperties(new SoftConversionToBoolean());
         Path datasetPath = dumpGraphToFile(new GraphToARFF());
         Instances dataset = readDataset(new ARFFReader(), datasetPath);
         Association association = new Association(dataset, t, t);

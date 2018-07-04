@@ -13,4 +13,8 @@ public class Element {
     public Map<String, Object> getProperties() {
         return new HashMap<>(properties);
     }
+
+    public void addProperty(String key, Object value) {
+        properties.putIfAbsent(key, value);
+    }
 }

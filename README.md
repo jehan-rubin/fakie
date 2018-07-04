@@ -96,8 +96,9 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 * Neo4j :heavy_check_mark:
 
 ### Process Fakie Model
-* Convert vertices properties value to boolean :heavy_check_mark:
-* Convert edges properties value to boolean :x:
+* Convert vertices properties values to boolean :heavy_check_mark:
+* Convert arrays properties values to boolean :x:
+* Convert edges properties values to boolean :x:
 * Resolution of collision among properties :x:
 
 ### Dump Fakie Model

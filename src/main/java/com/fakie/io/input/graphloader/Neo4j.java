@@ -51,6 +51,7 @@ public class Neo4j implements GraphLoader {
     private Map<Node, Vertex> addVertices() {
         Map<Node, Vertex> mapping = new HashMap<>();
         for (Node node : database.getAllNodes()) {
+            logger.debug(node);
             Vertex vertex = new Vertex(node.getId(), retrieveLabels(node), node.getAllProperties());
             mapping.put(node, vertex);
             graph.addVertex(vertex);
@@ -68,6 +69,7 @@ public class Neo4j implements GraphLoader {
 
     private void addEdges(Map<Node, Vertex> mapping) {
         for (Relationship rs : database.getAllRelationships()) {
+            logger.debug(rs);
             Vertex source = mapping.get(rs.getStartNode());
             Vertex destination = mapping.get(rs.getEndNode());
             graph.addEdge(new Edge(source, destination, rs.getType().name(), rs.getAllProperties()));

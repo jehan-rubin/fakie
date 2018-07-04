@@ -9,7 +9,6 @@ import java.util.*;
 
 public class ConvertPropertiesToBoolean implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
-    private static final String FORMAT = "%s_is_%s";
 
     @Override
     public Graph process(Graph graph) {
@@ -24,6 +23,7 @@ public class ConvertPropertiesToBoolean implements Processor {
     }
 
     private Vertex convertVertex(Map<String, Set<Object>> properties, Vertex vertex) {
+        logger.debug("Converting " + vertex);
         Map<String, Boolean> booleanProperties = mapNominalToBoolean(properties, vertex);
         addLabelsToProperties(booleanProperties, vertex.getLabels());
         fillEmptyProperties(properties, booleanProperties);
@@ -31,6 +31,7 @@ public class ConvertPropertiesToBoolean implements Processor {
     }
 
     private void addLabelsToProperties(Map<String, Boolean> booleanProperties, List<String> labels) {
+        logger.trace("add labels to properties");
         for (String label : labels) {
             booleanProperties.put(format(Keyword.LABEL.toString(), label), Boolean.TRUE);
         }
@@ -48,7 +49,9 @@ public class ConvertPropertiesToBoolean implements Processor {
     }
 
     private void fillEmptyProperties(Map<String, Set<Object>> properties, Map<String, Boolean> booleanProperties) {
+        logger.trace("filling empty properties");
         for (Map.Entry<String, Set<Object>> property : properties.entrySet()) {
+            logger.debug("filling property " + property.getKey());
             for (Object value : property.getValue()) {
                 booleanProperties.putIfAbsent(format(property.getKey(), value), Boolean.FALSE);
             }
@@ -56,6 +59,6 @@ public class ConvertPropertiesToBoolean implements Processor {
     }
 
     private String format(String property, Object value) {
-        return String.format(FORMAT, property, value);
+        return String.format(Keyword.IS.toString(), property, value);
     }
 }
