@@ -13,6 +13,8 @@ import com.fakie.learning.Rule;
 import com.fakie.learning.association.Association;
 import com.fakie.learning.filter.Filter;
 import com.fakie.learning.filter.FilterNonCodeSmellRule;
+import com.fakie.learning.filter.ManyToOne;
+import com.fakie.learning.filter.RemoveNonCodeSmellConsequences;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.ConvertPropertiesToBoolean;
 import com.fakie.model.processor.ProcessingException;
@@ -56,7 +58,7 @@ public class Fakie {
         Instances dataset = readDataset(new ARFFReader(), datasetPath);
         Association association = new Association(dataset, t, t);
         rules = association.generateRules();
-        filterRules(new FilterNonCodeSmellRule());
+        filterRules(new FilterNonCodeSmellRule(), new RemoveNonCodeSmellConsequences(), new ManyToOne());
         generatedRules(rules);
     }
 
@@ -80,7 +82,7 @@ public class Fakie {
 
     private void generatedRules(List<Rule> rules) {
         if (rules.isEmpty()) {
-            logger.info("Could not generate rules from the dataset");
+            logger.warn("Could not generate rules from the dataset");
         } else {
             logger.info("Generated rules : ");
             for (Rule rule : rules) {

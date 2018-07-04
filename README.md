@@ -111,7 +111,7 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 * Implement Apriori algorithm to infer associations rules among properties :heavy_check_mark:
 
 ### Filter Rules
-* Filter the rules to keep only those that identify a smell code :x:
+* Filter the rules to keep only those that identify a smell code :heavy_check_mark:
 
 ### Export Rules to Queries
 * Convert Fakie rules to Cypher queries to allow a reuse by Paprika :heavy_check_mark:

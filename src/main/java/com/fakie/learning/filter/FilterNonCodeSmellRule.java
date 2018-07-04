@@ -1,7 +1,6 @@
 package com.fakie.learning.filter;
 
 import com.fakie.learning.Rule;
-import com.fakie.model.processor.Keyword;
 import com.fakie.utils.logic.Expression;
 import com.fakie.utils.logic.Implication;
 import com.fakie.utils.logic.Operator;
@@ -55,9 +54,5 @@ public class FilterNonCodeSmellRule implements Filter {
             }
         }
         return false;
-    }
-
-    private boolean isACodeSmell(Expression expression) {
-        return expression.getAttribute().startsWith(Keyword.CODE_SMELL.toString());
     }
 }

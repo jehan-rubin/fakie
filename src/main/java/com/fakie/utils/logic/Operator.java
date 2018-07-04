@@ -45,6 +45,10 @@ public abstract class Operator {
         return newInstance(filtered);
     }
 
+    public int size() {
+        return expressions.size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

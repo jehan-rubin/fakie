@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 public class FilterNonCodeSmellRuleTest {
     @Test
-    public void ShouldKeepBlob() {
+    public void shouldKeepBlob() {
         List<Rule> rules = new ArrayList<>();
 
         And left = new And(Collections.singletonList(new Expression("number_of_methods_greater_than_40", true)));
@@ -46,7 +46,7 @@ public class FilterNonCodeSmellRuleTest {
     }
 
     @Test
-    public void ShouldNotKeepCauseBlobIsInPremises() {
+    public void shouldNotKeepCauseBlobIsInPremises() {
         List<Rule> rules = new ArrayList<>();
 
         And right = new And(Collections.singletonList(new Expression("number_of_methods_greater_than_40", true)));
@@ -75,5 +75,6 @@ public class FilterNonCodeSmellRuleTest {
         FilterNonCodeSmellRule filterNonCodeSmellRule = new FilterNonCodeSmellRule();
         List<Rule> filter = filterNonCodeSmellRule.filter(rules);
         assertEquals(1, filter.size());
+        assertEquals(new Expression("CODE_SMELL_BLOB", true), filter.get(0).consequences().getExpressions().get(0));
     }
 }
