@@ -63,13 +63,25 @@ public class Fakie {
             logger.warn("The graph could not be found. Aborting association algorithm");
             return;
         }
-        applyProcessors(new ApplyCodeSmellOnGraph(codeSmells), new SoftConversionToBoolean());
+        applyProcessors(
+                new ApplyCodeSmellOnGraph(codeSmells),
+                new ProcessOnlyObjectsWithACodeSmellLabel(),
+                new ConvertLabelsToProperties(),
+                new ConvertArraysToNominal(),
+                new ConvertNumericToNominal(),
+                new ConvertNominalToBoolean(),
+                new RemovePropertiesWithASingleValue());
+
         Path datasetPath = dumpGraphToFile(new GraphToARFF());
         Instances dataset = readDataset(new ARFFReader(), datasetPath);
         Association association = new Association(dataset, t, t);
         rules = association.generateRules();
         generatedRules(rules);
-        filterRules(new FilterNonCodeSmellRule(), new RemoveNonCodeSmellConsequences(), new ManyToOne());
+
+        filterRules(
+                new FilterNonCodeSmellRule(),
+                new RemoveNonCodeSmellConsequences(),
+                new ManyToOne());
         filteredRules(rules);
     }
 

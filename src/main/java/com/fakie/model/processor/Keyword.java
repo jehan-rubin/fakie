@@ -4,7 +4,9 @@ public enum Keyword {
     SEPARATOR("_"),
     LABEL,
     CODE_SMELL,
-    IS("%s_IS_%s");
+    IS("%s_IS_%s"),
+    LOW,
+    HIGH;
 
     private final String name;
 
