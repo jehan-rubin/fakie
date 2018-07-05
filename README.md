@@ -96,8 +96,8 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 
 ## Code Smells File
 
-To be able to work correctly, the learning algorithm needs a file in input containing the code smell presents in the targeted project.
-This file should looks like this (currently, only json is supported) :
+In order to work properly, the learning algorithm needs an input file containing the code smell present in the targeted project.
+This file should look like this (currently, only json is supported) :
 
 ```json
 {
@@ -159,7 +159,7 @@ This file should looks like this (currently, only json is supported) :
 * Filter the rules to keep only those that identify a smell code :heavy_check_mark:
 * Filter the rules to keep only the many to one rules :heavy_check_mark:
 * Remove consequences in rules that are not a code smell :heavy_check_mark:
-* Filter rules with the same support but a different the amount of premises
+* Filter rules with the same support but a different the amount of premises :heavy_check_mark:
 
 ### Export Rules to Queries
 * Export the rules to Cypher :heavy_check_mark:

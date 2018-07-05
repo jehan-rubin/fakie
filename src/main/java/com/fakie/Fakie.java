@@ -69,7 +69,7 @@ public class Fakie {
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
                 new ConvertNumericToNominal(),
-                new ProcessOnlyObjectsWithACodeSmell(),
+                new ProcessOnlyVerticesWithACodeSmell(),
                 new ConvertNominalToBoolean(),
                 new RemovePropertiesWithASingleValue()
         );

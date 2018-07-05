@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
-public class ProcessOnlyObjectsWithACodeSmell implements Processor {
+public class ProcessOnlyVerticesWithACodeSmell implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
 
     @Override

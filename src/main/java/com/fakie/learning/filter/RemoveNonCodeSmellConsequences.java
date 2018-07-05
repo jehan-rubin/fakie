@@ -1,6 +1,5 @@
 package com.fakie.learning.filter;
 
-import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
 import com.fakie.utils.logic.Expression;
 import com.fakie.utils.logic.Implication;
