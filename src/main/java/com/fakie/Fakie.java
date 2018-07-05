@@ -12,10 +12,7 @@ import com.fakie.io.output.queryexporter.Cypher;
 import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
 import com.fakie.learning.association.Association;
-import com.fakie.learning.filter.Filter;
-import com.fakie.learning.filter.FilterNonCodeSmellRule;
-import com.fakie.learning.filter.ManyToOne;
-import com.fakie.learning.filter.RemoveNonCodeSmellConsequences;
+import com.fakie.learning.filter.*;
 import com.fakie.model.processor.CodeSmell;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.*;
@@ -50,8 +47,12 @@ public class Fakie {
         codeSmells = new JsonCodeSmellParser().parse(file);
     }
 
-    public void fpGrowth() throws FakieException {
-        association(new FPGrowth());
+    public void fpGrowth(int n, double support) throws FakieException {
+        FPGrowth fpGrowth = new FPGrowth();
+        fpGrowth.setNumRulesToFind(n);
+        fpGrowth.setMinMetric(support);
+        fpGrowth.setLowerBoundMinSupport(support);
+        association(fpGrowth);
     }
 
     public void apriori() throws FakieException {
@@ -65,12 +66,13 @@ public class Fakie {
         }
         applyProcessors(
                 new ApplyCodeSmellOnGraph(codeSmells),
-                new ProcessOnlyObjectsWithACodeSmellLabel(),
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
                 new ConvertNumericToNominal(),
+                new ProcessOnlyObjectsWithACodeSmell(),
                 new ConvertNominalToBoolean(),
-                new RemovePropertiesWithASingleValue());
+                new RemovePropertiesWithASingleValue()
+        );
 
         Path datasetPath = dumpGraphToFile(new GraphToARFF());
         Instances dataset = readDataset(new ARFFReader(), datasetPath);
@@ -81,7 +83,10 @@ public class Fakie {
         filterRules(
                 new FilterNonCodeSmellRule(),
                 new RemoveNonCodeSmellConsequences(),
-                new ManyToOne());
+                new ManyToOne(),
+                new FilterRedundantRule()
+        );
+
         filteredRules(rules);
     }
 
@@ -109,9 +114,9 @@ public class Fakie {
         if (rules.isEmpty()) {
             logger.warn("Could not generate rules from the dataset");
         } else {
-            logger.info("Generated rules : ");
+            logger.info("Generated rules (%d)", rules.size());
             for (Rule rule : rules) {
-                logger.info("\t %s", rule);
+                logger.debug("\t %s", rule);
             }
         }
     }
@@ -120,7 +125,7 @@ public class Fakie {
         if (rules.isEmpty()) {
             logger.warn("No rules left after filtering");
         } else {
-            logger.info("Filtered rules : ");
+            logger.info("Filtered rules (%d)", rules.size());
             for (Rule rule : rules) {
                 logger.info("\t %s", rule);
             }

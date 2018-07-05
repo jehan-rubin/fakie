@@ -6,7 +6,8 @@ public enum Keyword {
     CODE_SMELL,
     IS("%s_IS_%s"),
     LOW,
-    HIGH;
+    HIGH,
+    SPLIT("%s_%s");
 
     private final String name;
 

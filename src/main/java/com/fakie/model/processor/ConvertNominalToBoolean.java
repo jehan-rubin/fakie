@@ -24,7 +24,6 @@ public class ConvertNominalToBoolean implements Processor {
 
     private Graph fillProperties(Graph graph) {
         Map<String, Set<Object>> properties = graph.getProperties();
-        properties.put(Keyword.LABEL.toString(), new HashSet<>(graph.getLabels()));
         Graph result = new Graph();
         for (Vertex vertex : graph.getVertices()) {
             Map<String, Object> normalized = new HashMap<>(vertex.getProperties());

@@ -32,7 +32,9 @@ public class RemovePropertiesWithASingleValue implements Processor {
     private Set<String> findUselessProperties(Map<String, Set<Object>> properties) {
         Set<String> result = new HashSet<>();
         for (Map.Entry<String, Set<Object>> property : properties.entrySet()) {
-            if (property.getValue().size() <= 1) {
+            boolean isLabel = property.getKey().startsWith(Keyword.LABEL.toString());
+            boolean isCodeSmell = property.getKey().startsWith(Keyword.CODE_SMELL.toString());
+            if (!isLabel && !isCodeSmell && property.getValue().size() <= 1) {
                 result.add(property.getKey());
             }
         }

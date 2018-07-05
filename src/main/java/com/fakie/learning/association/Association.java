@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Association implements Algorithm {
     private static final Logger logger = LogManager.getFormatterLogger();
-    private static final int MIN_INSTANCES = 10;
+    private static final int MIN_INSTANCES = 2;
     private final Instances dataset;
     private final Associator associator;
     private final AssociationRulesProducer producer;

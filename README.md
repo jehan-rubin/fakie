@@ -6,6 +6,7 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 ## Table of contents
 *   [Getting Started](#getting-started)
 *   [Usage](#usage)
+*   [Code Smells](#code-smells-file)
 *   [Overview](#overview)
 *   [Development](#development)
 *   [Troubleshooting](#troubleshooting)
@@ -43,12 +44,17 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 
 ### Learning Algorithm
 * FPGrowth `fpgrowth` : Use the FPGrowth algorithm on the dataset
-    * Usage : `fakie GRAPH_LOADER fpgrowth [-hV] QUERY_EXPORTER`
+    * Usage : `fakie GRAPH_LOADER fpgrowth [-hV] -f=<file> [-n=<n>] [-s=<support>] QUERY_EXPORTER`
     * Options :
         ```
-          -f, --file=<file>   Path to the file containing the code smells in the database
-          -h, --help          Show this help message and exit.
-          -V, --version       Print version information and exit.
+          -f, --file=<file>    Path to the file containing the code smells in the database
+          -h, --help           Show this help message and exit.
+          -n, --nb-rules=<n>   Number of rules to find
+                                 Default: 10000
+          -s, --min-support=<support>
+                               Minimum support bound
+                                 Default: 0.1
+          -V, --version        Print version information and exit.
         ```
     * Query Exporter :
         ```
@@ -88,6 +94,38 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 
 `load-neo4j ./path/to/your/neo4j/db apriori cypher --output="queries/destination/folder`
 
+## Code Smells File
+
+To be able to work correctly, the learning algorithm needs a file in input containing the code smell presents in the targeted project.
+This file should looks like this (currently, only json is supported) :
+
+```json
+{
+  "codeSmells": [
+    {
+      "labels": ["Class"],
+      "properties": {"name": "org.torproject.android.service.TorService"},
+      "name": "God Class"
+    },
+    {
+      "labels": ["Class"],
+      "properties": {"name": "org.torproject.android.OrbotMainActivity"},
+      "name": "God Class"
+    },
+    {
+      "labels": ["Class"],
+      "properties": {"name": "org.torproject.android.Prefs"},
+      "name": "God Class"
+    },
+    {
+      "labels": ["Class"],
+      "properties": {"name": "org.torproject.android.settings.TorifiedApp"},
+      "name": "God Class"
+    }
+  ]
+}
+```
+
 ## Overview
 
 ![Overview](docs/images/overview.svg)
@@ -98,11 +136,14 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 * Neo4j :heavy_check_mark:
 
 ### Process Fakie Model
-* Convert vertices properties values to boolean :heavy_check_mark:
-* Convert arrays properties values to boolean :x:
+* Add code smell to the Fakie model :heavy_check_mark:
+* Convert vertices numeric properties to nominal :heavy_check_mark:
+* Convert vertices arrays properties to nominal :heavy_check_mark:
+* Convert vertices nominal properties to boolean :heavy_check_mark:
+* Removing properties with a single value :heavy_check_mark:
+* Process only vertices which contains a code smell :heavy_check_mark:
 * Convert edges properties values to boolean :x:
 * Resolution of collision among properties :x:
-* Add code smell to the Fakie model :heavy_check_mark:
 
 ### Dump Fakie Model
 * Dump Fakie Model to an ARFF dataset :heavy_check_mark:
@@ -116,9 +157,13 @@ Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
 
 ### Filter Rules
 * Filter the rules to keep only those that identify a smell code :heavy_check_mark:
+* Filter the rules to keep only the many to one rules :heavy_check_mark:
+* Remove consequences in rules that are not a code smell :heavy_check_mark:
+* Filter rules with the same support but a different the amount of premises
 
 ### Export Rules to Queries
-* Convert Fakie rules to Cypher queries to allow a reuse by Paprika :heavy_check_mark:
+* Export the rules to Cypher :heavy_check_mark:
+* Convert Fakie rules to allow a reuse by Paprika :x:
 
 ## Troubleshooting
 

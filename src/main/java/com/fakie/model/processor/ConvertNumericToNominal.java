@@ -24,25 +24,25 @@ public class ConvertNumericToNominal implements Processor {
 
     private Vertex convertVertex(Map<String, Set<Object>> properties, Vertex vertex) {
         logger.debug("Converting " + vertex);
-        Map<String, String> nominalProperties = mapNumericToNominal(properties, vertex);
+        Map<String, Object> nominalProperties = mapNumericToNominal(properties, vertex);
         return new Vertex(vertex.getId(), vertex.getLabels(), nominalProperties);
     }
 
-    private Map<String, String> mapNumericToNominal(Map<String, Set<Object>> properties, Vertex vertex) {
-        Map<String, String> nominalProperties = new HashMap<>();
+    private Map<String, Object> mapNumericToNominal(Map<String, Set<Object>> properties, Vertex vertex) {
+        Map<String, Object> nominalProperties = new HashMap<>();
         for (Map.Entry<String, Object> property : vertex.getProperties().entrySet()) {
             if (property.getValue() instanceof Number) {
-                String value = covertNumericToNominal(properties.get(property.getKey()), (Number) property.getValue());
+                Object value = covertNumericToNominal(properties.get(property.getKey()), (Number) property.getValue());
                 nominalProperties.put(property.getKey(), value);
             }
             else {
-                nominalProperties.put(property.getKey(), property.getValue().toString());
+                nominalProperties.put(property.getKey(), property.getValue());
             }
         }
         return nominalProperties;
     }
 
-    private String covertNumericToNominal(Set<Object> values, Number value) {
+    private Object covertNumericToNominal(Set<Object> values, Number value) {
         List<Number> numbers = new ArrayList<>();
         for (Object o : values) {
             if (o instanceof Number) {
@@ -52,6 +52,6 @@ public class ConvertNumericToNominal implements Processor {
         numbers.sort((n1, n2) -> Double.compare(n1.doubleValue(), n2.doubleValue()));
         int i = numbers.indexOf(value);
         int n = numbers.size();
-        return i > n / 2 ? Keyword.HIGH.toString() : Keyword.LOW.toString();
+        return i > n / 2 ? Keyword.HIGH : Keyword.LOW;
     }
 }
