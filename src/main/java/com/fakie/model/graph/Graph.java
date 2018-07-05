@@ -1,20 +1,21 @@
 package com.fakie.model.graph;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Graph {
-    private final List<Vertex> vertices;
-    private final List<Edge> edges;
+    private final Set<Vertex> vertices;
+    private final Set<Edge> edges;
     private final Map<String, Set<Object>> properties;
     private final Map<String, Set<Vertex>> labels;
 
     public Graph() {
-        this(new ArrayList<>(), new ArrayList<>(), new HashMap<>(), new HashMap<>());
+        this(new HashSet<>(), new HashSet<>(), new HashMap<>(), new HashMap<>());
     }
 
-    private Graph(List<Vertex> v, List<Edge> e, Map<String, Set<Object>> p, Map<String, Set<Vertex>> l) {
-        this.vertices = new ArrayList<>(v);
-        this.edges = new ArrayList<>(e);
+    private Graph(Set<Vertex> v, Set<Edge> e, Map<String, Set<Object>> p, Map<String, Set<Vertex>> l) {
+        this.vertices = new HashSet<>(v);
+        this.edges = new HashSet<>(e);
         this.properties = new HashMap<>(p);
         this.labels = new HashMap<>(l);
     }
@@ -40,7 +41,7 @@ public class Graph {
 
     public List<Vertex> bestMatches(List<String> labels, Map<String, Object> properties) {
         List<Vertex> bestMatches = new ArrayList<>();
-        for (Vertex vertex : vertices) {
+        for (Vertex vertex : getVertices()) {
             if (vertex.getLabels().containsAll(labels) &&
                     vertex.getProperties().entrySet().containsAll(properties.entrySet())) {
                 bestMatches.add(vertex);
@@ -50,11 +51,17 @@ public class Graph {
     }
 
     public List<Vertex> getVertices() {
-        return new ArrayList<>(vertices);
+        return sortById(vertices);
     }
 
     public List<Edge> getEdges() {
-        return new ArrayList<>(edges);
+        return sortById(edges);
+    }
+
+    private <T extends Element> List<T> sortById(Set<T> ts) {
+        return ts.stream()
+                .sorted((t1, t2) -> Long.compare(t1.getId(), t2.getId()))
+                .collect(Collectors.toList());
     }
 
     public Map<String, Set<Object>> getProperties() {

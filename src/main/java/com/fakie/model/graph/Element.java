@@ -5,10 +5,16 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Element {
+    private final long id;
     private final Map<String, Object> properties;
 
-    Element(Map<String, ?> properties) {
+    Element(long id, Map<String, ?> properties) {
+        this.id = id;
         this.properties = new HashMap<>(properties);
+    }
+
+    public long getId() {
+        return id;
     }
 
     public Map<String, Object> getProperties() {
@@ -22,11 +28,11 @@ public class Element {
         if (o == null || getClass() != o.getClass())
             return false;
         Element element = (Element) o;
-        return Objects.equals(properties, element.properties);
+        return id == element.id && Objects.equals(properties, element.properties);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(properties);
+        return Objects.hash(id, properties);
     }
 }

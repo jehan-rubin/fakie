@@ -1,14 +1,15 @@
 package com.fakie.model.graph;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class Edge extends Element {
     private final Vertex source;
     private final Vertex destination;
     private final String type;
 
-    public Edge(Vertex source, Vertex destination, String type, Map<String, ?> properties) {
-        super(properties);
+    public Edge(long id, Vertex source, Vertex destination, String type, Map<String, ?> properties) {
+        super(id, properties);
         this.source = source;
         this.destination = destination;
         this.type = type;
@@ -23,8 +24,27 @@ public class Edge extends Element {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        Edge edge = (Edge) o;
+        return Objects.equals(source, edge.source) &&
+                Objects.equals(destination, edge.destination) &&
+                Objects.equals(type, edge.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), source, destination, type);
+    }
+
+    @Override
     public String toString() {
-        return source.shortRepresentation() + " --" + type + "-> " + destination.shortRepresentation() +
-                ", properties=" + getProperties();
+        return source.shortRepresentation() + " --" + type + "[" + getId() + "]-> " +
+                destination.shortRepresentation() + ", properties=" + getProperties();
     }
 }

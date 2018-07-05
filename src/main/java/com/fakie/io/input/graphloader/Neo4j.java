@@ -71,7 +71,7 @@ public class Neo4j implements GraphLoader {
         for (Relationship rs : database.getAllRelationships()) {
             Vertex source = mapping.get(rs.getStartNode());
             Vertex destination = mapping.get(rs.getEndNode());
-            Edge edge = new Edge(source, destination, rs.getType().name(), rs.getAllProperties());
+            Edge edge = new Edge(rs.getId(), source, destination, rs.getType().name(), rs.getAllProperties());
             logger.debug(edge);
             graph.addEdge(edge);
         }

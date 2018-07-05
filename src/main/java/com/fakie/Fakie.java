@@ -60,7 +60,7 @@ public class Fakie {
 
     private <T extends Associator & AssociationRulesProducer> void association(T t) throws FakieException {
         if (graph == null) {
-            logger.info("The graph could not be found. Aborting association algorithm");
+            logger.warn("The graph could not be found. Aborting association algorithm");
             return;
         }
         applyProcessors(new ApplyCodeSmellOnGraph(codeSmells), new SoftConversionToBoolean());
@@ -68,8 +68,9 @@ public class Fakie {
         Instances dataset = readDataset(new ARFFReader(), datasetPath);
         Association association = new Association(dataset, t, t);
         rules = association.generateRules();
-        filterRules(new FilterNonCodeSmellRule(), new RemoveNonCodeSmellConsequences(), new ManyToOne());
         generatedRules(rules);
+        filterRules(new FilterNonCodeSmellRule(), new RemoveNonCodeSmellConsequences(), new ManyToOne());
+        filteredRules(rules);
     }
 
     private <T> T readDataset(DatasetReader<T> reader, Path datasetPath) throws FakieInputException {
@@ -103,9 +104,20 @@ public class Fakie {
         }
     }
 
+    private void filteredRules(List<Rule> rules) {
+        if (rules.isEmpty()) {
+            logger.warn("No rules left after filtering");
+        } else {
+            logger.info("Filtered rules : ");
+            for (Rule rule : rules) {
+                logger.info("\t %s", rule);
+            }
+        }
+    }
+
     public void exportRulesAsCypherQueries(Path path) throws FakieOutputException {
-        if (rules == null) {
-            logger.info("No rules found. Aborting export to Cypher");
+        if (rules == null || rules.isEmpty()) {
+            logger.warn("No rules found. Aborting export to Cypher");
             return;
         }
         logger.info("Exporting rules as Cypher queries in \'" + path + '\'');

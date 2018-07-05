@@ -19,19 +19,51 @@ public class SoftConversionToBoolean implements Processor {
                 temp.addVertex(convertVertex(vertex));
             }
         }
-        Map<String, Set<Object>> properties = temp.getProperties();
-        properties.put(Keyword.LABEL.toString(), new HashSet<>(temp.getLabels()));
-        return fillProperties(temp, properties);
+        for (String label : temp.getLabels()) {
+            Set<Vertex> verticesWithLabel = graph.getVerticesWithLabel(label);
+            for (Vertex vertex : verticesWithLabel) {
+                temp.addVertex(convertVertex(vertex));
+            }
+        }
+        Graph complete = fillProperties(temp);
+        logger.debug("Complete graph " + graph);
+        Graph clean = removeUselessProperties(complete);
+        logger.debug("Cleaned graph " + graph);
+        return clean;
     }
 
-    private Graph fillProperties(Graph graph, Map<String, Set<Object>> properties) {
+    private Graph removeUselessProperties(Graph graph) {
+        Map<String, Set<Object>> properties = graph.getProperties();
+        Set<String> uselessProperties = findUselessProperties(properties);
+        Graph result = new Graph();
+        for (Vertex vertex : graph.getVertices()) {
+            Map<String, Object> normalized = new HashMap<>(vertex.getProperties());
+            for (String uselessProperty : uselessProperties) {
+                normalized.remove(uselessProperty);
+            }
+            result.addVertex(new Vertex(vertex.getId(), vertex.getLabels(), normalized));
+        }
+        return result;
+    }
+
+    private Set<String> findUselessProperties(Map<String, Set<Object>> properties) {
+        Set<String> result = new HashSet<>();
+        for (Map.Entry<String, Set<Object>> property : properties.entrySet()) {
+            if (property.getValue().size() <= 1) {
+                result.add(property.getKey());
+            }
+        }
+        return result;
+    }
+
+    private Graph fillProperties(Graph graph) {
+        Map<String, Set<Object>> properties = graph.getProperties();
+        properties.put(Keyword.LABEL.toString(), new HashSet<>(graph.getLabels()));
         Graph result = new Graph();
         for (Vertex vertex : graph.getVertices()) {
             Map<String, Object> normalized = new HashMap<>(vertex.getProperties());
             for (Map.Entry<String, Set<Object>> property : properties.entrySet()) {
-                for (Object value : property.getValue()) {
-                    normalized.put(format(property.getKey(), value), Boolean.FALSE);
-                }
+                normalized.putIfAbsent(property.getKey(), Boolean.FALSE);
             }
             result.addVertex(new Vertex(vertex.getId(), vertex.getLabels(), normalized));
         }
