@@ -4,14 +4,19 @@ import com.fakie.learning.Rule;
 import com.fakie.utils.logic.Expression;
 import com.fakie.utils.logic.Implication;
 import com.fakie.utils.logic.Operator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class RemoveNonCodeSmellConsequences implements Filter {
+    private static final Logger logger = LogManager.getFormatterLogger();
+
     @Override
     public List<Rule> filter(List<Rule> rules) {
+        logger.info("Remove consequences which are not code smell from the rules");
         List<Rule> filtered = new ArrayList<>();
         for (Rule rule : rules) {
             addRuleWithOnlyCodeSmellInConsequences(filtered, rule);
