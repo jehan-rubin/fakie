@@ -23,10 +23,10 @@ import static org.junit.Assert.assertTrue;
 public class AssociationTest {
     @Test
     public void fpgrowth() throws URISyntaxException, FakieException {
-        URL iris = getClass().getClassLoader().getResource("arff/wikipedia.arff");
-        assert iris != null : "Could not find wikipedia data set";
+        URL wikipedia = getClass().getClassLoader().getResource("arff/wikipedia.arff");
+        assert wikipedia != null : "Could not find wikipedia data set";
         ARFFReader arffReader = new ARFFReader();
-        Instances dataset = arffReader.readDataset(Paths.get(iris.toURI()));
+        Instances dataset = arffReader.readDataset(Paths.get(wikipedia.toURI()));
         FPGrowth fpGrowth = new FPGrowth();
         Algorithm algorithm = new Association(dataset, fpGrowth, fpGrowth);
         List<Rule> rules = algorithm.generateRules();
@@ -35,16 +35,16 @@ public class AssociationTest {
         And right = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
 
-        Rule expectedRule = new Rule(implication, 12);
+        Rule expectedRule = new Rule(implication, 0.6666666666666666, 0.9230769230769231);
         assertTrue(rules.contains(expectedRule));
     }
 
     @Test
     public void apriori() throws URISyntaxException, FakieException {
-        URL iris = getClass().getClassLoader().getResource("arff/wikipedia.arff");
-        assert iris != null : "Could not find wikipedia data set";
+        URL wikipedia = getClass().getClassLoader().getResource("arff/wikipedia.arff");
+        assert wikipedia != null : "Could not find wikipedia data set";
         ARFFReader arffReader = new ARFFReader();
-        Instances dataset = arffReader.readDataset(Paths.get(iris.toURI()));
+        Instances dataset = arffReader.readDataset(Paths.get(wikipedia.toURI()));
         Apriori apriori = new Apriori();
         Algorithm algorithm = new Association(dataset, apriori, apriori);
         List<Rule> rules = algorithm.generateRules();
@@ -53,7 +53,7 @@ public class AssociationTest {
         And right = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
 
-        Rule expectedRule = new Rule(implication, 12);
+        Rule expectedRule = new Rule(implication, 0.6666666666666666, 0.9230769230769231);
         assertTrue(rules.contains(expectedRule));
     }
 }

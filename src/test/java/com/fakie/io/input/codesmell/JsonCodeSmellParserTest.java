@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 public class JsonCodeSmellParserTest {
     @Test
-    public void name() throws FakieInputException, URISyntaxException {
+    public void parseExampleJson() throws FakieInputException, URISyntaxException {
         URL resource = getClass().getClassLoader().getResource("codesmell/codesmells.json");
         assert resource != null : "Could not locate resource folder";
         File file = new File(resource.toURI());

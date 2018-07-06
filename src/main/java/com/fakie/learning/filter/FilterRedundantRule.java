@@ -16,7 +16,9 @@ public class FilterRedundantRule implements Filter {
             Rule ruleI = rules.get(i);
             for (int j = i + 1; j < rules.size(); j++) {
                 Rule ruleJ = rules.get(j);
-                if (ruleI.getSupport() == ruleJ.getSupport() && ruleI.premises().size() < ruleJ.premises().size()) {
+                if (Double.compare(ruleI.getSupport(), ruleJ.getSupport()) == 0 &&
+                        Double.compare(ruleI.getConfidence(), ruleJ.getConfidence()) == 0 &&
+                        ruleI.premises().size() < ruleJ.premises().size()) {
                     ruleI = ruleJ;
                 }
             }

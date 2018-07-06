@@ -21,7 +21,7 @@ public class FilterNonCodeSmellRuleTest {
         And right = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
 
-        Rule rule = new Rule(implication, 12);
+        Rule rule = new Rule(implication, 1, 1);
         rules.add(rule);
 
         FilterNonCodeSmellRule filterNonCodeSmellRule = new FilterNonCodeSmellRule();
@@ -37,7 +37,7 @@ public class FilterNonCodeSmellRuleTest {
         And right = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", false)));
         Implication implication = new Implication(left, right);
 
-        Rule rule = new Rule(implication, 12);
+        Rule rule = new Rule(implication, 1, 1);
         rules.add(rule);
 
         FilterNonCodeSmellRule filterNonCodeSmellRule = new FilterNonCodeSmellRule();
@@ -53,7 +53,7 @@ public class FilterNonCodeSmellRuleTest {
         And left = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
 
-        Rule rule = new Rule(implication, 12);
+        Rule rule = new Rule(implication, 1, 1);
         rules.add(rule);
 
         FilterNonCodeSmellRule filterNonCodeSmellRule = new FilterNonCodeSmellRule();
@@ -69,7 +69,7 @@ public class FilterNonCodeSmellRuleTest {
         And left = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", false)));
         Implication implication = new Implication(left, right);
 
-        Rule rule = new Rule(implication, 12);
+        Rule rule = new Rule(implication, 1, 1);
         rules.add(rule);
 
         FilterNonCodeSmellRule filterNonCodeSmellRule = new FilterNonCodeSmellRule();

@@ -64,6 +64,8 @@ public class Association implements Algorithm {
             expressions.add(new Expression(item.getAttribute().name(), Boolean.valueOf(item.getItemValueAsString())));
         }
         And right = new And(expressions);
-        return new Rule(new Implication(left, right), associationRule.getTotalSupport());
+        double support = associationRule.getTotalSupport() * 1.0 / dataset.numInstances();
+        double confidence = associationRule.getPrimaryMetricValue();
+        return new Rule(new Implication(left, right), support, confidence);
     }
 }

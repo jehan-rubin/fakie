@@ -6,16 +6,18 @@ import com.fakie.utils.logic.Operator;
 import java.util.Objects;
 
 public class Rule {
-    private final int support;
+    private final double support;
+    private final double confidence;
     private final Implication implication;
 
-    public Rule(Implication implication, int support) {
+    public Rule(Implication implication, double support, double confidence) {
         this.implication = implication;
         this.support = support;
+        this.confidence = confidence;
     }
 
     public Rule contrapositive() {
-        return new Rule(implication.contrapositive(), support);
+        return new Rule(implication.contrapositive(), support, confidence);
     }
 
     public Operator premises() {
@@ -26,8 +28,12 @@ public class Rule {
         return implication.getRight();
     }
 
-    public int getSupport() {
+    public double getSupport() {
         return support;
+    }
+
+    public double getConfidence() {
+        return confidence;
     }
 
     @Override
@@ -37,16 +43,18 @@ public class Rule {
         if (o == null || getClass() != o.getClass())
             return false;
         Rule rule = (Rule) o;
-        return rule.support == support && Objects.equals(implication, rule.implication);
+        return Double.compare(rule.support, support) == 0 &&
+                Double.compare(rule.confidence, confidence) == 0 &&
+                Objects.equals(implication, rule.implication);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(support, implication);
+        return Objects.hash(support, confidence, implication);
     }
 
     @Override
     public String toString() {
-        return "Rule{rule=" + implication + ", support=" + support + '}';
+        return "Rule{rule=" + implication + ", support=" + support + ", confidence=" + confidence + '}';
     }
 }

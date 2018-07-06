@@ -23,7 +23,7 @@ public class ManyToOneTest {
         And right = new And(Collections.singletonList(new Expression("CODE_SMELL_BLOB", true)));
         Implication implication = new Implication(left, right);
 
-        Rule rule = new Rule(implication, 12);
+        Rule rule = new Rule(implication, 1, 1);
         rules.add(rule);
 
         ManyToOne manyToOne = new ManyToOne();
@@ -39,7 +39,7 @@ public class ManyToOneTest {
         And right = new And(Arrays.asList(new Expression("CODE_SMELL_BLOB", true), new Expression("useless_consequences", true)));
         Implication implication = new Implication(left, right);
 
-        Rule rule = new Rule(implication, 12);
+        Rule rule = new Rule(implication, 1, 1);
         rules.add(rule);
 
         ManyToOne manyToOne = new ManyToOne();

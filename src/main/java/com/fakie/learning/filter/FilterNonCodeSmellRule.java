@@ -40,7 +40,7 @@ public class FilterNonCodeSmellRule implements Filter {
     private Rule filterFalseCodeSmell(Rule rule) {
         Operator premises = filterFalseCodeSmell(rule.premises());
         Operator consequences = filterFalseCodeSmell(rule.consequences());
-        return new Rule(new Implication(premises, consequences), rule.getSupport());
+        return new Rule(new Implication(premises, consequences), rule.getSupport(), rule.getConfidence());
     }
 
     private Operator filterFalseCodeSmell(Operator operator) {

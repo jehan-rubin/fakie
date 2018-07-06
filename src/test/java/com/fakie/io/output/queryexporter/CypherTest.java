@@ -50,7 +50,7 @@ public class CypherTest {
 
         URL db = getClass().getClassLoader().getResource(".");
         assert db != null : "Could not locate the resources directory";
-        Rule expectedRule = new Rule(implication, 1);
+        Rule expectedRule = new Rule(implication, 1, 1);
         cypher.exportRulesAsQueries(path, Collections.singletonList(expectedRule));
         assertEquals(1, FileUtils.countFilesInDirectoryPath(path.resolve("CODE_SMELL_BLOB")));
     }

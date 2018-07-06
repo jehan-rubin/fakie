@@ -23,7 +23,7 @@ public class RemoveNonCodeSmellConsequencesTest {
         And right = new And(Arrays.asList(new Expression("CODE_SMELL_BLOB", true), new Expression("useless_consequences", true)));
         Implication implication = new Implication(left, right);
 
-        Rule rule = new Rule(implication, 12);
+        Rule rule = new Rule(implication, 1, 1);
         rules.add(rule);
 
         RemoveNonCodeSmellConsequences removeNonCodeSmellConsequences = new RemoveNonCodeSmellConsequences();
@@ -40,7 +40,7 @@ public class RemoveNonCodeSmellConsequencesTest {
         Or right = new Or(Arrays.asList(new Expression("CODE_SMELL_BLOB", true), new Expression("useless_consequences", true)));
         Implication implication = new Implication(left, right);
 
-        Rule rule = new Rule(implication, 12);
+        Rule rule = new Rule(implication, 1, 1);
         rules.add(rule);
 
         RemoveNonCodeSmellConsequences removeNonCodeSmellConsequences = new RemoveNonCodeSmellConsequences();

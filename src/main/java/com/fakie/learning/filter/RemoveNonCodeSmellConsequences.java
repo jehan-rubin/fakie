@@ -31,7 +31,8 @@ public class RemoveNonCodeSmellConsequences implements Filter {
             for (Expression expression : consequences.getExpressions()) {
                 if (isACodeSmell(expression)) {
                     Operator operator = consequences.newInstance(Collections.singletonList(expression));
-                    result = new Rule(new Implication(rule.premises(), operator), rule.getSupport());
+                    Implication implication = new Implication(rule.premises(), operator);
+                    result = new Rule(implication, rule.getSupport(), rule.getConfidence());
                 }
             }
         }
