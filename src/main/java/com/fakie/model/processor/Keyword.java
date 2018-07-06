@@ -7,7 +7,10 @@ public enum Keyword {
     IS("%s_IS_%s"),
     LOW,
     HIGH,
-    SPLIT("%s_%s");
+    SPLIT("%s_%s"),
+    BELOW("BELOW_%s"),
+    BETWEEN("BETWEEN_%s_AND_%s"),
+    ABOVE("ABOVE_%s");
 
     private final String name;
 

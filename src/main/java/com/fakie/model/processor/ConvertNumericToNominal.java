@@ -5,11 +5,11 @@ import com.fakie.model.graph.Vertex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.security.Key;
 import java.util.*;
 
 public class ConvertNumericToNominal implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
+    private static final int MIN_VALUES = 4;
 
     @Override
     public Graph process(Graph graph) throws ProcessingException {
@@ -50,8 +50,27 @@ public class ConvertNumericToNominal implements Processor {
             }
         }
         numbers.sort((n1, n2) -> Double.compare(n1.doubleValue(), n2.doubleValue()));
+        return partition(value, numbers);
+    }
+
+    private String partition(Number value, List<Number> numbers) {
         int i = numbers.indexOf(value);
         int n = numbers.size();
-        return i > n / 2 ? Keyword.HIGH : Keyword.LOW;
+        if (n < MIN_VALUES) {
+            return value.toString();
+        }
+        int m = (int) Math.sqrt(n);
+        int low = n / m;
+        if (i < low) {
+            return String.format(Keyword.BELOW.toString(), numbers.get(low));
+        }
+        for (int j = 2; j < m - 1; j++) {
+            int q = n * j / m;
+            if (i < q) {
+                return String.format(Keyword.BETWEEN.toString(), numbers.get(j - 1), numbers.get(j));
+            }
+        }
+        int high = n * (m - 1) / m;
+        return String.format(Keyword.ABOVE.toString(), numbers.get(high));
     }
 }
