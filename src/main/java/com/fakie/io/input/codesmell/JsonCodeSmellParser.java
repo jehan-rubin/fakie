@@ -9,6 +9,13 @@ import java.io.IOException;
 import java.util.List;
 
 public class JsonCodeSmellParser implements CodeSmellParser {
+    private static final String EXT = ".json";
+
+    @Override
+    public boolean accept(File file) {
+        return file.isFile() && file.getName().endsWith(EXT);
+    }
+
     @Override
     public List<CodeSmell> parse(File file) throws FakieInputException {
         ObjectMapper objectMapper = new ObjectMapper();

@@ -33,7 +33,7 @@ public class RemoveNonCodeSmellConsequences implements Filter {
         Operator consequences = rule.consequences();
         Rule result = rule;
         if (consequences.getType() == Operator.Type.AND) {
-            for (Expression expression : consequences.getExpressions()) {
+            for (Expression expression : consequences) {
                 if (isACodeSmell(expression)) {
                     Operator operator = consequences.newInstance(Collections.singletonList(expression));
                     Implication implication = new Implication(rule.premises(), operator);

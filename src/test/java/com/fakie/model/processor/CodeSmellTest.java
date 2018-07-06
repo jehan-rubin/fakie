@@ -16,22 +16,23 @@ public class CodeSmellTest {
         Graph graph = MockedGraph.wikipedia();
         CodeSmell godClass = new CodeSmell(Collections.singletonList("class"),
                 Collections.singletonMap("name", "Main"), "God Class");
-        graph = godClass.process(graph);
-        Vertex vertex = graph.getVertices().get(1);
+        Graph processed = godClass.process(graph);
+        Vertex vertex = processed.getVertices().get(1);
+        assertNotEquals(graph, processed);
         assertEquals(true, vertex.getProperties().get("CODE_SMELL_God_Class"));
     }
 
-    @Test(expected = ProcessingException.class)
+    @Test
     public void noMatch() throws ProcessingException {
         Graph graph = MockedGraph.wikipedia();
         CodeSmell godClass = new CodeSmell(Collections.singletonList("method"), new HashMap<>(), "God Class");
-        godClass.process(graph);
+        assertEquals(graph, godClass.process(graph));
     }
 
-    @Test(expected = ProcessingException.class)
+    @Test
     public void tooManyMatches() throws ProcessingException {
         Graph graph = MockedGraph.wikipedia();
         CodeSmell godClass = new CodeSmell(Collections.singletonList("class"), new HashMap<>(), "God Class");
-        godClass.process(graph);
+        assertEquals(graph, godClass.process(graph));
     }
 }

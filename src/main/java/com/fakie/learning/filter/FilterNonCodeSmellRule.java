@@ -48,7 +48,7 @@ public class FilterNonCodeSmellRule implements Filter {
     }
 
     private boolean containsACodeSmell(Operator operator) {
-        for (Expression expression : operator.getExpressions()) {
+        for (Expression expression : operator) {
             if (isACodeSmell(expression) && expression.getValue()) {
                 return true;
             }

@@ -2,6 +2,8 @@ package com.fakie;
 
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.codesmell.JsonCodeSmellParser;
+import com.fakie.io.input.codesmell.PaprikaDetectionParser;
+import com.fakie.io.input.codesmell.ParserFactory;
 import com.fakie.io.input.dataset.ARFFReader;
 import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.io.output.FakieOutputException;
@@ -27,9 +29,17 @@ import java.util.List;
 
 public class Fakie {
     private static final Logger logger = LogManager.getFormatterLogger();
+    private final ParserFactory parserFactory;
     private Graph graph;
     private List<Rule> rules;
     private List<CodeSmell> codeSmells;
+
+    public Fakie() {
+        parserFactory = new ParserFactory(
+                new JsonCodeSmellParser(),
+                new PaprikaDetectionParser()
+        );
+    }
 
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {
         logger.info("Loading Neo4j Database");
@@ -40,7 +50,7 @@ public class Fakie {
     }
 
     public void addCodeSmellToGraph(File file) throws FakieInputException {
-        codeSmells = new JsonCodeSmellParser().parse(file);
+        codeSmells = parserFactory.createInstance(file).parse(file);
     }
 
     public void fpGrowth(int n, double support) throws FakieException {

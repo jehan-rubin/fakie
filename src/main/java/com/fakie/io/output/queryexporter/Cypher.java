@@ -77,7 +77,7 @@ public class Cypher implements QueryExporter {
 
     private void createAndAddQueryToQueries(Map<String, JcQuery> queries, Rule rule, Concatenate concatenate) {
         JcQuery jcQuery = convertPremisesToQuery(rule.premises(), concatenate);
-        for (Expression expression : rule.consequences().getExpressions()) {
+        for (Expression expression : rule.consequences()) {
             queries.put(expression.getAttribute(), jcQuery);
         }
     }
@@ -90,7 +90,7 @@ public class Cypher implements QueryExporter {
         clauses.add(start);
         Concat concat = WHERE.BR_OPEN();
         Concatenator c = null;
-        for (Expression expression : premises.getExpressions()) {
+        for (Expression expression : premises) {
             if (c != null) {
                 concat = concatenate.apply(c);
             }

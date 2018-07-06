@@ -2,10 +2,13 @@ package com.fakie.model.processor;
 
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class CodeSmell implements Processor {
+    private static final Logger logger = LogManager.getFormatterLogger();
     private final List<String> labels;
     private final Map<String, Object> properties;
     private final String name;
@@ -21,10 +24,12 @@ public class CodeSmell implements Processor {
         List<Vertex> bestMatches = graph.bestMatches(labels, properties);
         int size = bestMatches.size();
         if (size > 1) {
-            throw new ProcessingException("Find too many matches (" + size + ") for " + labels + " " + properties);
+            logger.debug("Find too many matches (" + size + ") for " + labels + " " + properties);
+            return graph;
         }
         else if (bestMatches.isEmpty()) {
-            throw new ProcessingException("Could not find a match for " + labels + " " + properties);
+            logger.debug("Could not find a match for " + labels + " " + properties);
+            return graph;
         }
         Vertex match = bestMatches.get(0);
         Graph processed = new Graph();

@@ -1,12 +1,13 @@
 package com.fakie.utils.logic;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public abstract class Operator {
+public abstract class Operator implements Iterable<Expression> {
     private final Type type;
     private final List<Expression> expressions;
 
@@ -21,6 +22,11 @@ public abstract class Operator {
 
     public List<Expression> getExpressions() {
         return new ArrayList<>(expressions);
+    }
+
+    @Override
+    public Iterator<Expression> iterator() {
+        return expressions.iterator();
     }
 
     public abstract Operator negation();
