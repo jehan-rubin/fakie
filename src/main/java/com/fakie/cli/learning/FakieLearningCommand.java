@@ -19,6 +19,14 @@ public abstract class FakieLearningCommand extends FakieSubCommand {
             description = "Path to the file containing the code smells in the database")
     private File file;
 
+    @CommandLine.Option(names = {"-n", "--nb-rules"}, description = "Number of rules to find",
+            showDefaultValue = CommandLine.Help.Visibility.ALWAYS)
+    protected int n = 10000;
+
+    @CommandLine.Option(names = {"-s", "--min-support"}, description = "Minimum support bound",
+            showDefaultValue = CommandLine.Help.Visibility.ALWAYS)
+    protected double support = 0.1;
+
     @Override
     protected void process() {
         try {

@@ -12,14 +12,6 @@ import picocli.CommandLine;
 public class FPGrowthAlgorithm extends FakieLearningCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 
-    @CommandLine.Option(names = {"-n", "--nb-rules"}, description = "Number of rules to find",
-            showDefaultValue = CommandLine.Help.Visibility.ALWAYS)
-    private int n = 10000;
-
-    @CommandLine.Option(names = {"-s", "--min-support"}, description = "Minimum support bound",
-            showDefaultValue = CommandLine.Help.Visibility.ALWAYS)
-    private double support = 0.1;
-
     @Override
     public void applyAlgorithm() {
         logger.debug("Using FPGrowth algorithm");

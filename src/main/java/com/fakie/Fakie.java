@@ -3,27 +3,23 @@ package com.fakie;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.codesmell.JsonCodeSmellParser;
 import com.fakie.io.input.dataset.ARFFReader;
-import com.fakie.io.input.dataset.DatasetReader;
 import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.io.output.FakieOutputException;
-import com.fakie.io.output.graphdumper.GraphDumper;
 import com.fakie.io.output.graphdumper.GraphToARFF;
 import com.fakie.io.output.queryexporter.Cypher;
-import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
-import com.fakie.learning.association.Association;
-import com.fakie.learning.filter.*;
-import com.fakie.model.processor.CodeSmell;
+import com.fakie.learning.association.Orchestrator;
+import com.fakie.learning.filter.FilterNonCodeSmellRule;
+import com.fakie.learning.filter.FilterRedundantRule;
+import com.fakie.learning.filter.ManyToOne;
+import com.fakie.learning.filter.RemoveNonCodeSmellConsequences;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.*;
 import com.fakie.utils.exceptions.FakieException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import weka.associations.Apriori;
-import weka.associations.AssociationRulesProducer;
-import weka.associations.Associator;
 import weka.associations.FPGrowth;
-import weka.core.Instances;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -52,19 +48,28 @@ public class Fakie {
         fpGrowth.setNumRulesToFind(n);
         fpGrowth.setMinMetric(support);
         fpGrowth.setLowerBoundMinSupport(support);
-        association(fpGrowth);
+        Orchestrator fpGrowthOrchestrator = new Orchestrator();
+        fpGrowthOrchestrator.useAssociationAlgorithm(fpGrowth);
+        orchestrateLearning(fpGrowthOrchestrator);
     }
 
-    public void apriori() throws FakieException {
-        association(new Apriori());
+    public void apriori(int n, double support) throws FakieException {
+        Apriori apriori = new Apriori();
+        apriori.setNumRules(n);
+        apriori.setMinMetric(support);
+        apriori.setLowerBoundMinSupport(support);
+        Orchestrator aprioriOrchestrator = new Orchestrator();
+        aprioriOrchestrator.useAssociationAlgorithm(apriori);
+        orchestrateLearning(aprioriOrchestrator);
     }
 
-    private <T extends Associator & AssociationRulesProducer> void association(T t) throws FakieException {
+    private void orchestrateLearning(Orchestrator orchestrator) throws FakieException {
         if (graph == null) {
             logger.warn("The graph could not be found. Aborting association algorithm");
             return;
         }
-        applyProcessors(
+        orchestrator.useGraph(graph);
+        orchestrator.useProcessors(
                 new ApplyCodeSmellOnGraph(codeSmells),
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
@@ -73,58 +78,23 @@ public class Fakie {
                 new ConvertNominalToBoolean(),
                 new RemovePropertiesWithASingleValue()
         );
-
-        Path datasetPath = dumpGraphToFile(new GraphToARFF());
-        Instances dataset = readDataset(new ARFFReader(), datasetPath);
-        Association association = new Association(dataset, t, t);
-        rules = association.generateRules();
-        generatedRules(rules);
-
-        filterRules(
+        orchestrator.useGraphDumper(new GraphToARFF());
+        orchestrator.useDatasetReader(new ARFFReader());
+        orchestrator.useFilters(
                 new FilterNonCodeSmellRule(),
                 new RemoveNonCodeSmellConsequences(),
                 new ManyToOne(),
                 new FilterRedundantRule()
         );
-
-        filteredRules(rules);
+        rules = orchestrator.orchestrate();
+        logRules(rules);
     }
 
-    private <T> T readDataset(DatasetReader<T> reader, Path datasetPath) throws FakieInputException {
-        return reader.readDataset(datasetPath);
-    }
-
-    private void applyProcessors(Processor... processors) throws ProcessingException {
-        for (Processor processor : processors) {
-            this.graph = processor.process(graph);
-        }
-    }
-
-    private Path dumpGraphToFile(GraphDumper graphDumper) throws FakieOutputException {
-        return graphDumper.dump(graph);
-    }
-
-    private void filterRules(Filter... filters) throws LearningException {
-        for (Filter filter : filters) {
-            rules = filter.filter(rules);
-        }
-    }
-
-    private void generatedRules(List<Rule> rules) {
-        if (rules.isEmpty()) {
-            logger.warn("Could not generate rules from the dataset");
-        } else {
-            logger.info("Generated rules (%d)", rules.size());
-            for (Rule rule : rules) {
-                logger.debug("\t %s", rule);
-            }
-        }
-    }
-
-    private void filteredRules(List<Rule> rules) {
+    private void logRules(List<Rule> rules) {
         if (rules.isEmpty()) {
             logger.warn("No rules left after filtering");
-        } else {
+        }
+        else {
             logger.info("Filtered rules (%d)", rules.size());
             for (Rule rule : rules) {
                 logger.info("\t %s", rule);

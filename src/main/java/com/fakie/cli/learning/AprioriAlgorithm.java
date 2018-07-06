@@ -7,7 +7,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "apriori",
-        customSynopsis = "fakie GRAPH_LOADER apriori [-hV] QUERY_EXPORTER",
+        customSynopsis = "fakie GRAPH_LOADER apriori [-hV] -f=<file> [-n=<n>] [-s=<support>] QUERY_EXPORTER",
         description = "Use the  Apriori algorithm on the dataset")
 public class AprioriAlgorithm extends FakieLearningCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
@@ -16,7 +16,7 @@ public class AprioriAlgorithm extends FakieLearningCommand {
     public void applyAlgorithm() {
         logger.debug("Using Apriori algorithm");
         try {
-            fakie().apriori();
+            fakie().apriori(n, support);
         }
         catch (FakieException e) {
             logger.error(e);
