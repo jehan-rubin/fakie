@@ -1,5 +1,8 @@
 # Fakie
 
+[![Build Status](https://travis-ci.org/alexandre-clement/fakie.svg?branch=master)](https://travis-ci.org/alexandre-clement/fakie)
+[![Coverage Status](https://coveralls.io/repos/github/alexandre-clement/fakie/badge.svg?branch=master)](https://coveralls.io/github/alexandre-clement/fakie?branch=master)
+
 Mining Mobile Apps to Learn Design Patterns and Code Smells.
 Fakie is a tool to automatically generate the Antipattern Queries from the Graph DB for [Paprika](https://github.com/Sriki13/paprika).  
 
