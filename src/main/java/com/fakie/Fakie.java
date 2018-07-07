@@ -1,5 +1,6 @@
 package com.fakie;
 
+import com.fakie.io.IOPath;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.codesmell.JsonCodeSmellParser;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
@@ -18,6 +19,7 @@ import com.fakie.learning.filter.RemoveNonCodeSmellConsequences;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.*;
 import com.fakie.utils.exceptions.FakieException;
+import com.fakie.utils.paprika.PaprikaAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import weka.associations.Apriori;
@@ -41,6 +43,10 @@ public class Fakie {
         );
     }
 
+    public void runPaprikaAnalyse(File androidJars, File apk, File info, Path db) throws FakieInputException {
+        new PaprikaAccessor(androidJars, apk, info).analyse(db);
+    }
+
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {
         logger.info("Loading Neo4j Database");
         try (Neo4j neo4j = new Neo4j(db)) {
@@ -54,6 +60,7 @@ public class Fakie {
     }
 
     public void fpGrowth(int n, double support) throws FakieException {
+        logger.info("Applying FPGrowth on dataset with %d rules and a min support of %f", n, support);
         FPGrowth fpGrowth = new FPGrowth();
         fpGrowth.setNumRulesToFind(n);
         fpGrowth.setMinMetric(support);
@@ -64,6 +71,7 @@ public class Fakie {
     }
 
     public void apriori(int n, double support) throws FakieException {
+        logger.info("Applying Apriori on dataset with %d rules and a min support of %f", n, support);
         Apriori apriori = new Apriori();
         apriori.setNumRules(n);
         apriori.setMinMetric(support);

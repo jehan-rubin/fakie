@@ -3,6 +3,7 @@ package com.fakie.cli;
 
 import com.fakie.Fakie;
 import com.fakie.cli.dataset.LoadNeo4jDatabase;
+import com.fakie.cli.paprika.PaprikaAnalyse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
@@ -19,8 +20,10 @@ import java.util.List;
                     "%n ██║     ██║  ██║██║  ██╗██║███████╗" +
                     "%n ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝%n"},
         description = {"Mining Mobile Apps to Learn Design Patterns and Code Smells."},
-        customSynopsis = "fakie [-hV] GRAPH_LOADER",
-        subcommands = {LoadNeo4jDatabase.class})
+        subcommands = {
+                PaprikaAnalyse.class,
+                LoadNeo4jDatabase.class
+        })
 public class FakieCLI extends FakieCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
     private final Std std;
@@ -28,7 +31,7 @@ public class FakieCLI extends FakieCommand {
     private final CommandLine commandLine;
 
     public FakieCLI() {
-        this(new Std(System.out, System.err), new Fakie());
+        this(new Std(), new Fakie());
         logger.debug("Running Fakie CLI with the standard output and the standard error output");
     }
 
@@ -36,6 +39,7 @@ public class FakieCLI extends FakieCommand {
         this.std = std;
         this.fakie = fakie;
         this.commandLine = new CommandLine(this);
+        std.disableSystemOutput();
     }
 
     @Override

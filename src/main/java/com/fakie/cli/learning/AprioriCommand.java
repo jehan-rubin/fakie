@@ -6,17 +6,16 @@ import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-        name = "fpgrowth", aliases = {"fpg"},
-        customSynopsis = "fakie GRAPH_LOADER fpgrowth [-hV] -f=<file> [-n=<n>] [-s=<support>] QUERY_EXPORTER",
-        description = "Use the  FPGrowth algorithm on the dataset")
-public class FPGrowthAlgorithm extends FakieLearningCommand {
+        name = "apriori",
+        description = "Use the  Apriori algorithm on the dataset")
+public class AprioriCommand extends FakieLearningCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 
     @Override
     public void applyAlgorithm() {
-        logger.debug("Using FPGrowth algorithm");
+        logger.debug("Using Apriori algorithm");
         try {
-            fakie().fpGrowth(n, support);
+            fakie().apriori(n, support);
         }
         catch (FakieException e) {
             logger.error(e);

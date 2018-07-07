@@ -1,22 +1,23 @@
-package com.fakie.cli.dataset;
+package com.fakie.cli.paprika;
 
 import com.fakie.cli.FakieSubCommand;
 import com.fakie.cli.learning.AprioriCommand;
 import com.fakie.cli.learning.FPGrowthCommand;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
 @CommandLine.Command(
         commandListHeading = "@|bold %nLearning Algorithm|@:%n",
         subcommands = {FPGrowthCommand.class, AprioriCommand.class})
-public abstract class GraphLoaderCommand extends FakieSubCommand {
-    private static final Logger logger = LogManager.getFormatterLogger();
+public abstract class PaprikaCommand extends FakieSubCommand {
+    @Override
+    public void run() {
+        process();
+    }
 
     @Override
     protected void process() {
-        loadGraph();
+        runPaprika();
     }
 
-    protected abstract void loadGraph();
+    protected abstract void runPaprika();
 }

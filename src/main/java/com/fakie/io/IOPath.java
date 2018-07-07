@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public enum IOPath {
+    DB("db"),
     GRAPH_DIRECTORY("dataset"),
     GRAPH_FILENAME("graph.fakie"),
     QUERY_FOLDER("queries"),

@@ -19,6 +19,10 @@ public abstract class FakieLearningCommand extends FakieSubCommand {
             description = "Path to the file containing the code smells in the database")
     private File file;
 
+    @CommandLine.Option(names = {"-d", "--dataset"},
+            description = "Path to the dataset")
+    private File dataset;
+
     @CommandLine.Option(names = {"-n", "--nb-rules"}, description = "Number of rules to find",
             showDefaultValue = CommandLine.Help.Visibility.ALWAYS)
     protected int n = 10000;
