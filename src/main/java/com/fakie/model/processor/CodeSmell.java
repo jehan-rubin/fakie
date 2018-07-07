@@ -43,6 +43,7 @@ public class CodeSmell implements Processor {
                 processed.addVertex(vertex);
             }
         }
+        logger.debug("Successfully applied %s on %s", this, match);
         return processed;
     }
 
