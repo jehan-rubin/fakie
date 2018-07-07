@@ -6,6 +6,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PaprikaDetectionParser implements CodeSmellParser {
+    private static final Logger logger = LogManager.getFormatterLogger();
     private static final String[] EXT = new String[]{"csv"};
     private static final Pattern FILENAME = Pattern.compile("([A-Z])+");
 
@@ -25,6 +28,7 @@ public class PaprikaDetectionParser implements CodeSmellParser {
 
     @Override
     public List<CodeSmell> parse(File file) throws FakieInputException {
+        logger.info("Parsing %s as a Paprika detection output folder", file);
         return parseDirectory(file);
     }
 
@@ -42,6 +46,7 @@ public class PaprikaDetectionParser implements CodeSmellParser {
     }
 
     private List<CodeSmell> parseFile(File file, String name) throws FakieInputException {
+        logger.info("Parsing %s", file);
         List<CodeSmell> codeSmells = new ArrayList<>();
         try {
             CSVParser csv = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT.withHeader());
