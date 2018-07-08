@@ -43,8 +43,14 @@ public class Fakie {
         );
     }
 
-    public void runPaprikaAnalyse(File androidJars, File apk, File info, Path db) throws FakieInputException {
-        new PaprikaAccessor(androidJars, apk, info).analyse(db);
+    public void runPaprikaAnalyse(File androidJars, File apk, File info, Path db) throws FakieException {
+        logger.info("Running Paprika analyse on %s", db);
+        new PaprikaAccessor().analyse(androidJars, apk, info, db);
+    }
+
+    public void runPaprikaQuery(Path db) {
+        logger.info("Running Paprika query on %s", db);
+        new PaprikaAccessor().query(db);
     }
 
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {

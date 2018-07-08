@@ -24,11 +24,11 @@ public class CodeSmell implements Processor {
         List<Vertex> bestMatches = graph.bestMatches(labels, properties);
         int size = bestMatches.size();
         if (size > 1) {
-            logger.debug("Find too many matches (" + size + ") for " + labels + " " + properties);
+            logger.warn("Find too many matches (" + size + ") for " + labels + " " + properties);
             return graph;
         }
         else if (bestMatches.isEmpty()) {
-            logger.debug("Could not find a match for " + labels + " " + properties);
+            logger.warn("Could not find a match for " + labels + " " + properties);
             return graph;
         }
         Vertex match = bestMatches.get(0);
@@ -43,7 +43,7 @@ public class CodeSmell implements Processor {
                 processed.addVertex(vertex);
             }
         }
-        logger.debug("Successfully applied %s on %s", this, match);
+        logger.info("Successfully applied %s on %s", this, match);
         return processed;
     }
 

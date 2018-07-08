@@ -1,7 +1,7 @@
 package com.fakie.cli.paprika;
 
 import com.fakie.io.IOPath;
-import com.fakie.io.input.FakieInputException;
+import com.fakie.utils.exceptions.FakieException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
@@ -9,7 +9,10 @@ import picocli.CommandLine;
 import java.io.File;
 import java.nio.file.Path;
 
-@CommandLine.Command(name = "analyse", description = "Run Paprika analyse on given folder")
+@CommandLine.Command(
+        name = "analyse",
+        subcommands = {PaprikaQuery.class},
+        description = "Run Paprika analyse on given folder")
 public class PaprikaAnalyse extends PaprikaCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 
@@ -22,7 +25,7 @@ public class PaprikaAnalyse extends PaprikaCommand {
     @CommandLine.Option(names = {"-i", "--info-apk"}, required = true, description = "Path to the info apk file")
     private File info;
 
-    @CommandLine.Option(names = {"-d", "--database"}, description = "Path to the info Paprika db")
+    @CommandLine.Option(names = {"-db", "--database"}, description = "Path to the info Paprika db")
     private Path db = IOPath.DB.asPath();
 
     @Override
@@ -30,7 +33,7 @@ public class PaprikaAnalyse extends PaprikaCommand {
         try {
             fakie().runPaprikaAnalyse(androidJars, apk, info, db);
         }
-        catch (FakieInputException e) {
+        catch (FakieException e) {
             logger.error(e);
         }
     }

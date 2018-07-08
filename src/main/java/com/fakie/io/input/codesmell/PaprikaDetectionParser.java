@@ -18,34 +18,43 @@ import java.util.regex.Pattern;
 
 public class PaprikaDetectionParser implements CodeSmellParser {
     private static final Logger logger = LogManager.getFormatterLogger();
-    private static final String[] EXT = new String[]{"csv"};
+    private static final String CSV = "csv";
+    private static final String[] EXT = new String[]{CSV};
     private static final Pattern FILENAME = Pattern.compile("([A-Z])+");
 
     @Override
     public boolean accept(File file) {
-        return file.isDirectory();
+        return file.isDirectory() || file.getName().endsWith(CSV);
     }
 
     @Override
     public List<CodeSmell> parse(File file) throws FakieInputException {
         logger.info("Parsing %s as a Paprika detection output folder", file);
-        return parseDirectory(file);
+        if (file.isDirectory()) {
+            return parseDirectory(file);
+        } else {
+            return parseFile(file);
+        }
     }
 
     private List<CodeSmell> parseDirectory(File file) throws FakieInputException {
         Collection<File> files = FileUtils.listFiles(file, EXT, false);
         List<CodeSmell> codeSmells = new ArrayList<>();
         for (File csv : files) {
-            Optional<String> name = codeSmellName(csv.getName());
-            if (name.isPresent()) {
-                codeSmells.addAll(parseFile(csv, name.get()));
-            }
-
+            codeSmells.addAll(parseFile(csv));
         }
         return codeSmells;
     }
 
-    private List<CodeSmell> parseFile(File file, String name) throws FakieInputException {
+    private List<CodeSmell> parseFile(File file) throws FakieInputException {
+        Optional<String> name = codeSmellName(file.getName());
+        if (name.isPresent()) {
+            return parseCSV(file, name.get());
+        }
+        return new ArrayList<>();
+    }
+
+    private List<CodeSmell> parseCSV(File file, String name) throws FakieInputException {
         logger.info("Parsing %s", file);
         List<CodeSmell> codeSmells = new ArrayList<>();
         try {
