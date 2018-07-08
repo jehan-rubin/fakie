@@ -20,7 +20,7 @@ public class PaprikaDetectionParser implements CodeSmellParser {
     private static final Logger logger = LogManager.getFormatterLogger();
     private static final String CSV = "csv";
     private static final String[] EXT = new String[]{CSV};
-    private static final Pattern FILENAME = Pattern.compile("([A-Z])+");
+    private static final Pattern FILENAME = Pattern.compile("([A-Z]+)");
 
     @Override
     public boolean accept(File file) {
@@ -32,7 +32,8 @@ public class PaprikaDetectionParser implements CodeSmellParser {
         logger.info("Parsing %s as a Paprika detection output folder", file);
         if (file.isDirectory()) {
             return parseDirectory(file);
-        } else {
+        }
+        else {
             return parseFile(file);
         }
     }
@@ -57,8 +58,7 @@ public class PaprikaDetectionParser implements CodeSmellParser {
     private List<CodeSmell> parseCSV(File file, String name) throws FakieInputException {
         logger.info("Parsing %s", file);
         List<CodeSmell> codeSmells = new ArrayList<>();
-        try {
-            CSVParser csv = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT.withHeader());
+        try (CSVParser csv = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT.withHeader())) {
             Map<String, Integer> headerMap = csv.getHeaderMap();
             for (CSVRecord record : csv) {
                 Map<String, Object> properties = new HashMap<>();

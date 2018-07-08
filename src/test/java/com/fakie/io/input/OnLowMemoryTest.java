@@ -4,6 +4,7 @@ import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.model.graph.Edge;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
+import com.fakie.utils.Zipper;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
@@ -27,12 +28,7 @@ public class OnLowMemoryTest {
 
     @Before
     public void setUp() throws URISyntaxException, ZipException {
-        URL db = getClass().getClassLoader().getResource(Paths.get("db").toString());
-        assert db != null : "Could not locate the db directory";
-        Path path = new File(db.toURI()).toPath();
-        ZipFile zipFile = new ZipFile(path.resolve(NAME + ".zip").toFile());
-        dir = path.resolve(NAME).toFile();
-        zipFile.extractAll(path.toString());
+        dir = Zipper.unzip(NAME);
     }
 
     @After

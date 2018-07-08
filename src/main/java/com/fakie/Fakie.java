@@ -48,9 +48,9 @@ public class Fakie {
         new PaprikaAccessor().analyse(androidJars, apk, info, db);
     }
 
-    public void runPaprikaQuery(Path db) {
+    public void runPaprikaQuery(Path db, String suffix) {
         logger.info("Running Paprika query on %s", db);
-        new PaprikaAccessor().query(db);
+        new PaprikaAccessor().query(db, suffix);
     }
 
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {

@@ -10,8 +10,11 @@ public class PaprikaQuery extends PaprikaCommand {
     @CommandLine.Option(names = {"-db", "--database"}, description = "Path to the info Paprika db")
     private Path db = IOPath.DB.asPath();
 
+    @CommandLine.Option(names = {"-s", "--suffix"}, description = "Suffix for the csv filename")
+    private String suffix = "";
+
     @Override
     protected void runPaprika() {
-        fakie().runPaprikaQuery(db);
+        fakie().runPaprikaQuery(db, suffix);
     }
 }

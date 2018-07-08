@@ -1,0 +1,5 @@
+app_key,lack_of_cohesion_in_methods,number_of_methods,number_of_attributes,full_name,fuzzy_value
+org.torproject.android,177,22,11,org.torproject.android.vpn.OrbotVpnService,0.556
+org.torproject.android,2606,77,33,org.torproject.android.service.TorService,1
+org.torproject.android,1503,58,27,org.torproject.android.OrbotMainActivity,1
+org.torproject.android,184,21,9,org.torproject.android.settings.TorifiedApp,0.097

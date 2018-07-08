@@ -10,11 +10,13 @@ import org.apache.logging.log4j.Logger;
 import org.neo4j.graphdb.GraphDatabaseService;
 import paprika.analyzer.SootAnalyzer;
 import paprika.entities.PaprikaApp;
+import paprika.neo4j.BLOBQuery;
 import paprika.neo4j.DatabaseManager;
 import paprika.neo4j.ModelToGraph;
 import paprika.neo4j.QueryEngine;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,8 +38,18 @@ public class PaprikaAccessor {
         close(modelToGraph);
     }
 
-    public void query(Path db) {
+    public void query(Path db, String suffix) {
         QueryEngine queryEngine = new QueryEngine(db.toString());
+        queryEngine.setCsvPrefix(suffix);
+        BLOBQuery blobQuery = BLOBQuery.createBLOBQuery(queryEngine);
+        try {
+            blobQuery.executeFuzzy(true);
+        }
+        catch (IOException e) {
+            logger.error(e);
+        } finally {
+            queryEngine.shutDown();
+        }
     }
 
     private void analyseApk(File androidJars, File apk, Path db, APKInfo.Entry entry, ModelToGraph modelToGraph) {
