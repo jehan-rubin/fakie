@@ -39,7 +39,7 @@ public class Graph {
         return new HashSet<>(labels.get(label));
     }
 
-    public List<Vertex> bestMatches(List<String> labels, Map<String, Object> properties) {
+    public List<Vertex> matches(List<String> labels, Map<String, Object> properties) {
         List<Vertex> bestMatches = new ArrayList<>();
         for (Vertex vertex : getVertices()) {
             if (vertex.getLabels().containsAll(labels) &&

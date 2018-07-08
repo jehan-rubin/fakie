@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CodeSmell implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
@@ -21,7 +22,7 @@ public class CodeSmell implements Processor {
 
     @Override
     public Graph process(Graph graph) throws ProcessingException {
-        List<Vertex> bestMatches = graph.bestMatches(labels, properties);
+        Set<Vertex> bestMatches = bestMatches(graph);
         int size = bestMatches.size();
         if (size > 1) {
             logger.warn("Find too many matches (" + size + ") for " + labels + " " + properties);
@@ -31,7 +32,7 @@ public class CodeSmell implements Processor {
             logger.warn("Could not find a match for " + labels + " " + properties);
             return graph;
         }
-        Vertex match = bestMatches.get(0);
+        Vertex match = bestMatches.iterator().next();
         Graph processed = new Graph();
         for (Vertex vertex : graph.getVertices()) {
             if (vertex.equals(match)) {
@@ -45,6 +46,34 @@ public class CodeSmell implements Processor {
         }
         logger.info("Successfully applied %s on %s", this, match);
         return processed;
+    }
+
+    private Set<Vertex> bestMatches(Graph graph) {
+        Map<Integer, Set<Vertex>> matches = new HashMap<>();
+        for (Vertex vertex : graph.getVertices()) {
+            int match = 0;
+            List<String> vertexLabels = vertex.getLabels();
+            for (String label : this.labels) {
+                if (vertexLabels.contains(label)) {
+                    match += 1;
+                }
+            }
+            List<String> values = vertex.getProperties().values().stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
+            for (Object o : properties.values()) {
+                if (values.contains(o.toString())) {
+                    match += 1;
+                }
+            }
+            matches.putIfAbsent(match, new HashSet<>());
+            matches.get(match).add(vertex);
+        }
+        Optional<Integer> max = matches.keySet().stream().max(Integer::compareTo);
+        if (max.isPresent()) {
+            return matches.get(max.get());
+        }
+        return new HashSet<>();
     }
 
     private String formatName() {
