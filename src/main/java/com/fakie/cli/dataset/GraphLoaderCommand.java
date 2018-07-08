@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-        commandListHeading = "@|bold %nLearning Algorithm|@:%n",
         subcommands = {FPGrowthCommand.class, AprioriCommand.class})
 public abstract class GraphLoaderCommand extends FakieSubCommand {
     private static final Logger logger = LogManager.getFormatterLogger();

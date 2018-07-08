@@ -10,7 +10,6 @@ import picocli.CommandLine;
 import java.io.File;
 
 @CommandLine.Command(
-        commandListHeading = "@|bold %nQuery Exporter|@:%n",
         subcommands = {CypherExporter.class})
 public abstract class FakieLearningCommand extends FakieSubCommand {
     private static final Logger logger = LogManager.getFormatterLogger();

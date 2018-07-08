@@ -25,7 +25,71 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 
 ## Usage
 
-Usage : `fakie [-hV] GRAPH_LOADER LEARNING_ALGORITHM QUERY_EXPORTER`
+```
+ ███████╗ █████╗ ██╗  ██╗██╗███████╗
+ ██╔════╝██╔══██╗██║ ██╔╝██║██╔════╝
+ █████╗  ███████║█████╔╝ ██║█████╗
+ ██╔══╝  ██╔══██║██╔═██╗ ██║██╔══╝
+ ██║     ██║  ██║██║  ██╗██║███████╗
+ ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝
+
+Usage: fakie [-hV] [COMMAND]
+
+Description:
+  Mining Mobile Apps to Learn Design Patterns and Code Smells.
+
+Options:
+  -h, --help      Show this help message and exit.
+  -V, --version   Print version information and exit.
+
+Commands:
+  analyse     Run Paprika analyse on given folder
+  query       Run Paprika query on the given db
+  load-neo4j  Import Android applications from a Neo4j database.
+ ```
+ 
+### Analyse
+
+```
+Usage: fakie analyse [-hV] -a=<androidJars> [-db=<db>] -f=<apk> -i=<info>
+                     [COMMAND]
+
+Description:
+  Run Paprika analyse on given folder
+
+Options:
+  -a, --android=<androidJars>
+                             Path to the android platform jars
+      -db, --database=<db>   Path to the info Paprika db
+  -f, --apk-folder=<apk>     Path to the apk folder
+  -h, --help                 Show this help message and exit.
+  -i, --info-apk=<info>      Path to the info apk file
+  -V, --version              Print version information and exit.
+
+Commands:
+  query     Run Paprika query on the given db
+  fpgrowth  Use the  FPGrowth algorithm on the dataset
+  apriori   Use the  Apriori algorithm on the dataset
+```
+
+### Query
+
+```
+Usage: fakie query [-hV] [-db=<db>] [-s=<suffix>] [COMMAND]
+
+Description:
+  Run Paprika query on the given db
+
+Options:
+      -db, --database=<db>   Path to the info Paprika db
+  -h, --help                 Show this help message and exit.
+  -s, --suffix=<suffix>      Suffix for the csv filename
+  -V, --version              Print version information and exit.
+
+Commands:
+  fpgrowth  Use the  FPGrowth algorithm on the dataset
+  apriori   Use the  Apriori algorithm on the dataset
+```
 
 ### Graph loader
 * Neo4j `load-neo4j` : Load graph from a Neo4j database
@@ -134,6 +198,11 @@ This file should look like this (currently, only json is supported) :
 ![Overview](docs/images/overview.svg)
 
 ## Development
+
+### Embedded Paprika
+* Run Paprika Analyse :heavy_check_mark:
+* Run Paprika Query :x:
+* Parse Paprika Query result :heavy_check_mark:
 
 ### Load Graph
 * Neo4j :heavy_check_mark:
