@@ -10,17 +10,17 @@ import org.apache.logging.log4j.Logger;
 import org.neo4j.graphdb.GraphDatabaseService;
 import paprika.analyzer.SootAnalyzer;
 import paprika.entities.PaprikaApp;
-import paprika.neo4j.BLOBQuery;
-import paprika.neo4j.DatabaseManager;
-import paprika.neo4j.ModelToGraph;
-import paprika.neo4j.QueryEngine;
+import paprika.neo4j.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class PaprikaAccessor {
     private static final Logger logger = LogManager.getFormatterLogger();
@@ -41,13 +41,56 @@ public class PaprikaAccessor {
     public void query(Path db, String suffix) {
         QueryEngine queryEngine = new QueryEngine(db.toString());
         queryEngine.setCsvPrefix(suffix);
-        BLOBQuery blobQuery = BLOBQuery.createBLOBQuery(queryEngine);
+        List<Query> queries = new ArrayList<>(Arrays.asList(
+                BLOBQuery.createBLOBQuery(queryEngine),
+                CCQuery.createCCQuery(queryEngine),
+                HeavyAsyncTaskStepsQuery.createHeavyAsyncTaskStepsQuery(queryEngine),
+                HeavyBroadcastReceiverQuery.createHeavyBroadcastReceiverQuery(queryEngine),
+                HashMapUsageQuery.createHashMapUsageQuery(queryEngine),
+                HeavyServiceStartQuery.createHeavyServiceStartQuery(queryEngine),
+                IGSQuery.createIGSQuery(queryEngine),
+                InitOnDrawQuery.createInitOnDrawQuery(queryEngine),
+                InvalidateWithoutRectQuery.createInvalidateWithoutRectQuery(queryEngine),
+                LICQuery.createLICQuery(queryEngine),
+                LMQuery.createLMQuery(queryEngine),
+                MIMQuery.createMIMQuery(queryEngine),
+                NLMRQuery.createNLMRQuery(queryEngine),
+                SAKQuery.createSAKQuery(queryEngine),
+                UnsuitedLRUCacheSizeQuery.createUnsuitedLRUCacheSizeQuery(queryEngine),
+                UnsupportedHardwareAccelerationQuery.createUnsupportedHardwareAccelerationQuery(queryEngine)));
         try {
-            blobQuery.executeFuzzy(true);
+            for (Query query : queries) {
+                query.execute(true);
+            }
         }
         catch (IOException e) {
             logger.error(e);
-        } finally {
+        }
+        finally {
+            queryEngine.shutDown();
+        }
+    }
+
+    public void fuzzyQuery(Path db, String suffix) {
+        QueryEngine queryEngine = new QueryEngine(db.toString());
+        queryEngine.setCsvPrefix(suffix);
+        List<FuzzyQuery> queries = new ArrayList<>(Arrays.asList(
+                BLOBQuery.createBLOBQuery(queryEngine),
+                CCQuery.createCCQuery(queryEngine),
+                HeavyAsyncTaskStepsQuery.createHeavyAsyncTaskStepsQuery(queryEngine),
+                HeavyBroadcastReceiverQuery.createHeavyBroadcastReceiverQuery(queryEngine),
+                HeavyServiceStartQuery.createHeavyServiceStartQuery(queryEngine),
+                LMQuery.createLMQuery(queryEngine),
+                SAKQuery.createSAKQuery(queryEngine)));
+        try {
+            for (FuzzyQuery query : queries) {
+                query.executeFuzzy(true);
+            }
+        }
+        catch (IOException e) {
+            logger.error(e);
+        }
+        finally {
             queryEngine.shutDown();
         }
     }

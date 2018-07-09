@@ -50,7 +50,7 @@ public class Fakie {
 
     public void runPaprikaQuery(Path db, String suffix) {
         logger.info("Running Paprika query on %s", db);
-        new PaprikaAccessor().query(db, suffix);
+        new PaprikaAccessor().fuzzyQuery(db, suffix);
     }
 
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {

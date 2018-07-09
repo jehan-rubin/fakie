@@ -64,8 +64,6 @@ public class PaprikaAnalyseTest {
         paprikaAccessor.analyse(android, apkFolder.toFile(), info, db);
         try (Neo4j neo4j = new Neo4j(db)) {
             Graph graph = neo4j.load();
-            assertEquals(4341, graph.getVertices().size());
-            assertEquals(8200, graph.getEdges().size());
 
             Map<String, Object> properties = graph.getVertices().get(0).getProperties();
             assertEquals(3, properties.get("number_of_interfaces"));

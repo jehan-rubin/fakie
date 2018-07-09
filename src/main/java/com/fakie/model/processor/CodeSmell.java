@@ -25,11 +25,11 @@ public class CodeSmell implements Processor {
         Set<Vertex> bestMatches = bestMatches(graph);
         int size = bestMatches.size();
         if (size > 1) {
-            logger.warn("Find too many matches (" + size + ") for " + labels + " " + properties);
+            logger.warn("Find too many matches (" + size + ") for \'" + name + "\' " + labels + " " + properties);
             return graph;
         }
         else if (bestMatches.isEmpty()) {
-            logger.warn("Could not find a match for " + labels + " " + properties);
+            logger.warn("Could not find a match for \'" + name + "\' " + labels + " " + properties);
             return graph;
         }
         Vertex match = bestMatches.iterator().next();
