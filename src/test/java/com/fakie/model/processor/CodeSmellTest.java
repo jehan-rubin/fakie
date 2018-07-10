@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -16,9 +17,11 @@ public class CodeSmellTest {
         Graph graph = MockedGraph.wikipedia();
         CodeSmell godClass = new CodeSmell(Collections.singletonList("class"),
                 Collections.singletonMap("name", "Main"), "God Class");
-        Graph processed = godClass.process(graph);
-        Vertex vertex = processed.getVertices().get(1);
-        assertNotEquals(graph, processed);
+        List<Vertex> processed = godClass.process(graph.getVertices());
+        Graph newGraph = new Graph();
+        newGraph.addVertices(processed);
+        assertNotEquals(graph.getVertices(), newGraph.getVertices());
+        Vertex vertex = newGraph.getVertices().get(1);
         assertEquals(true, vertex.getProperties().get("CODE_SMELL_God_Class"));
     }
 
@@ -26,13 +29,13 @@ public class CodeSmellTest {
     public void noMatch() throws ProcessingException {
         Graph graph = MockedGraph.wikipedia();
         CodeSmell godClass = new CodeSmell(Collections.singletonList("method"), new HashMap<>(), "God Class");
-        assertEquals(graph, godClass.process(graph));
+        assertEquals(graph.getVertices(), godClass.process(graph.getVertices()));
     }
 
     @Test
     public void tooManyMatches() throws ProcessingException {
         Graph graph = MockedGraph.wikipedia();
         CodeSmell godClass = new CodeSmell(Collections.singletonList("class"), new HashMap<>(), "God Class");
-        assertEquals(graph, godClass.process(graph));
+        assertEquals(graph.getVertices(), godClass.process(graph.getVertices()));
     }
 }

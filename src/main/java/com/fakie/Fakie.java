@@ -97,7 +97,7 @@ public class Fakie {
                 new ApplyCodeSmellOnGraph(codeSmells),
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
-                new ConvertNumericToNominal(),
+                new ConvertNumericToThreshold(),
                 new ProcessOnlyVerticesWithACodeSmell(),
                 new ConvertNominalToBoolean(),
                 new RemovePropertiesWithASingleValue()

@@ -37,23 +37,19 @@ public class ConvertNominalToBoolean implements Processor {
 
     private Vertex convertVertex(Vertex vertex) {
         logger.debug("Converting " + vertex);
-        Map<String, Boolean> booleanProperties = mapNominalToBoolean(vertex);
+        Map<String, Object> booleanProperties = mapNominalToBoolean(vertex);
         return new Vertex(vertex.getId(), vertex.getLabels(), booleanProperties);
     }
 
-    private Map<String, Boolean> mapNominalToBoolean(Vertex vertex) {
-        Map<String, Boolean> booleanProperties = new HashMap<>();
+    private Map<String, Object> mapNominalToBoolean(Vertex vertex) {
+        Map<String, Object> booleanProperties = new HashMap<>();
         for (Map.Entry<String, Object> property : vertex.getProperties().entrySet()) {
             if (property.getValue() instanceof Boolean) {
-                booleanProperties.put(property.getKey(), ((Boolean) property.getValue()));
+                booleanProperties.put(property.getKey(), property.getValue());
             } else {
-                booleanProperties.put(format(property.getKey(), property.getValue()), Boolean.TRUE);
+                booleanProperties.put(Keyword.SPLIT.format(property.getKey(), property.getValue()), Boolean.TRUE);
             }
         }
         return booleanProperties;
-    }
-
-    private String format(String property, Object value) {
-        return String.format(Keyword.IS.toString(), property, value);
     }
 }

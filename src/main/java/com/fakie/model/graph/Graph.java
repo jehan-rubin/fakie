@@ -30,6 +30,12 @@ public class Graph {
         addProperties(vertex);
     }
 
+    public void addVertices(List<Vertex> vertices) {
+        for (Vertex vertex : vertices) {
+            addVertex(vertex);
+        }
+    }
+
     public void addEdge(Edge edge) {
         edges.add(edge);
         addProperties(edge);

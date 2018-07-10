@@ -34,8 +34,18 @@ public class PaprikaQueryTest {
     @Test
     public void torWithOnlyBlobCodeSmells() throws FakieInputException {
         new PaprikaAccessor().query(dir.toPath(), dir.toPath().toString().concat("/"));
-        List<CodeSmell> parse = new PaprikaDetectionParser().parse(dir);
-        assertEquals(4, parse.size());
+        List<CodeSmell> parse = new PaprikaDetectionParser().parse(dir.toPath().resolve("_BLOB_NO_FUZZY.csv").toFile());
+        assertEquals(2, parse.size());
+        parse = new PaprikaDetectionParser().parse(dir);
+        assertEquals(105, parse.size());
+    }
 
+    @Test
+    public void torFuzzyWithOnlyBlobCodeSmells() throws FakieInputException {
+        new PaprikaAccessor().fuzzyQuery(dir.toPath(), dir.toPath().toString().concat("/"));
+        List<CodeSmell> parse = new PaprikaDetectionParser().parse(dir.toPath().resolve("_BLOB.csv").toFile());
+        assertEquals(4, parse.size());
+        parse = new PaprikaDetectionParser().parse(dir);
+        assertEquals(73, parse.size());
     }
 }

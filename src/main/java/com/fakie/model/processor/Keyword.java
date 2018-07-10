@@ -8,9 +8,9 @@ public enum Keyword {
     LOW,
     HIGH,
     SPLIT("%s_%s"),
-    BELOW("BELOW_%s"),
+    BELOW("BELOW"),
     BETWEEN("BETWEEN_%s_AND_%s"),
-    ABOVE("ABOVE_%s");
+    ABOVE("ABOVE");
 
     private final String name;
 
@@ -20,6 +20,10 @@ public enum Keyword {
 
     Keyword(String name) {
         this.name = name;
+    }
+
+    public String format(Object... objects) {
+        return String.format(toString(), objects);
     }
 
     @Override
