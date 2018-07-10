@@ -21,10 +21,11 @@ public class FilterRedundantRule implements Filter {
         while (!temp.isEmpty()) {
             Rule pop = temp.pop();
             for (Rule rule : new ArrayList<>(temp)) {
-                boolean isBetter = isBetter(pop, rule);
-                if (isBetter) {
+                if (isBetter(pop, rule)) {
                     temp.remove(pop);
                     pop = rule;
+                } else if (isBetter(rule, pop)) {
+                    temp.remove(rule);
                 }
             }
             filtered.add(pop);
@@ -33,15 +34,16 @@ public class FilterRedundantRule implements Filter {
     }
 
     private boolean isBetter(Rule ruleI, Rule ruleJ) {
+        boolean sameConsequences = ruleI.consequences().equals(ruleJ.consequences());
         boolean sameSupport = Double.compare(ruleI.getSupport(), ruleJ.getSupport()) == 0;
         boolean sameConfidence = Double.compare(ruleI.getConfidence(), ruleJ.getConfidence()) == 0;
         boolean morePremises = ruleI.premises().size() <= ruleJ.premises().size();
-        boolean sameMetricButMorePremises = sameSupport && sameConfidence && morePremises;
+        boolean sameMetricButMorePremises = sameConsequences && sameSupport && sameConfidence && morePremises;
 
-        boolean sameConsequences = ruleI.consequences().equals(ruleJ.consequences());
-        boolean betterSupport = ruleI.getSupport() <= ruleJ.getSupport();
-        boolean betterConfidence = ruleI.getConfidence() <= ruleJ.getConfidence();
-        boolean betterSupportAndConfidence = sameConsequences && betterSupport && betterConfidence && morePremises;
+        boolean betterSupport = Double.compare(ruleI.getSupport(), ruleJ.getSupport()) <= 0;
+        boolean betterConfidence =  Double.compare(ruleI.getConfidence(), ruleJ.getConfidence()) <= 0;
+        boolean samePremises = ruleI.premises().equals(ruleJ.premises());
+        boolean betterSupportAndConfidence = sameConsequences && betterSupport && betterConfidence && samePremises;
 
         return sameMetricButMorePremises || betterSupportAndConfidence;
     }

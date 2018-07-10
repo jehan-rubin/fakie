@@ -17,6 +17,11 @@ public class Std {
         this.stderr = stderr;
     }
 
+    public void enableSystemOutput() {
+        System.setOut(stdout);
+        System.setErr(stderr);
+    }
+
     public void disableSystemOutput() {
         System.setOut(new NullPrintStream());
         System.setErr(new NullPrintStream());

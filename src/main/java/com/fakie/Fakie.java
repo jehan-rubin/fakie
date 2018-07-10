@@ -1,6 +1,5 @@
 package com.fakie;
 
-import com.fakie.io.IOPath;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.codesmell.JsonCodeSmellParser;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
@@ -58,7 +57,7 @@ public class Fakie {
         try (Neo4j neo4j = new Neo4j(db)) {
             this.graph = neo4j.load();
         }
-        logger.info("Correctly loaded Graph from neo4j database");
+        logger.info("Correctly loaded %s from neo4j database", graph);
     }
 
     public void addCodeSmellToGraph(File file) throws FakieInputException {

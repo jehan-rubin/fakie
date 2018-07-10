@@ -41,7 +41,6 @@ public class FakieCLI extends FakieCommand {
         this.std = std;
         this.fakie = fakie;
         this.commandLine = new CommandLine(this);
-        std.disableSystemOutput();
     }
 
     @Override

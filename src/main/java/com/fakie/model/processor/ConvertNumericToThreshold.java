@@ -71,7 +71,7 @@ public class ConvertNumericToThreshold implements Processor {
         int m = (int) Math.sqrt(n);
         for (int j = 1; j < m; j++) {
             int q = n * j / m;
-            keys.add(new Pair(numbers.get(q), i < q ? Keyword.BELOW : Keyword.ABOVE));
+            keys.add(new Pair(numbers.get(q), i <= q ? Keyword.BELOW : Keyword.ABOVE));
         }
         return keys;
     }
