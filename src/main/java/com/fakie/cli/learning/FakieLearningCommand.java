@@ -7,20 +7,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine;
 
-import java.io.File;
+import java.nio.file.Path;
 
 @CommandLine.Command(
         subcommands = {CypherExporter.class})
 public abstract class FakieLearningCommand extends FakieSubCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
-
-    @CommandLine.Option(names = {"-f", "--file"}, required = true,
-            description = "Path to the file containing the code smells in the database")
-    private File file;
-
-    @CommandLine.Option(names = {"-d", "--dataset"},
-            description = "Path to the dataset")
-    private File dataset;
 
     @CommandLine.Option(names = {"-n", "--nb-rules"}, description = "Number of rules to find",
             showDefaultValue = CommandLine.Help.Visibility.ALWAYS)
@@ -30,10 +22,14 @@ public abstract class FakieLearningCommand extends FakieSubCommand {
             showDefaultValue = CommandLine.Help.Visibility.ALWAYS)
     protected double support = 0.1;
 
+    @CommandLine.Option(names = {"-f", "--file"},
+            description = "Path to the file containing the code smells in the database")
+    private Path codesmell = null;
+
     @Override
     protected void process() {
         try {
-            fakie().addCodeSmellToGraph(file);
+            fakie().addCodeSmellToGraph(codesmell);
             applyAlgorithm();
         }
         catch (FakieInputException e) {

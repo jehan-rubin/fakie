@@ -1,12 +1,12 @@
 package com.fakie.cli.paprika;
 
 import com.fakie.cli.FakieSubCommand;
-import com.fakie.cli.learning.AprioriCommand;
-import com.fakie.cli.learning.FPGrowthCommand;
+import com.fakie.cli.dataset.LoadNeo4jDatabase;
+import com.fakie.cli.macro.Generate;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-        subcommands = {FPGrowthCommand.class, AprioriCommand.class})
+        subcommands = {LoadNeo4jDatabase.class, Generate.class})
 public abstract class PaprikaCommand extends FakieSubCommand {
     @Override
     public void run() {

@@ -7,7 +7,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "fpgrowth", aliases = {"fpg"},
-        description = "Use the  FPGrowth algorithm on the dataset")
+        description = "Use the FPGrowth algorithm on the dataset")
 public class FPGrowthCommand extends FakieLearningCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 

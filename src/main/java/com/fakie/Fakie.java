@@ -1,5 +1,6 @@
 package com.fakie;
 
+import com.fakie.io.IOPath;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.codesmell.JsonCodeSmellParser;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
@@ -31,6 +32,9 @@ import java.util.List;
 public class Fakie {
     private static final Logger logger = LogManager.getFormatterLogger();
     private final ParserFactory parserFactory;
+    private Path db = IOPath.DB.asPath();
+    private Path queries = IOPath.CODE_SMELL.asPath();
+    private Path cypherFolder = IOPath.CYPHER_FOLDER.asPath();
     private Graph graph;
     private List<Rule> rules;
     private List<CodeSmell> codeSmells;
@@ -43,25 +47,37 @@ public class Fakie {
     }
 
     public void runPaprikaAnalyse(File androidJars, File apk, File info, Path db) throws FakieException {
-        logger.info("Running Paprika analyse on %s", db);
-        new PaprikaAccessor().analyse(androidJars, apk, info, db);
+        if (db != null) {
+            this.db = db;
+        }
+        logger.info("Running Paprika analyse on %s", this.db);
+        new PaprikaAccessor().analyse(androidJars, apk, info, this.db);
     }
 
     public void runPaprikaQuery(Path db, String suffix) {
-        logger.info("Running Paprika query on %s", db);
-        new PaprikaAccessor().fuzzyQuery(db, suffix);
+        if (db != null) {
+            this.db = db;
+        }
+        logger.info("Running Paprika query on %s", this.db);
+        this.queries = new PaprikaAccessor().fuzzyQuery(this.db, suffix);
     }
 
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {
-        logger.info("Loading Neo4j Database");
-        try (Neo4j neo4j = new Neo4j(db)) {
+        if (db != null) {
+            this.db = db;
+        }
+        logger.info("Loading Neo4j Database from %s", this.db);
+        try (Neo4j neo4j = new Neo4j(this.db)) {
             this.graph = neo4j.load();
         }
         logger.info("Correctly loaded %s from neo4j database", graph);
     }
 
-    public void addCodeSmellToGraph(File file) throws FakieInputException {
-        codeSmells = parserFactory.createInstance(file).parse(file);
+    public void addCodeSmellToGraph(Path codesmell) throws FakieInputException {
+        if (codesmell != null) {
+            this.queries = codesmell;
+        }
+        codeSmells = parserFactory.createInstance(this.queries.toFile()).parse(this.queries.toFile());
     }
 
     public void fpGrowth(int n, double support) throws FakieException {
@@ -130,9 +146,12 @@ public class Fakie {
             logger.warn("No rules found. Aborting export to Cypher");
             return;
         }
-        logger.info("Exporting rules as Cypher queries in \'" + path + '\'');
+        if (path != null) {
+            cypherFolder = path;
+        }
+        logger.info("Exporting rules as Cypher queries in \'" + this.cypherFolder + '\'');
         Cypher cypher = new Cypher();
-        cypher.exportRulesAsQueries(path, rules);
+        cypher.exportRulesAsQueries(this.cypherFolder, rules);
         logger.info("Successfully exported rules as Cypher queries");
     }
 }

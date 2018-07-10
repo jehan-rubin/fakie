@@ -8,8 +8,12 @@ public enum IOPath {
     DB("db"),
     GRAPH_DIRECTORY("dataset"),
     GRAPH_FILENAME("graph.fakie"),
+    CODE_SMELL("codesmell"),
     QUERY_FOLDER("queries"),
-    CYPHER_FOLDER(QUERY_FOLDER.path.resolve("cypher"));
+    CYPHER_FOLDER(QUERY_FOLDER.path.resolve("cypher")),
+    INFO("info.csv"),
+    APK("apk"),
+    ANDROID("android_platform");
 
     private final String string;
     private final Path path;

@@ -1,6 +1,5 @@
 package com.fakie.cli.query;
 
-import com.fakie.io.IOPath;
 import com.fakie.io.output.FakieOutputException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,12 +12,12 @@ public class CypherExporter extends QueryExporterCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 
     @CommandLine.Option(names = {"-o", "--output"}, description = "Destination folder for the generated queries")
-    private Path path = IOPath.CYPHER_FOLDER.asPath();
+    private Path output = null;
 
     @Override
     protected void createQueries() {
         try {
-            fakie().exportRulesAsCypherQueries(path);
+            fakie().exportRulesAsCypherQueries(output);
         }
         catch (FakieOutputException e) {
             logger.error(e);

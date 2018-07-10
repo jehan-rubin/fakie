@@ -1,5 +1,6 @@
 package com.fakie.utils.paprika;
 
+import com.fakie.io.IOPath;
 import com.fakie.io.input.apk.APKInfo;
 import com.fakie.io.input.apk.CSVInfoReader;
 import com.fakie.utils.exceptions.FakieException;
@@ -15,6 +16,7 @@ import paprika.neo4j.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class PaprikaAccessor {
         }
     }
 
-    public void fuzzyQuery(Path db, String suffix) {
+    public Path fuzzyQuery(Path db, String suffix) {
         QueryEngine queryEngine = new QueryEngine(db.toString());
         queryEngine.setCsvPrefix(suffix);
         List<FuzzyQuery> queries = new ArrayList<>(Arrays.asList(
@@ -93,6 +95,7 @@ public class PaprikaAccessor {
         finally {
             queryEngine.shutDown();
         }
+        return queryResultPath(suffix);
     }
 
     private void analyseApk(File androidJars, File apk, Path db, APKInfo.Entry entry, ModelToGraph modelToGraph) {
@@ -145,5 +148,10 @@ public class PaprikaAccessor {
         catch (IllegalAccessException e) {
             throw new PaprikaException(e);
         }
+    }
+
+    private Path queryResultPath(String suffix) {
+        Path path = Paths.get(suffix + IOPath.QUERY_FOLDER);
+        return path.toAbsolutePath().getParent();
     }
 }

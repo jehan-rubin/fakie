@@ -3,6 +3,7 @@ package com.fakie.cli;
 
 import com.fakie.Fakie;
 import com.fakie.cli.dataset.LoadNeo4jDatabase;
+import com.fakie.cli.macro.Generate;
 import com.fakie.cli.paprika.PaprikaAnalyse;
 import com.fakie.cli.paprika.PaprikaQuery;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +25,8 @@ import java.util.List;
         subcommands = {
                 PaprikaAnalyse.class,
                 PaprikaQuery.class,
-                LoadNeo4jDatabase.class
+                LoadNeo4jDatabase.class,
+                Generate.class
         })
 public class FakieCLI extends FakieCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
@@ -49,7 +51,6 @@ public class FakieCLI extends FakieCommand {
         CommandLine.ParseResult result = commandLine.getParseResult();
         if (!result.hasSubcommand() && !commandLine.isUsageHelpRequested()) {
             logger.warn("Fakie CLI requires at least one command");
-            std().err().println("Choose a graph db loader among the available commands\n");
             commandLine.usage(std.err());
         }
     }

@@ -7,7 +7,7 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "apriori",
-        description = "Use the  Apriori algorithm on the dataset")
+        description = "Use the Apriori algorithm on the dataset")
 public class AprioriCommand extends FakieLearningCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 

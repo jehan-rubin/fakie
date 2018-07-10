@@ -10,8 +10,6 @@ import picocli.CommandLine;
 @CommandLine.Command(
         subcommands = {FPGrowthCommand.class, AprioriCommand.class})
 public abstract class GraphLoaderCommand extends FakieSubCommand {
-    private static final Logger logger = LogManager.getFormatterLogger();
-
     @Override
     protected void process() {
         loadGraph();
