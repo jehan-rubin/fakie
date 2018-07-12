@@ -7,9 +7,7 @@ import picocli.CommandLine;
 
 import java.nio.file.Path;
 
-@CommandLine.Command(
-        name = "load-neo4j",
-        description = {"Import Android applications from a Neo4j database."})
+@CommandLine.Command(name = "load-neo4j", description = "Import Android applications from a Neo4j database.")
 public class LoadNeo4jDatabase extends GraphLoaderCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 

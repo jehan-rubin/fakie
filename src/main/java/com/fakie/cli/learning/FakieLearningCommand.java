@@ -9,8 +9,7 @@ import picocli.CommandLine;
 
 import java.nio.file.Path;
 
-@CommandLine.Command(
-        subcommands = {CypherExporter.class})
+@CommandLine.Command(subcommands = {CypherExporter.class})
 public abstract class FakieLearningCommand extends FakieSubCommand {
     private static final Logger logger = LogManager.getFormatterLogger();
 

@@ -50,7 +50,7 @@ public class Fakie {
         if (db != null) {
             this.db = db;
         }
-        logger.info("Running Paprika analyse on %s", this.db);
+        logger.info("Running Paprika analyse on %s", apk);
         new PaprikaAccessor().analyse(androidJars, apk, info, this.db);
     }
 
