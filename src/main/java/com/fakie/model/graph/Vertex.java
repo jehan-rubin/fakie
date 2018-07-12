@@ -2,14 +2,13 @@ package com.fakie.model.graph;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class Vertex extends Element {
     private final List<String> labels;
 
-    public Vertex(long id, List<String> labels, Map<String, ?> properties) {
-        super(id, properties);
+    Vertex(long id, Graph graph, List<String> labels) {
+        super(id, graph);
         this.labels = new ArrayList<>(labels);
     }
 
@@ -19,7 +18,7 @@ public class Vertex extends Element {
 
     @Override
     public String toString() {
-        return shortRepresentation() + labels + getProperties();
+        return shortRepresentation() + labels + super.toString();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class Vertex extends Element {
         return Objects.hash(super.hashCode(), labels);
     }
 
-    public String shortRepresentation() {
+    String shortRepresentation() {
         return "Node(" + getId() + ')';
     }
 }

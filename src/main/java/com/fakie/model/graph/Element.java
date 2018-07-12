@@ -1,38 +1,37 @@
 package com.fakie.model.graph;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.List;
 
-public class Element {
+public class Element extends AbstractProperties {
     private final long id;
-    private final Map<String, Object> properties;
+    private final Graph graph;
 
-    Element(long id, Map<String, ?> properties) {
+    Element(long id, Graph graph) {
         this.id = id;
-        this.properties = new HashMap<>(properties);
+        this.graph = graph;
+    }
+
+    @Override
+    public void setProperty(String key, Object value) {
+        super.setProperty(key, value);
+        graph.setProperty(this, key, value);
+    }
+
+    @Override
+    public List<Object> values(String key) {
+        return graph.values(key);
+    }
+
+    @Override
+    public Type type(String key) {
+        return graph.type(key);
     }
 
     public long getId() {
         return id;
     }
 
-    public Map<String, Object> getProperties() {
-        return new HashMap<>(properties);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Element element = (Element) o;
-        return id == element.id && Objects.equals(properties, element.properties);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, properties);
+    public Graph getGraph() {
+        return graph;
     }
 }

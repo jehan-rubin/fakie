@@ -1,5 +1,6 @@
 package com.fakie.model.processor;
 
+import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CodeSmell {
+public class CodeSmell implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
     private final List<String> labels;
     private final Map<String, Object> properties;
@@ -16,27 +17,26 @@ public class CodeSmell {
     public CodeSmell(List<String> labels, Map<String, Object> properties, String name) {
         this.labels = new ArrayList<>(labels);
         this.properties = new HashMap<>(properties);
-        this.name = name;
+        this.name = name.replace(" ", Keyword.SPLIT.toString());
     }
 
-    public List<Vertex> process(List<Vertex> vertices) {
+    @Override
+    public Graph process(Graph graph) throws ProcessingException {
+        List<Vertex> vertices = graph.getVertices();
         Set<Vertex> bestMatches = bestMatches(vertices);
         int size = bestMatches.size();
         if (size > 1) {
             logger.debug("Find too many matches (" + size + ") for \'" + name + "\' " + labels + " " + properties);
-            return vertices;
+            return graph;
         }
         else if (bestMatches.isEmpty()) {
             logger.debug("Could not find a match for \'" + name + "\' " + labels + " " + properties);
-            return vertices;
+            return graph;
         }
         Vertex match = bestMatches.iterator().next();
-        vertices.remove(match);
-        Map<String, Object> matchProperties = match.getProperties();
-        matchProperties.put(formatName(), Boolean.TRUE);
-        vertices.add(new Vertex(match.getId(), match.getLabels(), matchProperties));
+        match.setProperty(Keyword.CODE_SMELL.toString(), name);
         logger.debug("Successfully applied %s on %s", this, match);
-        return vertices;
+        return graph;
     }
 
     private Set<Vertex> bestMatches(List<Vertex> vertices) {
@@ -50,7 +50,7 @@ public class CodeSmell {
                     match += 1;
                 }
             }
-            List<String> values = vertex.getProperties().values().stream()
+            List<String> values = vertex.values().stream()
                     .map(Object::toString)
                     .collect(Collectors.toList());
             for (Object o : properties.values()) {
@@ -67,12 +67,6 @@ public class CodeSmell {
             }
         }
         return matches;
-    }
-
-    private String formatName() {
-        return Keyword.CODE_SMELL.toString()
-                .concat(Keyword.SEPARATOR.toString())
-                .concat(name.replace(" ", Keyword.SEPARATOR.toString()));
     }
 
     @Override

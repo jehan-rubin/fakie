@@ -18,9 +18,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -55,13 +53,11 @@ public class Neo4jTest {
 
     @Test
     public void noEdgesAndOneVertex() throws FakieInputException {
-        Map<String, Object> expected = new HashMap<>();
-        expected.put("name", "wikipedia");
         try (Neo4j neo4j = new Neo4j(dir.toPath())) {
             Graph graph = neo4j.load();
             List<Vertex> vertices = graph.getVertices();
             assertEquals(1, vertices.size());
-            assertEquals(expected, vertices.get(0).getProperties());
+            assertEquals("wikipedia", vertices.get(0).getProperty("name"));
             assertTrue(graph.getEdges().isEmpty());
         }
     }

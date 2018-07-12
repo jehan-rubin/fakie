@@ -1,40 +1,24 @@
 package com.fakie.io.output.graphdumper;
 
+import com.fakie.io.FakieIOException;
 import com.fakie.io.IOPath;
 import com.fakie.io.output.FakieOutputException;
 import com.fakie.model.graph.Graph;
+import com.fakie.utils.FakieUtils;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public interface GraphDumper {
-    default Path dump(Graph graph) throws FakieOutputException {
-        URL url = getClass().getClassLoader().getResource(".");
-        if (url == null) {
-            throw new FakieOutputException("Could not locate resource folder");
-        }
-        try {
-            Path path = new File(url.toURI()).toPath().resolve(createName());
-            dump(path, graph);
-            return path;
-        }
-        catch (URISyntaxException e) {
-            throw new FakieOutputException(e);
-        }
+    default Path dump(Graph graph) throws FakieIOException {
+        Path directory = IOPath.GRAPH_DIRECTORY.asPath();
+        Path filename = IOPath.GRAPH_FILENAME.asPath();
+        Path path = FakieUtils.findResource(".").toPath()
+                .resolve(directory)
+                .resolve(FakieUtils.uniqueName())
+                .resolve(filename);
+        dump(path, graph);
+        return path;
     }
 
     void dump(Path path, Graph graph) throws FakieOutputException;
-
-    default String createName() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy MM dd - HH mm ss");
-        LocalDateTime now = LocalDateTime.now();
-        String directory = IOPath.GRAPH_DIRECTORY.asString();
-        String filename = IOPath.GRAPH_FILENAME.asString();
-        return Paths.get(directory, dtf.format(now), filename).toString();
-    }
 }

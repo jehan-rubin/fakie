@@ -1,26 +1,20 @@
 package com.fakie.model.processor;
 
 import com.fakie.io.input.FakieInputException;
-import com.fakie.io.input.apk.APKInfo;
-import com.fakie.io.input.apk.CSVInfoReader;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
 import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
 import com.fakie.utils.Zipper;
-import net.lingala.zip4j.exception.ZipException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ApplyCodeSmellOnGraphTest {
     private static final String NAME = "tor";
@@ -51,7 +45,7 @@ public class ApplyCodeSmellOnGraphTest {
     private int countValues(Graph graph) {
         int result = 0;
         for (Vertex vertex : graph.getVertices()) {
-            result += vertex.getProperties().values().size();
+            result += vertex.values().size();
         }
         return result;
     }

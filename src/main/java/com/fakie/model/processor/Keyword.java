@@ -5,12 +5,13 @@ public enum Keyword {
     LABEL,
     CODE_SMELL,
     IS("%s_IS_%s"),
+    EQUAL("%s=%s"),
     LOW,
     HIGH,
     SPLIT("%s_%s"),
-    BELOW("BELOW"),
+    BELOW("%s < %s"),
     BETWEEN("BETWEEN_%s_AND_%s"),
-    ABOVE("ABOVE");
+    ABOVE("%s > %s");
 
     private final String name;
 

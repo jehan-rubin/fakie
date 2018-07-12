@@ -2,98 +2,78 @@ package com.fakie.model.graph;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class Graph {
-    private final Set<Vertex> vertices;
-    private final Set<Edge> edges;
-    private final Map<String, Set<Object>> properties;
-    private final Map<String, Set<Vertex>> labels;
+public class Graph extends AbstractProperties {
+    private final List<Vertex> vertices;
+    private final List<Edge> edges;
+    private final Map<String, List<Object>> values;
+    private final Map<String, Type> types;
+    private int vertexId = 0;
+    private long edgeId = 0;
 
     public Graph() {
-        this(new HashSet<>(), new HashSet<>(), new HashMap<>(), new HashMap<>());
+        vertices = new ArrayList<>();
+        edges = new ArrayList<>();
+        values = new HashMap<>();
+        types = new HashMap<>();
     }
 
-    private Graph(Set<Vertex> v, Set<Edge> e, Map<String, Set<Object>> p, Map<String, Set<Vertex>> l) {
-        this.vertices = new HashSet<>(v);
-        this.edges = new HashSet<>(e);
-        this.properties = new HashMap<>(p);
-        this.labels = new HashMap<>(l);
+    public Vertex createVertex() {
+        return createVertex(new ArrayList<>());
     }
 
-    public Graph(Graph graph) {
-        this(graph.vertices, graph.edges, graph.properties, graph.labels);
-    }
-
-    public void addVertex(Vertex vertex) {
+    public Vertex createVertex(List<String> labels) {
+        Vertex vertex = new Vertex(vertexId++, this, labels);
         vertices.add(vertex);
-        addLabels(vertex);
-        addProperties(vertex);
+        return vertex;
     }
 
-    public void addVertices(List<Vertex> vertices) {
-        for (Vertex vertex : vertices) {
-            addVertex(vertex);
-        }
+    public Vertex createVertex(Vertex vertex) {
+        Vertex v = createVertex(vertex.getLabels());
+        v.setProperties(vertex);
+        return v;
     }
 
-    public void addEdge(Edge edge) {
+    public Edge createEdge(Vertex source, Vertex destination, String type) {
+        Edge edge = new Edge(edgeId++, this, source, destination, type);
         edges.add(edge);
-        addProperties(edge);
+        return edge;
     }
 
-    public Set<Vertex> getVerticesWithLabel(String label) {
-        return new HashSet<>(labels.get(label));
-    }
-
-    public List<Vertex> matches(List<String> labels, Map<String, Object> properties) {
-        List<Vertex> bestMatches = new ArrayList<>();
-        for (Vertex vertex : getVertices()) {
-            if (vertex.getLabels().containsAll(labels) &&
-                    vertex.getProperties().entrySet().containsAll(properties.entrySet())) {
-                bestMatches.add(vertex);
-            }
-        }
-        return bestMatches;
+    public List<Element> getElements() {
+        return Stream.of(vertices, edges).flatMap(List::stream).collect(Collectors.toList());
     }
 
     public List<Vertex> getVertices() {
-        return sortById(vertices);
+        return new ArrayList<>(vertices);
     }
 
     public List<Edge> getEdges() {
-        return sortById(edges);
+        return new ArrayList<>(edges);
     }
 
-    private <T extends Element> List<T> sortById(Set<T> ts) {
-        return ts.stream()
-                .sorted((t1, t2) -> Long.compare(t1.getId(), t2.getId()))
+    @Override
+    public Set<String> keys() {
+        return values.keySet();
+    }
+
+    @Override
+    public Collection<Object> values() {
+        return Stream.of(values.values())
+                .flatMap(Collection::stream)
+                .flatMap(List::stream)
                 .collect(Collectors.toList());
     }
 
-    public Map<String, Set<Object>> getProperties() {
-        Map<String, Set<Object>> result = new HashMap<>();
-        for (Map.Entry<String, Set<Object>> property : properties.entrySet()) {
-            result.put(property.getKey(), new HashSet<>(property.getValue()));
-        }
-        return result;
+    @Override
+    public List<Object> values(String key) {
+        return values.getOrDefault(key, new ArrayList<>());
     }
 
-    public Set<String> getLabels() {
-        return new HashSet<>(labels.keySet());
-    }
-
-    private void addLabels(Vertex vertex) {
-        for (String label : vertex.getLabels()) {
-            labels.putIfAbsent(label, new HashSet<>());
-            labels.get(label).add(vertex);
-        }
-    }
-
-    private void addProperties(Element element) {
-        for (Map.Entry<String, Object> property : element.getProperties().entrySet()) {
-            properties.putIfAbsent(property.getKey(), new HashSet<>());
-            properties.get(property.getKey()).add(property.getValue());
-        }
+    @Override
+    public Type type(String key) {
+        return types.get(key);
     }
 
     @Override
@@ -115,5 +95,26 @@ public class Graph {
     @Override
     public String toString() {
         return "Graph{vertices=" + vertices.size() + ", edges=" + edges.size() + "}";
+    }
+
+    void setProperty(Element element, String key, Object value) {
+        addValue(key, value);
+        addType(key, value);
+    }
+
+    private void addValue(String key, Object value) {
+        values.putIfAbsent(key, new ArrayList<>());
+        values.get(key).add(value);
+    }
+
+    private void addType(String key, Object value) {
+        Type type = Type.valueOf(value);
+        if (types.containsKey(key)) {
+            if (types.get(key) != type) {
+                types.put(key, Type.NONE);
+            }
+        } else {
+            types.put(key, type);
+        }
     }
 }

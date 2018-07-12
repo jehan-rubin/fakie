@@ -1,8 +1,8 @@
 package com.fakie.utils.paprika;
 
-import com.fakie.utils.exceptions.FakieException;
+import com.fakie.utils.FakieUtilsException;
 
-public class PaprikaException extends FakieException {
+public class PaprikaException extends FakieUtilsException {
     public PaprikaException() {
     }
 

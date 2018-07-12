@@ -1,6 +1,5 @@
 package com.fakie.model.graph;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class Edge extends Element {
@@ -8,8 +7,8 @@ public class Edge extends Element {
     private final Vertex destination;
     private final String type;
 
-    public Edge(long id, Vertex source, Vertex destination, String type, Map<String, ?> properties) {
-        super(id, properties);
+    Edge(long id, Graph graph, Vertex source, Vertex destination, String type) {
+        super(id, graph);
         this.source = source;
         this.destination = destination;
         this.type = type;
@@ -45,6 +44,6 @@ public class Edge extends Element {
     @Override
     public String toString() {
         return source.shortRepresentation() + " --" + type + "[" + getId() + "]-> " +
-                destination.shortRepresentation() + ", properties=" + getProperties();
+                destination.shortRepresentation() + ", properties=" + super.toString();
     }
 }

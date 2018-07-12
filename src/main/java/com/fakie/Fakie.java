@@ -109,13 +109,14 @@ public class Fakie {
         }
         orchestrator.useGraph(graph);
         orchestrator.useProcessors(
+                new RemoveEdges(),
                 new ApplyCodeSmellOnGraph(codeSmells),
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
-                new ConvertNumericToThreshold(),
+                new ConvertNumericToBoolean(),
                 new ProcessOnlyVerticesWithACodeSmell(),
                 new ConvertNominalToBoolean(),
-                new RemovePropertiesWithASingleValue()
+                new KeepOnlyBooleanProperties()
         );
         orchestrator.useGraphDumper(new GraphToARFF());
         orchestrator.useDatasetReader(new ARFFReader());
