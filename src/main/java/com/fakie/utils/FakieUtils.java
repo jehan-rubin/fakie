@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class FakieUtils {
+    private FakieUtils() {}
+
     public static File findResource(String resource) throws FakieIOException {
         URL url = FakieUtils.class.getClassLoader().getResource(resource);
         if (url == null) {

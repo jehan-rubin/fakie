@@ -1,12 +1,11 @@
 package com.fakie.model.processor;
 
+import com.fakie.model.graph.Element;
 import com.fakie.model.graph.Graph;
-import com.fakie.model.graph.Vertex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CodeSmell implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
@@ -22,8 +21,7 @@ public class CodeSmell implements Processor {
 
     @Override
     public Graph process(Graph graph) throws ProcessingException {
-        List<Vertex> vertices = graph.getVertices();
-        Set<Vertex> bestMatches = bestMatches(vertices);
+        Set<Element> bestMatches = filterElements(graph);
         int size = bestMatches.size();
         if (size > 1) {
             logger.debug("Find too many matches (" + size + ") for \'" + name + "\' " + labels + " " + properties);
@@ -33,40 +31,39 @@ public class CodeSmell implements Processor {
             logger.debug("Could not find a match for \'" + name + "\' " + labels + " " + properties);
             return graph;
         }
-        Vertex match = bestMatches.iterator().next();
+        Element match = bestMatches.iterator().next();
         match.setProperty(Keyword.CODE_SMELL.toString(), name);
         logger.debug("Successfully applied %s on %s", this, match);
         return graph;
     }
 
-    private Set<Vertex> bestMatches(List<Vertex> vertices) {
-        int max = 0;
-        Set<Vertex> matches = new HashSet<>();
-        for (Vertex vertex : vertices) {
-            int match = 0;
-            List<String> vertexLabels = vertex.getLabels();
-            for (String label : this.labels) {
-                if (vertexLabels.contains(label)) {
-                    match += 1;
-                }
+    private Set<Element> filterElements(Graph graph) {
+        Set<Element> elements = null;
+        for (Map.Entry<String, Object> property : properties.entrySet()) {
+            Set<Element> temp;
+            switch (graph.type(property.getKey())) {
+                case BOOLEAN:
+                    temp = graph.find(property.getKey(), Boolean.valueOf(property.getValue().toString()));
+                    break;
+                case DOUBLE:
+                    temp = graph.find(property.getKey(), Double.valueOf(property.getValue().toString()));
+                    break;
+                case INTEGER:
+                    temp = graph.find(property.getKey(), Integer.valueOf(property.getValue().toString()));
+                    break;
+                default:
+                    temp = graph.find(property.getKey(), property.getValue());
             }
-            List<String> values = vertex.values().stream()
-                    .map(Object::toString)
-                    .collect(Collectors.toList());
-            for (Object o : properties.values()) {
-                if (values.contains(o.toString())) {
-                    match += 1;
+            if (!temp.isEmpty()) {
+                if (elements == null) {
+                    elements = temp;
                 }
-            }
-            if (match == max) {
-                matches.add(vertex);
-            } else if (match > max) {
-                max = match;
-                matches = new HashSet<>();
-                matches.add(vertex);
+                else {
+                    elements.retainAll(temp);
+                }
             }
         }
-        return matches;
+        return elements == null ? new HashSet<>() : elements;
     }
 
     @Override

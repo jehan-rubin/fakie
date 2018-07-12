@@ -21,6 +21,8 @@ public class PaprikaDetectionParser implements CodeSmellParser {
     private static final String CSV = "csv";
     private static final String[] EXT = new String[]{CSV};
     private static final Pattern FILENAME = Pattern.compile("([A-Z]+)");
+    private static final String FULL_NAME = "full_name";
+    private static final String NAME = "name";
 
     @Override
     public boolean accept(File file) {
@@ -64,7 +66,11 @@ public class PaprikaDetectionParser implements CodeSmellParser {
                 Map<String, Object> properties = new HashMap<>();
                 for (Map.Entry<String, Integer> header : headerMap.entrySet()) {
                     String value = record.get(header.getValue());
-                    properties.put(header.getKey(), value);
+                    if (header.getKey().equals(FULL_NAME)) {
+                        properties.put(NAME, value);
+                    } else {
+                        properties.put(header.getKey(), value);
+                    }
                 }
                 CodeSmell codeSmell = new CodeSmell(new ArrayList<>(), properties, name);
                 codeSmells.add(codeSmell);
@@ -76,7 +82,7 @@ public class PaprikaDetectionParser implements CodeSmellParser {
         return codeSmells;
     }
 
-    private Optional<String> codeSmellName(String filename) throws FakieInputException {
+    private Optional<String> codeSmellName(String filename) {
         Matcher matcher = FILENAME.matcher(filename);
         if (matcher.find()) {
             return Optional.of(matcher.group(1));

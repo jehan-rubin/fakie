@@ -4,7 +4,8 @@ import java.util.Collection;
 
 public enum Type {
     ARRAY(Collection.class),
-    NUMBER(Number.class),
+    INTEGER(Integer.class),
+    DOUBLE(Double.class),
     STRING(String.class),
     BOOLEAN(Boolean.class),
     NONE(Void.class);
@@ -22,5 +23,9 @@ public enum Type {
             }
         }
         return NONE;
+    }
+
+    public boolean isNumber() {
+        return this == INTEGER || this == DOUBLE;
     }
 }

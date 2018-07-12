@@ -1,6 +1,7 @@
 package com.fakie.model.graph;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Element extends AbstractProperties {
     private final long id;
@@ -33,5 +34,22 @@ public class Element extends AbstractProperties {
 
     public Graph getGraph() {
         return graph;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        Element element = (Element) o;
+        return id == element.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id);
     }
 }

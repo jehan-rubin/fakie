@@ -9,6 +9,7 @@ public class Graph extends AbstractProperties {
     private final List<Edge> edges;
     private final Map<String, List<Object>> values;
     private final Map<String, Type> types;
+    private final Map<Property, Set<Element>> index;
     private int vertexId = 0;
     private long edgeId = 0;
 
@@ -17,6 +18,7 @@ public class Graph extends AbstractProperties {
         edges = new ArrayList<>();
         values = new HashMap<>();
         types = new HashMap<>();
+        index = new HashMap<>();
     }
 
     public Vertex createVertex() {
@@ -53,6 +55,14 @@ public class Graph extends AbstractProperties {
         return new ArrayList<>(edges);
     }
 
+    public Set<Element> find(String key, Object value) {
+        Property property = new Property(this, key, value);
+        if (index.containsKey(property)) {
+            return new HashSet<>(index.get(property));
+        }
+        return new HashSet<>();
+    }
+
     @Override
     public Set<String> keys() {
         return values.keySet();
@@ -73,7 +83,7 @@ public class Graph extends AbstractProperties {
 
     @Override
     public Type type(String key) {
-        return types.get(key);
+        return types.getOrDefault(key, Type.NONE);
     }
 
     @Override
@@ -98,8 +108,15 @@ public class Graph extends AbstractProperties {
     }
 
     void setProperty(Element element, String key, Object value) {
+        addElement(element, key, value);
         addValue(key, value);
         addType(key, value);
+    }
+
+    private void addElement(Element element, String key, Object value) {
+        Property property = new Property(this, key, value);
+        index.putIfAbsent(property, new HashSet<>());
+        index.get(property).add(element);
     }
 
     private void addValue(String key, Object value) {
