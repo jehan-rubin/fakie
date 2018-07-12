@@ -57,10 +57,12 @@ public class CodeSmell implements Processor {
             if (!temp.isEmpty()) {
                 if (elements == null) {
                     elements = temp;
-                }
-                else {
+                } else {
                     elements.retainAll(temp);
                 }
+            }
+            if (elements != null && elements.isEmpty()) {
+                return elements;
             }
         }
         return elements == null ? new HashSet<>() : elements;

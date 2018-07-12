@@ -121,6 +121,21 @@ root
 But you can specify each of this path by using the options of the `analyse` command.  
 You can find many Android platforms in [this Github repository](https://github.com/Sable/android-platforms). 
 
+
+### Info.csv
+
+The file `info.csv` contains the name, the main package and the apk name of the android application you want to analyse.  
+Here is an example with 4 applications :
+
+```csv
+"Google IO Sched","com.google.samples.apps.iosched","iosched.apk"
+"AdAway","org.adaway","org.adaway_53.apk"
+"ADW.Launcher","org.adw.launcher","org.adw.launcher_34.apk"
+"Wikipedia","org.wikipedia","org.wikipedia_109.apk"
+```
+
+Note : the csv must not have a header
+
 ### Examples
 
 * `fakie analyse`

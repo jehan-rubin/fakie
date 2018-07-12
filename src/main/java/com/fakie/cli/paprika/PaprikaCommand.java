@@ -9,7 +9,7 @@ import picocli.CommandLine;
 public abstract class PaprikaCommand extends FakieSubCommand {
     @Override
     public void run() {
-        std().disableSystemOutput();
+        // std().disableSystemOutput();
         process();
         std().enableSystemOutput();
     }

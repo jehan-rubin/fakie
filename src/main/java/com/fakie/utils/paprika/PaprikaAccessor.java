@@ -1,8 +1,8 @@
 package com.fakie.utils.paprika;
 
-import com.fakie.io.IOPath;
 import com.fakie.io.input.apk.APKInfo;
 import com.fakie.io.input.apk.CSVInfoReader;
+import com.fakie.model.processor.Keyword;
 import com.fakie.utils.exceptions.FakieException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -73,7 +73,8 @@ public class PaprikaAccessor {
         }
     }
 
-    public Path fuzzyQuery(Path db, String suffix) {
+    public Path fuzzyQuery(Path db, String suffix) throws PaprikaException {
+        Path path = createQueryFolder(suffix);
         QueryEngine queryEngine = new QueryEngine(db.toString());
         queryEngine.setCsvPrefix(suffix);
         List<FuzzyQuery> queries = new ArrayList<>(Arrays.asList(
@@ -95,7 +96,16 @@ public class PaprikaAccessor {
         finally {
             queryEngine.shutDown();
         }
-        return queryResultPath(suffix);
+        return path;
+    }
+
+    private Path createQueryFolder(String suffix) throws PaprikaException {
+        Path path = Paths.get(suffix.concat(Keyword.CODE_SMELL.toString())).toAbsolutePath().getParent();
+        File file = path.toFile();
+        if (!file.exists() && !file.mkdirs()) {
+            throw new PaprikaException("Could not create folder \'" + path + "\'");
+        }
+        return path;
     }
 
     private void analyseApk(File androidJars, File apk, Path db, APKInfo.Entry entry, ModelToGraph modelToGraph) {
@@ -125,7 +135,9 @@ public class PaprikaAccessor {
         logger.info("Paprika analysing apk in the %s folder", dir);
         Collection<File> files = FileUtils.listFiles(dir, EXT, false);
         for (File apk : files) {
-            analyseApk(androidJars, apk, db, apkInfo.get(apk.getName()), modelToGraph);
+            if (apkInfo.contains(apk.getName())) {
+                analyseApk(androidJars, apk, db, apkInfo.get(apk.getName()), modelToGraph);
+            }
         }
         logger.info("Paprika successfully analyzed the apk folder %s", dir);
     }
@@ -148,10 +160,5 @@ public class PaprikaAccessor {
         catch (IllegalAccessException e) {
             throw new PaprikaException(e);
         }
-    }
-
-    private Path queryResultPath(String suffix) {
-        Path path = Paths.get(suffix + IOPath.QUERY_FOLDER);
-        return path.toAbsolutePath().getParent();
     }
 }

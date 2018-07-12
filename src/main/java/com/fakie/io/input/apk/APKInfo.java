@@ -14,6 +14,10 @@ public class APKInfo {
         return infoTable.get(apk);
     }
 
+    public boolean contains(String apk) {
+        return infoTable.containsKey(apk);
+    }
+
     public static class Entry {
         private final String name;
         private final String pkg;

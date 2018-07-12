@@ -20,6 +20,7 @@ import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.*;
 import com.fakie.utils.exceptions.FakieException;
 import com.fakie.utils.paprika.PaprikaAccessor;
+import com.fakie.utils.paprika.PaprikaException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import weka.associations.Apriori;
@@ -52,14 +53,16 @@ public class Fakie {
         }
         logger.info("Running Paprika analyse on %s", apk);
         new PaprikaAccessor().analyse(androidJars, apk, info, this.db);
+        logger.info("Successfully analysed the apk in %s", this.db);
     }
 
-    public void runPaprikaQuery(Path db, String suffix) {
+    public void runPaprikaQuery(Path db, String suffix) throws PaprikaException {
         if (db != null) {
             this.db = db;
         }
         logger.info("Running Paprika query on %s", this.db);
         this.queries = new PaprikaAccessor().fuzzyQuery(this.db, suffix);
+        logger.info("Successfully saved queries in %s", this.queries);
     }
 
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {
