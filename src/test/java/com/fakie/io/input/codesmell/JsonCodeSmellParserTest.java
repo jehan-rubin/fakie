@@ -8,9 +8,8 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class JsonCodeSmellParserTest {
     @Test
@@ -18,12 +17,12 @@ public class JsonCodeSmellParserTest {
         URL resource = getClass().getClassLoader().getResource("codesmell/codesmells.json");
         assert resource != null : "Could not locate resource folder";
         File file = new File(resource.toURI());
-        List<CodeSmell> parse = new JsonCodeSmellParser().parse(file);
-        assertEquals(1, parse.size());
-        CodeSmell expected = new CodeSmell(
+        CodeSmells parse = new JsonCodeSmellParser().parse(file);
+        CodeSmells expected = new CodeSmells();
+        expected.add(new CodeSmell(
                 Collections.singletonList("Class"),
                 Collections.singletonMap("name", "Main"),
-                "God Class");
-        assertEquals(expected, parse.get(0));
+                "God Class"));
+        assertEquals(expected, parse);
     }
 }

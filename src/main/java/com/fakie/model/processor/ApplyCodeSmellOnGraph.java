@@ -1,16 +1,15 @@
 package com.fakie.model.processor;
 
+import com.fakie.io.input.codesmell.CodeSmells;
 import com.fakie.model.graph.Graph;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-
 public class ApplyCodeSmellOnGraph implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
-    private final List<CodeSmell> codeSmells;
+    private final CodeSmells codeSmells;
 
-    public ApplyCodeSmellOnGraph(List<CodeSmell> codeSmells) {
+    public ApplyCodeSmellOnGraph(CodeSmells codeSmells) {
         this.codeSmells = codeSmells;
     }
 

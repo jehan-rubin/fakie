@@ -1,8 +1,8 @@
 package com.fakie.utils.paprika;
 
 import com.fakie.io.input.FakieInputException;
+import com.fakie.io.input.codesmell.CodeSmells;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
-import com.fakie.model.processor.CodeSmell;
 import com.fakie.utils.Zipper;
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
@@ -13,7 +13,6 @@ import org.neo4j.io.fs.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,7 +33,7 @@ public class PaprikaQueryTest {
     @Test
     public void torWithOnlyBlobCodeSmells() throws FakieInputException {
         new PaprikaAccessor().query(dir.toPath(), dir.toPath().toString().concat("/"));
-        List<CodeSmell> parse = new PaprikaDetectionParser().parse(dir.toPath().resolve("_BLOB_NO_FUZZY.csv").toFile());
+        CodeSmells parse = new PaprikaDetectionParser().parse(dir.toPath().resolve("_BLOB_NO_FUZZY.csv").toFile());
         assertEquals(2, parse.size());
         parse = new PaprikaDetectionParser().parse(dir);
         assertEquals(105, parse.size());
@@ -43,7 +42,7 @@ public class PaprikaQueryTest {
     @Test
     public void torFuzzyWithOnlyBlobCodeSmells() throws FakieInputException, PaprikaException {
         new PaprikaAccessor().fuzzyQuery(dir.toPath(), dir.toPath().toString().concat("/"));
-        List<CodeSmell> parse = new PaprikaDetectionParser().parse(dir.toPath().resolve("_BLOB.csv").toFile());
+        CodeSmells parse = new PaprikaDetectionParser().parse(dir.toPath().resolve("_BLOB.csv").toFile());
         assertEquals(4, parse.size());
         parse = new PaprikaDetectionParser().parse(dir);
         assertEquals(73, parse.size());

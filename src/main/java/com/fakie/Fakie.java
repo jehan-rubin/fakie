@@ -2,6 +2,7 @@ package com.fakie;
 
 import com.fakie.io.IOPath;
 import com.fakie.io.input.FakieInputException;
+import com.fakie.io.input.codesmell.CodeSmells;
 import com.fakie.io.input.codesmell.JsonCodeSmellParser;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
 import com.fakie.io.input.codesmell.ParserFactory;
@@ -13,7 +14,6 @@ import com.fakie.learning.Rule;
 import com.fakie.learning.association.AprioriAlgorithm;
 import com.fakie.learning.association.FPGrowthAlgorithm;
 import com.fakie.model.graph.Graph;
-import com.fakie.model.processor.CodeSmell;
 import com.fakie.utils.exceptions.FakieException;
 import com.fakie.utils.paprika.PaprikaAccessor;
 import com.fakie.utils.paprika.PaprikaException;
@@ -32,7 +32,7 @@ public class Fakie {
     private Path cypherFolder = IOPath.CYPHER_FOLDER.asPath();
     private Graph graph;
     private List<Rule> rules;
-    private List<CodeSmell> codeSmells;
+    private CodeSmells codeSmells;
 
     public Fakie() {
         parserFactory = new ParserFactory(

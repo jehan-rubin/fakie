@@ -3,6 +3,7 @@ package com.fakie.io.output.graphdumper;
 import com.fakie.io.output.FakieOutputException;
 import com.fakie.model.converter.InstancesConverter;
 import com.fakie.model.graph.Graph;
+import com.fakie.utils.exceptions.FakieException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import weka.core.Instances;
@@ -15,7 +16,7 @@ public class GraphToARFF implements GraphDumper {
     private static final Logger logger = LogManager.getFormatterLogger();
 
     @Override
-    public void dump(Path path, Graph graph) throws FakieOutputException {
+    public void dump(Path path, Graph graph) throws FakieException {
         logger.info("Dumping graph %s as ARFF file at path \'%s\'", graph, path);
         Instances dataset = new InstancesConverter().dump(graph);
         save(path, dataset);

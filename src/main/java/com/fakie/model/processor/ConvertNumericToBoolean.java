@@ -57,9 +57,7 @@ public class ConvertNumericToBoolean implements Processor {
         List<Threshold> thresholds = new ArrayList<>();
         double q1 = StatUtils.percentile(values, 25);
         double q3 = StatUtils.percentile(values, 75);
-        thresholds.add(new Threshold(q3 + 2 * (q3 - q1)));
-        thresholds.add(new Threshold(q3 + 4 * (q3 - q1)));
-        thresholds.add(new Threshold(q3 + 8 * (q3 - q1)));
+        thresholds.add(new Threshold(q3 + 1.5 * (q3 - q1)));
         return thresholds;
     }
 

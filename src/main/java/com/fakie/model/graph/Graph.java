@@ -21,6 +21,11 @@ public class Graph extends AbstractProperties {
         index = new HashMap<>();
     }
 
+    public Graph(Graph graph) {
+        this();
+        union(graph);
+    }
+
     public Vertex createVertex() {
         return createVertex(new ArrayList<>());
     }
@@ -43,14 +48,12 @@ public class Graph extends AbstractProperties {
         return edge;
     }
 
-    public Edge createEdge(Edge edge) {
-        Edge e = createEdge(createVertex(edge.getSource()), createVertex(edge.getDestination()), edge.getType());
-        e.setProperties(edge);
-        return e;
-    }
-
     public List<Element> getElements() {
         return Stream.of(vertices, edges).flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    public boolean isEmpty() {
+        return getElements().isEmpty();
     }
 
     public List<Vertex> getVertices() {
@@ -102,6 +105,17 @@ public class Graph extends AbstractProperties {
     @Override
     public Type type(String key) {
         return types.getOrDefault(key, Type.NONE);
+    }
+
+    public void union(Graph graph) {
+        Map<Vertex, Vertex> mapping = new HashMap<>();
+        for (Vertex vertex : graph.getVertices()) {
+            mapping.put(vertex, createVertex(vertex));
+        }
+        for (Edge edge : graph.getEdges()) {
+            Edge e = createEdge(mapping.get(edge.getSource()), mapping.get(edge.getDestination()), edge.getType());
+            e.setProperties(edge);
+        }
     }
 
     @Override

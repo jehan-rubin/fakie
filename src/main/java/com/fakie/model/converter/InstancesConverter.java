@@ -1,8 +1,9 @@
 package com.fakie.model.converter;
 
+import com.fakie.model.FakieModelException;
+import com.fakie.model.graph.Element;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Property;
-import com.fakie.model.graph.Vertex;
 import com.fakie.utils.FakieUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,10 @@ public class InstancesConverter implements Converter<Instances> {
     }
 
     @Override
-    public Instances dump(Graph graph) {
+    public Instances dump(Graph graph) throws FakieModelException {
+        if (graph.isEmpty()) {
+            throw new FakieModelException("Empty Graph can not be converted to Instances");
+        }
         List<Attribute> attributes = createAttributes(graph);
         logger.debug("Attributes extracted from graph : %s", attributes);
         Instances dataset = new Instances(FakieUtils.uniqueName(), new ArrayList<>(attributes), 0);
@@ -45,9 +49,9 @@ public class InstancesConverter implements Converter<Instances> {
 
     private List<Instance> createInstances(Graph graph, Instances dataset) {
         List<Instance> instances = new ArrayList<>();
-        for (Vertex vertex : graph.getVertices()) {
+        for (Element element : graph.getElements()) {
             DenseInstance instance = new DenseInstance(dataset.numAttributes());
-            for (Property property : vertex) {
+            for (Property property : element) {
                 Attribute attribute = dataset.attribute(property.getKey());
                 instance.setValue(attribute, property.getValue().toString());
             }

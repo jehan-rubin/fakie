@@ -1,5 +1,6 @@
 package com.fakie.learning.association;
 
+import com.fakie.io.input.codesmell.CodeSmells;
 import com.fakie.io.input.dataset.ARFFReader;
 import com.fakie.io.output.graphdumper.GraphToARFF;
 import com.fakie.learning.Orchestrator;
@@ -18,28 +19,23 @@ import weka.associations.Associator;
 import weka.core.Instances;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
-public class AssociationOrchestrator<T extends Associator & AssociationRulesProducer> extends Orchestrator<T> {
+public class AssociationOrchestrator<T extends Associator & AssociationRulesProducer> extends Orchestrator<Instances> {
     private static final Logger logger = LogManager.getFormatterLogger();
+    private final CodeSmells codeSmells;
+    private final Graph parent;
+    private final T associator;
 
-    AssociationOrchestrator(Graph graph, List<CodeSmell> codeSmells, T associator) {
-        setup(graph, codeSmells, associator);
+    AssociationOrchestrator(Graph graph, CodeSmells codeSmells, T associator) {
+        this.parent = graph;
+        this.codeSmells = codeSmells;
+        this.associator = associator;
+        setup();
     }
 
-    private void setup(Graph graph, List<CodeSmell> codeSmells, T associator) {
-        useGraph(graph);
-        useAssociationAlgorithm(associator);
-        useProcessors(
-                new RemoveEdges(),
-                new ApplyCodeSmellOnGraph(codeSmells),
-                new ConvertLabelsToProperties(),
-                new ConvertArraysToNominal(),
-                new ConvertNumericToBoolean(),
-                new ProcessOnlyVerticesWithACodeSmell(),
-                new ConvertNominalToBoolean(),
-                new KeepOnlyBooleanProperties()
-        );
+    private void setup() {
         useGraphDumper(new GraphToARFF());
         useDatasetReader(new ARFFReader());
         useFilters(
@@ -52,14 +48,39 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
 
     @Override
     public List<Rule> generateRules() throws FakieException {
+        List<Rule> result = new ArrayList<>();
+        for (String name : this.codeSmells.names()) {
+            logger.info("Generating rules for code smell %s", name);
+            CodeSmells group = this.codeSmells.groupByName(name);
+            try {
+                result.addAll(generateRules(group, new Graph(parent)));
+            } catch (FakieException e) {
+                logger.warn(e);
+            }
+        }
+        return result;
+    }
+
+    private List<Rule> generateRules(CodeSmells codeSmells, Graph graph) throws FakieException {
+        useGraph(graph);
+        useProcessors(
+                new RemoveEdges(),
+                new ApplyCodeSmellOnGraph(codeSmells),
+                new ConvertLabelsToProperties(),
+                new ConvertArraysToNominal(),
+                new ConvertNumericToBoolean(),
+                new ProcessOnlyVerticesWithACodeSmell(),
+                new ConvertNominalToBoolean(),
+                new KeepOnlyBooleanProperties()
+        );
         applyProcessors();
-        Path datasetPath = graphDumper.dump(graph);
-        Instances dataset = datasetReader.readDataset(datasetPath);
+        Path datasetPath = dumpGraph();
+        Instances dataset = readDataset(datasetPath);
         Association association = new Association(dataset, associator, associator);
-        rules = association.generateRules();
+        List<Rule> rules = association.generateRules();
         logGeneratedRules(rules);
-        applyFilters();
-        logFilteredRules(rules);
+        List<Rule> filtered = applyFilters(rules);
+        logFilteredRules(filtered);
         return rules;
     }
 }

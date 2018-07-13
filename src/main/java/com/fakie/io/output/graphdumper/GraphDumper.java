@@ -1,15 +1,14 @@
 package com.fakie.io.output.graphdumper;
 
-import com.fakie.io.FakieIOException;
 import com.fakie.io.IOPath;
-import com.fakie.io.output.FakieOutputException;
 import com.fakie.model.graph.Graph;
 import com.fakie.utils.FakieUtils;
+import com.fakie.utils.exceptions.FakieException;
 
 import java.nio.file.Path;
 
 public interface GraphDumper {
-    default Path dump(Graph graph) throws FakieIOException {
+    default Path dump(Graph graph) throws FakieException {
         Path directory = IOPath.GRAPH_DIRECTORY.asPath();
         Path filename = IOPath.GRAPH_FILENAME.asPath();
         Path path = FakieUtils.findResource(".").toPath()
@@ -20,5 +19,5 @@ public interface GraphDumper {
         return path;
     }
 
-    void dump(Path path, Graph graph) throws FakieOutputException;
+    void dump(Path path, Graph graph) throws FakieException;
 }

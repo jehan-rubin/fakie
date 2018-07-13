@@ -1,25 +1,25 @@
 package com.fakie.learning;
 
+import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.dataset.DatasetReader;
 import com.fakie.io.output.graphdumper.GraphDumper;
 import com.fakie.learning.filter.Filter;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.ProcessingException;
 import com.fakie.model.processor.Processor;
+import com.fakie.utils.exceptions.FakieException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import weka.core.Instances;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Orchestrator<T> implements Algorithm {
+public abstract class Orchestrator<D> implements Algorithm {
     private static final Logger logger = LogManager.getFormatterLogger();
-    protected T associator;
-    protected Graph graph;
-    protected GraphDumper graphDumper;
-    protected DatasetReader<Instances> datasetReader;
-    protected List<Rule> rules;
+    private Graph graph;
+    private GraphDumper graphDumper;
+    private DatasetReader<D> datasetReader;
     private List<Processor> processors;
     private List<Filter> filters;
 
@@ -31,7 +31,7 @@ public abstract class Orchestrator<T> implements Algorithm {
         this.graphDumper = graphDumper;
     }
 
-    protected void useDatasetReader(DatasetReader<Instances> datasetReader) {
+    protected void useDatasetReader(DatasetReader<D> datasetReader) {
         this.datasetReader = datasetReader;
     }
 
@@ -43,20 +43,25 @@ public abstract class Orchestrator<T> implements Algorithm {
         this.filters = Arrays.asList(filters);
     }
 
-    protected void useAssociationAlgorithm(T associator) {
-        this.associator = associator;
-    }
-
     protected void applyProcessors() throws ProcessingException {
         for (Processor processor : processors) {
             this.graph = processor.process(graph);
         }
     }
 
-    protected void applyFilters() throws LearningException {
+    protected List<Rule> applyFilters(List<Rule> rules) throws LearningException {
         for (Filter filter : filters) {
             rules = filter.filter(rules);
         }
+        return rules;
+    }
+
+    protected Path dumpGraph() throws FakieException {
+        return graphDumper.dump(graph);
+    }
+
+    protected D readDataset(Path datasetPath) throws FakieInputException {
+        return datasetReader.readDataset(datasetPath);
     }
 
     protected void logGeneratedRules(List<Rule> rules) {

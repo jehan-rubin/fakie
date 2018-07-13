@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Binder {
     private List<CodeSmellBuilder> codeSmells;
@@ -19,8 +18,13 @@ public class Binder {
         this.codeSmells = codeSmells;
     }
 
-    public List<CodeSmell> bind() {
-        return codeSmells.stream().map(CodeSmellBuilder::build).collect(Collectors.toList());
+    CodeSmells bind() {
+        CodeSmells result = new CodeSmells();
+        for (CodeSmellBuilder codeSmell : codeSmells) {
+            CodeSmell cs = codeSmell.build();
+            result.add(cs);
+        }
+        return result;
     }
 
     public static class CodeSmellBuilder {
@@ -52,7 +56,7 @@ public class Binder {
             this.name = name;
         }
 
-        public CodeSmell build() {
+        private CodeSmell build() {
             return new CodeSmell(labels, properties, name);
         }
     }

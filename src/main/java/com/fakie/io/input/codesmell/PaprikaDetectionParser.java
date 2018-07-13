@@ -28,7 +28,7 @@ public class PaprikaDetectionParser implements CodeSmellParser {
     }
 
     @Override
-    public List<CodeSmell> parse(File file) throws FakieInputException {
+    public CodeSmells parse(File file) throws FakieInputException {
         logger.info("Parsing %s as a Paprika detection output folder", file);
         if (file.isDirectory()) {
             return parseDirectory(file);
@@ -38,26 +38,26 @@ public class PaprikaDetectionParser implements CodeSmellParser {
         }
     }
 
-    private List<CodeSmell> parseDirectory(File file) throws FakieInputException {
+    private CodeSmells parseDirectory(File file) throws FakieInputException {
         Collection<File> files = FileUtils.listFiles(file, EXT, false);
-        List<CodeSmell> codeSmells = new ArrayList<>();
+        CodeSmells codeSmells = new CodeSmells();
         for (File csv : files) {
             codeSmells.addAll(parseFile(csv));
         }
         return codeSmells;
     }
 
-    private List<CodeSmell> parseFile(File file) throws FakieInputException {
+    private CodeSmells parseFile(File file) throws FakieInputException {
         Optional<String> name = codeSmellName(file.getName());
         if (name.isPresent()) {
             return parseCSV(file, name.get());
         }
-        return new ArrayList<>();
+        return new CodeSmells();
     }
 
-    private List<CodeSmell> parseCSV(File file, String name) throws FakieInputException {
+    private CodeSmells parseCSV(File file, String name) throws FakieInputException {
         logger.info("Parsing %s", file);
-        List<CodeSmell> codeSmells = new ArrayList<>();
+        CodeSmells codeSmells = new CodeSmells();
         try (CSVParser csv = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT.withHeader())) {
             Map<String, Integer> headerMap = csv.getHeaderMap();
             for (CSVRecord record : csv) {

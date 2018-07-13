@@ -38,6 +38,10 @@ public class CodeSmell implements Processor {
         return graph;
     }
 
+    public String getName() {
+        return name;
+    }
+
     private Set<Element> filterElements(Graph graph) {
         Set<Element> elements = null;
         for (Map.Entry<String, Object> property : properties.entrySet()) {

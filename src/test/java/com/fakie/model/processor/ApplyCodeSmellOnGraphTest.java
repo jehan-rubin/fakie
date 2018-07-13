@@ -1,6 +1,7 @@
 package com.fakie.model.processor;
 
 import com.fakie.io.input.FakieInputException;
+import com.fakie.io.input.codesmell.CodeSmells;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
 import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.model.graph.Graph;
@@ -12,14 +13,13 @@ import org.junit.Test;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class ApplyCodeSmellOnGraphTest {
     private static final String NAME = "tor";
     private File db;
-    private List<CodeSmell> codeSmells;
+    private CodeSmells codeSmells;
 
     @Before
     public void setUp() throws Exception {
