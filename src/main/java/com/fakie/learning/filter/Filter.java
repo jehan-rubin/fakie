@@ -2,7 +2,7 @@ package com.fakie.learning.filter;
 
 import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
-import com.fakie.model.processor.Keyword;
+import com.fakie.utils.Keyword;
 import com.fakie.utils.logic.Expression;
 
 import java.util.List;

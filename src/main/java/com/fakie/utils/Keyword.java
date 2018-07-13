@@ -1,4 +1,4 @@
-package com.fakie.model.processor;
+package com.fakie.utils;
 
 public enum Keyword {
     SEPARATOR("_"),

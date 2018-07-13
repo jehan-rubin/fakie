@@ -2,7 +2,7 @@ package com.fakie.utils.paprika;
 
 import com.fakie.io.input.apk.APKInfo;
 import com.fakie.io.input.apk.CSVInfoReader;
-import com.fakie.model.processor.Keyword;
+import com.fakie.utils.Keyword;
 import com.fakie.utils.exceptions.FakieException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;

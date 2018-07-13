@@ -3,6 +3,7 @@ package com.fakie.model.processor;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Property;
 import com.fakie.model.graph.Vertex;
+import com.fakie.utils.Keyword;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

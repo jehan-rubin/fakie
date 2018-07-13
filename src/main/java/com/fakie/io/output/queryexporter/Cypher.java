@@ -2,6 +2,7 @@ package com.fakie.io.output.queryexporter;
 
 import com.fakie.io.output.FakieOutputException;
 import com.fakie.learning.Rule;
+import com.fakie.utils.FakieUtils;
 import com.fakie.utils.logic.Expression;
 import com.fakie.utils.logic.Operator;
 import iot.jcypher.query.JcQuery;
@@ -48,7 +49,7 @@ public class Cypher implements QueryExporter {
         if (!dir.exists() && !dir.mkdirs()) {
             throw new FakieOutputException("Could not create directory \'" + dir + "\'");
         }
-        File file = dir.toPath().resolve(createName().concat(EXT)).toFile();
+        File file = dir.toPath().resolve(FakieUtils.uniqueName().concat(EXT)).toFile();
         if (!file.exists() && !file.createNewFile()) {
             throw new FakieOutputException("Could not create file \'" + file + "\'");
         }

@@ -4,6 +4,7 @@ import com.fakie.model.graph.Element;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Property;
 import com.fakie.model.graph.Type;
+import com.fakie.utils.Keyword;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
