@@ -14,6 +14,10 @@ public class Edge extends Element {
         this.type = type;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public Vertex getSource() {
         return source;
     }

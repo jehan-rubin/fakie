@@ -1,6 +1,7 @@
 package com.fakie.learning.filter;
 
 import com.fakie.learning.Rule;
+import com.fakie.utils.FakieUtils;
 import com.fakie.utils.logic.Expression;
 import com.fakie.utils.logic.Implication;
 import com.fakie.utils.logic.Operator;
@@ -44,12 +45,12 @@ public class FilterNonCodeSmellRule implements Filter {
     }
 
     private Operator filterFalseCodeSmell(Operator operator) {
-        return operator.filter(expression -> (!isACodeSmell(expression) || expression.getValue()));
+        return operator.filter(expression -> (!FakieUtils.isACodeSmell(expression) || expression.getValue()));
     }
 
     private boolean containsACodeSmell(Operator operator) {
         for (Expression expression : operator) {
-            if (isACodeSmell(expression) && expression.getValue()) {
+            if (FakieUtils.isACodeSmell(expression) && expression.getValue()) {
                 return true;
             }
         }

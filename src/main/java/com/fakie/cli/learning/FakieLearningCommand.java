@@ -28,7 +28,7 @@ public abstract class FakieLearningCommand extends FakieSubCommand {
     @Override
     protected void process() {
         try {
-            fakie().addCodeSmellToGraph(codesmell);
+            fakie().readCodeSmellFile(codesmell);
             applyAlgorithm();
         }
         catch (FakieInputException e) {

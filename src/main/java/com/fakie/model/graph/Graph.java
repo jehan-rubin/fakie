@@ -43,6 +43,12 @@ public class Graph extends AbstractProperties {
         return edge;
     }
 
+    public Edge createEdge(Edge edge) {
+        Edge e = createEdge(createVertex(edge.getSource()), createVertex(edge.getDestination()), edge.getType());
+        e.setProperties(edge);
+        return e;
+    }
+
     public List<Element> getElements() {
         return Stream.of(vertices, edges).flatMap(List::stream).collect(Collectors.toList());
     }
@@ -61,6 +67,18 @@ public class Graph extends AbstractProperties {
             return new HashSet<>(index.get(property));
         }
         return new HashSet<>();
+    }
+
+    public Set<Vertex> findVertices(String key, Object value) {
+        Set<Vertex> result = new HashSet<>(this.vertices);
+        result.retainAll(find(key, value));
+        return result;
+    }
+
+    public Set<Edge> findEdges(String key, Object value) {
+        Set<Edge> result = new HashSet<>(this.edges);
+        result.retainAll(find(key, value));
+        return result;
     }
 
     @Override

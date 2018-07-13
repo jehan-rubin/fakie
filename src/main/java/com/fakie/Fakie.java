@@ -5,26 +5,20 @@ import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.codesmell.JsonCodeSmellParser;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
 import com.fakie.io.input.codesmell.ParserFactory;
-import com.fakie.io.input.dataset.ARFFReader;
 import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.io.output.FakieOutputException;
-import com.fakie.io.output.graphdumper.GraphToARFF;
 import com.fakie.io.output.queryexporter.Cypher;
+import com.fakie.learning.Algorithm;
 import com.fakie.learning.Rule;
-import com.fakie.learning.association.Orchestrator;
-import com.fakie.learning.filter.FilterNonCodeSmellRule;
-import com.fakie.learning.filter.FilterRedundantRule;
-import com.fakie.learning.filter.ManyToOne;
-import com.fakie.learning.filter.RemoveNonCodeSmellConsequences;
+import com.fakie.learning.association.AprioriAlgorithm;
+import com.fakie.learning.association.FPGrowthAlgorithm;
 import com.fakie.model.graph.Graph;
-import com.fakie.model.processor.*;
+import com.fakie.model.processor.CodeSmell;
 import com.fakie.utils.exceptions.FakieException;
 import com.fakie.utils.paprika.PaprikaAccessor;
 import com.fakie.utils.paprika.PaprikaException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import weka.associations.Apriori;
-import weka.associations.FPGrowth;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -76,7 +70,7 @@ public class Fakie {
         logger.info("Correctly loaded %s from neo4j database", graph);
     }
 
-    public void addCodeSmellToGraph(Path codesmell) throws FakieInputException {
+    public void readCodeSmellFile(Path codesmell) throws FakieInputException {
         if (codesmell != null) {
             this.queries = codesmell;
         }
@@ -84,65 +78,23 @@ public class Fakie {
     }
 
     public void fpGrowth(int n, double support) throws FakieException {
-        logger.info("Applying FPGrowth on dataset with %d rules and a min support of %f", n, support);
-        FPGrowth fpGrowth = new FPGrowth();
-        fpGrowth.setNumRulesToFind(n);
-        fpGrowth.setMinMetric(support);
-        fpGrowth.setLowerBoundMinSupport(support);
-        Orchestrator fpGrowthOrchestrator = new Orchestrator();
-        fpGrowthOrchestrator.useAssociationAlgorithm(fpGrowth);
-        orchestrateLearning(fpGrowthOrchestrator);
+        logger.info("Applying FPGrowth algorithm on %s with %d rules and a min support of %f", graph, n, support);
+        FPGrowthAlgorithm fpGrowth = new FPGrowthAlgorithm(graph, codeSmells, n, support);
+        applyingAlgorithm(fpGrowth);
     }
 
     public void apriori(int n, double support) throws FakieException {
         logger.info("Applying Apriori on dataset with %d rules and a min support of %f", n, support);
-        Apriori apriori = new Apriori();
-        apriori.setNumRules(n);
-        apriori.setMinMetric(support);
-        apriori.setLowerBoundMinSupport(support);
-        Orchestrator aprioriOrchestrator = new Orchestrator();
-        aprioriOrchestrator.useAssociationAlgorithm(apriori);
-        orchestrateLearning(aprioriOrchestrator);
+        AprioriAlgorithm aprioriAlgorithm = new AprioriAlgorithm(graph, codeSmells, n, support);
+        applyingAlgorithm(aprioriAlgorithm);
     }
 
-    private void orchestrateLearning(Orchestrator orchestrator) throws FakieException {
+    private void applyingAlgorithm(Algorithm algorithm) throws FakieException {
         if (graph == null) {
             logger.warn("The graph could not be found. Aborting association algorithm");
             return;
         }
-        orchestrator.useGraph(graph);
-        orchestrator.useProcessors(
-                new RemoveEdges(),
-                new ApplyCodeSmellOnGraph(codeSmells),
-                new ConvertLabelsToProperties(),
-                new ConvertArraysToNominal(),
-                new ConvertNumericToBoolean(),
-                new ProcessOnlyVerticesWithACodeSmell(),
-                new ConvertNominalToBoolean(),
-                new KeepOnlyBooleanProperties()
-        );
-        orchestrator.useGraphDumper(new GraphToARFF());
-        orchestrator.useDatasetReader(new ARFFReader());
-        orchestrator.useFilters(
-                new FilterNonCodeSmellRule(),
-                new RemoveNonCodeSmellConsequences(),
-                new ManyToOne(),
-                new FilterRedundantRule()
-        );
-        rules = orchestrator.orchestrate();
-        logRules(rules);
-    }
-
-    private void logRules(List<Rule> rules) {
-        if (rules.isEmpty()) {
-            logger.warn("No rules left after filtering");
-        }
-        else {
-            logger.info("Filtered rules (%d)", rules.size());
-            for (Rule rule : rules) {
-                logger.info("\t %s", rule);
-            }
-        }
+        rules = algorithm.generateRules();
     }
 
     public void exportRulesAsCypherQueries(Path path) throws FakieOutputException {

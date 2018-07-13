@@ -21,7 +21,7 @@ public class Association implements Algorithm {
     private final Associator associator;
     private final AssociationRulesProducer producer;
 
-    public Association(Instances dataset, Associator associator, AssociationRulesProducer producer) {
+    Association(Instances dataset, Associator associator, AssociationRulesProducer producer) {
         this.dataset = dataset;
         this.associator = associator;
         this.producer = producer;

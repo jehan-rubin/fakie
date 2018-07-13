@@ -1,16 +1,14 @@
 package com.fakie.utils;
 
 public enum Keyword {
-    SEPARATOR("_"),
+    SEPARATOR(" "),
     LABEL,
     CODE_SMELL,
-    IS("%s_IS_%s"),
-    EQUAL("%s=%s"),
+    EQUAL("%s = %s"),
     LOW,
     HIGH,
-    SPLIT("%s_%s"),
+    SPLIT("%s %s"),
     BELOW("%s < %s"),
-    BETWEEN("BETWEEN_%s_AND_%s"),
     ABOVE("%s > %s");
 
     private final String name;

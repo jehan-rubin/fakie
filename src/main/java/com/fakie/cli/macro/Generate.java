@@ -41,7 +41,7 @@ public class Generate extends FakieSubCommand {
     protected void process() {
         try {
             fakie().loadGraphFromNeo4jDatabase(db);
-            fakie().addCodeSmellToGraph(codesmell);
+            fakie().readCodeSmellFile(codesmell);
             fakie().fpGrowth(n, support);
             fakie().exportRulesAsCypherQueries(output);
         }
