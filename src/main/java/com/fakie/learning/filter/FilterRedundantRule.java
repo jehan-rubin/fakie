@@ -1,6 +1,5 @@
 package com.fakie.learning.filter;
 
-import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,8 +11,8 @@ public class FilterRedundantRule implements Filter {
     private static final Logger logger = LogManager.getFormatterLogger();
 
     @Override
-    public List<Rule> filter(List<Rule> rules) throws LearningException {
-        logger.info("Filter redundant rules");
+    public List<Rule> filter(List<Rule> rules) {
+        logger.info("Filter redundant rules (%d)", rules.size());
         Deque<Rule> temp = rules.stream()
                 .sorted(this::compare)
                 .collect(Collectors.toCollection(ArrayDeque::new));
@@ -41,7 +40,7 @@ public class FilterRedundantRule implements Filter {
         boolean sameMetricButMorePremises = sameConsequences && sameSupport && sameConfidence && morePremises;
 
         boolean betterSupport = Double.compare(ruleI.getSupport(), ruleJ.getSupport()) <= 0;
-        boolean betterConfidence =  Double.compare(ruleI.getConfidence(), ruleJ.getConfidence()) <= 0;
+        boolean betterConfidence = Double.compare(ruleI.getConfidence(), ruleJ.getConfidence()) <= 0;
         boolean samePremises = ruleI.premises().equals(ruleJ.premises());
         boolean betterSupportAndConfidence = sameConsequences && betterSupport && betterConfidence && samePremises;
 
@@ -49,6 +48,6 @@ public class FilterRedundantRule implements Filter {
     }
 
     private int compare(Rule a, Rule b) {
-        return b.premises().size() - a.premises().size();
+        return b.premises().variables() - a.premises().variables();
     }
 }

@@ -405,7 +405,7 @@ The conversion from numeric to boolean uses a threshold system in order to accel
 ### Read Dataset
 * Read an ARFF dataset :heavy_check_mark:
 
-### Learning Algorithm
+### Data Mining Algorithm
 * Implement FPGrowth algorithm to infer associations rules among properties :heavy_check_mark:
 * Implement Apriori algorithm to infer associations rules among properties :heavy_check_mark:
 
@@ -416,7 +416,7 @@ The conversion from numeric to boolean uses a threshold system in order to accel
 * Filter rules with the same support but a different the amount of premises :heavy_check_mark:
 
 ### Export Rules to Queries
-* Export the rules to Cypher :heavy_check_mark:
+* Export the rules to Cypher :x:
 * Convert Fakie rules to allow a reuse by Paprika :x:
 
 ## Troubleshooting

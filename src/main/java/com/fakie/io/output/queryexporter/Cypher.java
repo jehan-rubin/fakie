@@ -3,16 +3,12 @@ package com.fakie.io.output.queryexporter;
 import com.fakie.io.output.FakieOutputException;
 import com.fakie.learning.Rule;
 import com.fakie.utils.FakieUtils;
-import com.fakie.utils.logic.Expression;
-import com.fakie.utils.logic.Operator;
+import com.fakie.utils.expression.Expression;
 import iot.jcypher.query.JcQuery;
 import iot.jcypher.query.api.IClause;
-import iot.jcypher.query.api.predicate.Concat;
-import iot.jcypher.query.api.predicate.Concatenator;
 import iot.jcypher.query.api.start.StartPoint;
 import iot.jcypher.query.factories.clause.RETURN;
 import iot.jcypher.query.factories.clause.START;
-import iot.jcypher.query.factories.clause.WHERE;
 import iot.jcypher.query.values.JcNode;
 import iot.jcypher.query.writer.Format;
 import iot.jcypher.util.Util;
@@ -67,39 +63,20 @@ public class Cypher implements QueryExporter {
     }
 
     private void convertRuleToQueryAndAddItToQueries(Map<String, JcQuery> queries, Rule rule) {
-        Operator.Type type = rule.premises().getType();
-        if (type == Operator.Type.OR) {
-            createAndAddQueryToQueries(queries, rule, Concatenator::OR);
-        }
-        else if (type == Operator.Type.AND) {
-            createAndAddQueryToQueries(queries, rule, Concatenator::AND);
-        }
-    }
-
-    private void createAndAddQueryToQueries(Map<String, JcQuery> queries, Rule rule, Concatenate concatenate) {
-        JcQuery jcQuery = convertPremisesToQuery(rule.premises(), concatenate);
-        for (Expression expression : rule.consequences()) {
-            queries.put(expression.getAttribute(), jcQuery);
+        JcQuery jcQuery = buildQuery(rule.premises());
+        for (Expression expression : rule.consequences().depthFirstChildren()) {
+            if (FakieUtils.isACodeSmell(expression)) {
+                queries.put(expression.eval().toString(), jcQuery);
+            }
         }
     }
 
-    private JcQuery convertPremisesToQuery(Operator premises, Concatenate concatenate) {
+    private JcQuery buildQuery(Expression premises) {
         JcQuery jcQuery = new JcQuery();
         JcNode n = new JcNode("n");
         List<IClause> clauses = new ArrayList<>();
         StartPoint start = START.node(n).all();
         clauses.add(start);
-        Concat concat = WHERE.BR_OPEN();
-        Concatenator c = null;
-        for (Expression expression : premises) {
-            if (c != null) {
-                concat = concatenate.apply(c);
-            }
-            c = concat.valueOf(n.property(expression.getAttribute())).EQUALS(expression.getValue());
-        }
-        if (c != null) {
-            clauses.add(c.BR_CLOSE());
-        }
         clauses.add(RETURN.value(n));
         jcQuery.setClauses(clauses.toArray(new IClause[0]));
         return jcQuery;
@@ -107,10 +84,5 @@ public class Cypher implements QueryExporter {
 
     private String formatQuery(JcQuery query) {
         return Util.toCypher(query, Format.PRETTY_3);
-    }
-
-    @FunctionalInterface
-    private interface Concatenate {
-        Concat apply(Concatenator concatenator);
     }
 }

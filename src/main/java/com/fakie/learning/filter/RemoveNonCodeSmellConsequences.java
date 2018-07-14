@@ -2,14 +2,13 @@ package com.fakie.learning.filter;
 
 import com.fakie.learning.Rule;
 import com.fakie.utils.FakieUtils;
-import com.fakie.utils.logic.Expression;
-import com.fakie.utils.logic.Implication;
-import com.fakie.utils.logic.Operator;
+import com.fakie.utils.expression.And;
+import com.fakie.utils.expression.Equals;
+import com.fakie.utils.expression.Expression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RemoveNonCodeSmellConsequences implements Filter {
@@ -17,7 +16,7 @@ public class RemoveNonCodeSmellConsequences implements Filter {
 
     @Override
     public List<Rule> filter(List<Rule> rules) {
-        logger.info("Remove consequences which are not code smell from the rules");
+        logger.info("Remove consequences which are not code smell from the rules (%d)", rules.size());
         List<Rule> filtered = new ArrayList<>();
         for (Rule rule : rules) {
             addRuleWithOnlyCodeSmellInConsequences(filtered, rule);
@@ -31,17 +30,29 @@ public class RemoveNonCodeSmellConsequences implements Filter {
     }
 
     private Rule removeAllNonCodeSmellConsequences(Rule rule) {
-        Operator consequences = rule.consequences();
-        Rule result = rule;
-        if (consequences.getType() == Operator.Type.AND) {
-            for (Expression expression : consequences) {
-                if (FakieUtils.isACodeSmell(expression)) {
-                    Operator operator = consequences.newInstance(Collections.singletonList(expression));
-                    Implication implication = new Implication(rule.premises(), operator);
-                    result = new Rule(implication, rule.getSupport(), rule.getConfidence());
-                }
+        Expression consequences = rule.consequences();
+        Expression result = removeAllNonCodeSmell(consequences).simplify();
+        return new Rule(rule.premises().imply(result), rule.getSupport(), rule.getConfidence());
+    }
+
+    private Expression removeAllNonCodeSmell(Expression expression) {
+        if (expression.getType() == Expression.Type.EQ) {
+            Equals op = expression.cast(Equals.class);
+            Expression left = op.getLeft();
+            Expression right = op.getRight();
+            if (left.getType() == Expression.Type.VAR && right.getType() == Expression.Type.VAR) {
+                boolean isACodeSmell = FakieUtils.isACodeSmell(left);
+                return isACodeSmell ? expression : Expression.empty();
             }
+            op.setLeft(removeAllNonCodeSmell(left));
+            op.setRight(removeAllNonCodeSmell(right));
+            return op;
+        } else if (expression.getType() == Expression.Type.AND) {
+            And and = expression.cast(And.class);
+            and.setLeft(removeAllNonCodeSmell(and.getLeft()));
+            and.setRight(removeAllNonCodeSmell(and.getRight()));
+            return and;
         }
-        return result;
+        return expression;
     }
 }

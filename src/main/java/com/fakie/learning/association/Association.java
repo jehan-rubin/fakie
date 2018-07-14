@@ -3,9 +3,7 @@ package com.fakie.learning.association;
 import com.fakie.learning.Algorithm;
 import com.fakie.learning.LearningException;
 import com.fakie.learning.Rule;
-import com.fakie.utils.logic.And;
-import com.fakie.utils.logic.Expression;
-import com.fakie.utils.logic.Implication;
+import com.fakie.utils.expression.Expression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import weka.associations.*;
@@ -54,18 +52,20 @@ public class Association implements Algorithm {
     }
 
     private Rule buildRuleFromAssociationRule(AssociationRule associationRule) {
-        List<Expression> expressions = new ArrayList<>();
+        Expression left = Expression.empty();
         for (Item item : associationRule.getPremise()) {
-            expressions.add(new Expression(item.getAttribute().name(), Boolean.valueOf(item.getItemValueAsString())));
+            String key = item.getAttribute().name();
+            Boolean value = Boolean.valueOf(item.getItemValueAsString());
+            left = left.and(Expression.of(key).eq(value));
         }
-        And left = new And(expressions);
-        expressions.clear();
+        Expression right = Expression.empty();
         for (Item item : associationRule.getConsequence()) {
-            expressions.add(new Expression(item.getAttribute().name(), Boolean.valueOf(item.getItemValueAsString())));
+            String key = item.getAttribute().name();
+            Boolean value = Boolean.valueOf(item.getItemValueAsString());
+            right = right.and(Expression.of(key).eq(value));
         }
-        And right = new And(expressions);
         double support = associationRule.getTotalSupport() * 1.0 / dataset.numInstances();
         double confidence = associationRule.getPrimaryMetricValue();
-        return new Rule(new Implication(left, right), support, confidence);
+        return new Rule(left.imply(right), support, confidence);
     }
 }

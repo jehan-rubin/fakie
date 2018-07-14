@@ -1,7 +1,7 @@
 package com.fakie.learning.filter;
 
 import com.fakie.learning.Rule;
-import com.fakie.utils.logic.Operator;
+import com.fakie.utils.expression.Expression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,7 +13,7 @@ public class ManyToOne implements Filter {
 
     @Override
     public List<Rule> filter(List<Rule> rules) {
-        logger.info("Keep only many to one rules");
+        logger.info("Keep only many to one rules (%d)", rules.size());
         List<Rule> filtered = new ArrayList<>();
         for (Rule rule : rules) {
             addOnlyManyToOneRule(filtered, rule);
@@ -22,9 +22,9 @@ public class ManyToOne implements Filter {
     }
 
     private void addOnlyManyToOneRule(List<Rule> filtered, Rule rule) {
-        Operator consequences = rule.consequences();
-       if (consequences.size() == 1) {
-           filtered.add(rule);
-       }
+        Expression consequences = rule.consequences();
+        if (consequences.variables() == 2) {
+            filtered.add(rule);
+        }
     }
 }

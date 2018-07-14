@@ -1,7 +1,7 @@
 package com.fakie.learning;
 
-import com.fakie.utils.logic.Implication;
-import com.fakie.utils.logic.Operator;
+import com.fakie.utils.expression.Expression;
+import com.fakie.utils.expression.Implication;
 
 import java.util.Objects;
 
@@ -20,11 +20,11 @@ public class Rule {
         return new Rule(implication.contrapositive(), support, confidence);
     }
 
-    public Operator premises() {
+    public Expression premises() {
         return implication.getLeft();
     }
 
-    public Operator consequences() {
+    public Expression consequences() {
         return implication.getRight();
     }
 

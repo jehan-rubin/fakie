@@ -2,7 +2,7 @@ package com.fakie.utils;
 
 import com.fakie.io.FakieIOException;
 import com.fakie.model.graph.Property;
-import com.fakie.utils.logic.Expression;
+import com.fakie.utils.expression.Expression;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -41,6 +41,6 @@ public class FakieUtils {
     }
 
     public static boolean isACodeSmell(Expression expression) {
-        return FakieUtils.isACodeSmell(expression.getAttribute());
+        return expression.getType() == Expression.Type.VAR && FakieUtils.isACodeSmell(expression.eval().toString());
     }
 }
