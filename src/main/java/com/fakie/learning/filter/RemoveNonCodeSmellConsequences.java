@@ -40,7 +40,7 @@ public class RemoveNonCodeSmellConsequences implements Filter {
             Equals op = expression.cast(Equals.class);
             Expression left = op.getLeft();
             Expression right = op.getRight();
-            if (left.getType() == Expression.Type.VAR && right.getType() == Expression.Type.VAR) {
+            if (left.getType().isVariable() && right.getType().isVariable()) {
                 boolean isACodeSmell = FakieUtils.isACodeSmell(left);
                 return isACodeSmell ? expression : Expression.empty();
             }

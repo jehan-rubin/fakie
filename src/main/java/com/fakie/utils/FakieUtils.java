@@ -27,7 +27,7 @@ public class FakieUtils {
     }
 
     public static String uniqueName() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy MM dd - HH mm ss n");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy MM dd - HH mm ss");
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
     }
@@ -41,6 +41,6 @@ public class FakieUtils {
     }
 
     public static boolean isACodeSmell(Expression expression) {
-        return expression.getType() == Expression.Type.VAR && FakieUtils.isACodeSmell(expression.eval().toString());
+        return expression.getType().isVariable() && FakieUtils.isACodeSmell(expression.eval().toString());
     }
 }

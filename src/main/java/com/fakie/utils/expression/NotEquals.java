@@ -7,6 +7,6 @@ public class NotEquals extends BinaryOperator {
 
     @Override
     public Boolean eval() {
-        return getLeft().eq(getRight()).not().eval();
+        return !getLeft().eq(getRight()).eval();
     }
 }

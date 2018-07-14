@@ -47,7 +47,7 @@ public class FilterNonCodeSmellRule implements Filter {
             BinaryOperator op = expression.cast(BinaryOperator.class);
             Expression left = op.getLeft();
             Expression right = op.getRight();
-            if (left.getType() == Expression.Type.VAR && right.getType() == Expression.Type.VAR) {
+            if (left.getType().isVariable() && right.getType().isVariable()) {
                 boolean isACodeSmell = FakieUtils.isACodeSmell(left);
                 boolean rightIsTrue = right.eq(true).eval();
                 return !isACodeSmell || rightIsTrue ? expression : Expression.empty();
@@ -64,7 +64,7 @@ public class FilterNonCodeSmellRule implements Filter {
             BinaryOperator op = expression.cast(BinaryOperator.class);
             Expression left = op.getLeft();
             Expression right = op.getRight();
-            if (left.getType() == Expression.Type.VAR && right.getType() == Expression.Type.VAR) {
+            if (left.getType().isVariable() && right.getType().isVariable()) {
                 boolean isCodeSmell = FakieUtils.isACodeSmell(left);
                 boolean rightIsTrue = right.eq(true).eval();
                 return isCodeSmell && rightIsTrue;

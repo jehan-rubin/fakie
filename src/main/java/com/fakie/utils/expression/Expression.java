@@ -114,6 +114,10 @@ public interface Expression {
             this.binaryOperator = binaryOperator;
         }
 
+        public boolean isVariable() {
+            return this == VAR;
+        }
+
         public boolean isUnaryOperator() {
             return unaryOperator;
         }

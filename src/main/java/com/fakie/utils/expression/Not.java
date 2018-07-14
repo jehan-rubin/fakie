@@ -7,6 +7,6 @@ public class Not extends UnaryOperator {
 
     @Override
     public Boolean eval() {
-        return getExpression().eq(false).eval();
+        return !getExpression().isTrue().eval();
     }
 }
