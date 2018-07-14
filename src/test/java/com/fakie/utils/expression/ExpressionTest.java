@@ -27,7 +27,7 @@ public class ExpressionTest {
     public void expr3() {
         // (((50 > 43) == true) && (name == hello))
         Expression exp = Expression.empty()
-                .and(Expression.of(10).gt(43)).eq(true).and(Expression.of("name").eq("hello"))
+                .and(Expression.of(50).gt(43)).eq(true).and(Expression.of("name").eq("hello"))
                 .simplify();
         assertEquals(false, exp.eval());
     }

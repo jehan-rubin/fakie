@@ -31,7 +31,7 @@ public class AssociationTest {
 
         Implication implication = Expression.of("CODE_SMELL_BLOB").eq(false)
                 .imply(Expression.of("number_of_methods_greater_than_40").eq(false));
-        System.out.println(rules);
+
         Rule expectedRule = new Rule(implication, 0.6666666666666666, 0.9230769230769231);
         assertTrue(rules.contains(expectedRule));
     }
