@@ -5,6 +5,7 @@ import com.fakie.learning.Rule;
 import com.fakie.utils.FakieUtils;
 import com.fakie.utils.expression.BinaryOperator;
 import com.fakie.utils.expression.Expression;
+import com.fakie.utils.expression.UnaryOperator;
 import iot.jcypher.query.JcQuery;
 import iot.jcypher.query.api.IClause;
 import iot.jcypher.query.api.predicate.BooleanOperation;
@@ -22,20 +23,27 @@ import iot.jcypher.util.Util;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
 
 public class Cypher implements QueryExporter {
     private static final String EXT = ".cql";
     private static final Map<Expression.Type, Mapper> mapping = new EnumMap<>(Expression.Type.class);
     private static final Map<Expression.Type, Linker> linking = new EnumMap<>(Expression.Type.class);
+    private static final Map<Expression.Type, BeforePredicate> before = new EnumMap<>(Expression.Type.class);
 
     static {
-        mapping.put(Expression.Type.EQ, ((op, expression) -> op.EQUALS(expression.eval())));
-        mapping.put(Expression.Type.NEQ, ((op, expression) -> op.NOT_EQUALS(expression.eval())));
-        mapping.put(Expression.Type.GT, ((op, expression) -> op.GT(expression.eval())));
-        mapping.put(Expression.Type.LT, ((op, expression) -> op.LT(expression.eval())));
+        mapping.put(Expression.Type.EQ, ((op, expression) -> op.EQUALS(expression[0].eval())));
+        mapping.put(Expression.Type.NEQ, ((op, expression) -> op.NOT_EQUALS(expression[0].eval())));
+        mapping.put(Expression.Type.GT, ((op, expression) -> op.GT(expression[0].eval())));
+        mapping.put(Expression.Type.LT, ((op, expression) -> op.LT(expression[0].eval())));
+        mapping.put(Expression.Type.IS_TRUE, ((op, expression) -> op.EQUALS(true)));
+        mapping.put(Expression.Type.NOT, ((op, expression) -> op.EQUALS(false)));
 
         linking.put(Expression.Type.AND, Concatenator::AND);
         linking.put(Expression.Type.OR, Concatenator::OR);
+
+        before.put(Expression.Type.IS_TRUE, (iBeforePredicate -> iBeforePredicate));
+        before.put(Expression.Type.NOT, IBeforePredicate::NOT);
     }
 
     @Override
@@ -117,8 +125,15 @@ public class Cypher implements QueryExporter {
                 Concat link = linking.get(expression.getType()).link(l);
                 return concatExpression(n, right, link);
             }
-        } else if (expression.getType() == Expression.Type.NOT) {
-            return concatExpression(n, expression, concat.NOT());
+        } else if (expression.getType().isUnaryOperator()) {
+            UnaryOperator op = expression.cast(UnaryOperator.class);
+            Expression exp = op.getExpression();
+            if (exp.getType().isVariable()) {
+                BooleanOperation booleanOperation = concat.valueOf(n.property(exp.eval().toString()));
+                return mapping.get(expression.getType()).map(booleanOperation);
+            } else {
+                return concatExpression(n, exp, before.get(exp.getType()).apply(concat));
+            }
         }
         return concat.has(n.property(expression.eval().toString()));
     }
@@ -128,10 +143,12 @@ public class Cypher implements QueryExporter {
     }
 
     private interface Mapper {
-        Concatenator map(BooleanOperation op, Expression expression);
+        Concatenator map(BooleanOperation op, Expression... expression);
     }
 
     private interface Linker {
         Concat link(Concatenator concatenator);
     }
+
+    private interface BeforePredicate extends Function<IBeforePredicate, IBeforePredicate> {}
 }

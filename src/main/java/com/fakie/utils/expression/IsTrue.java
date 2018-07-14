@@ -9,4 +9,9 @@ public class IsTrue extends UnaryOperator {
     public Boolean eval() {
         return getExpression().neq(false).eval() && getExpression().neq(0).eval();
     }
+
+    @Override
+    public String toString() {
+        return getExpression().toString();
+    }
 }

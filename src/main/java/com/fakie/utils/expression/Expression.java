@@ -94,7 +94,7 @@ public interface Expression {
     enum Type {
         EMPTY("None", false, false),
         VAR("", false, false),
-        IS_TRUE(" == true", true, false),
+        IS_TRUE("", true, false),
         NOT("!", true, false),
         OR(" || ", false, true),
         AND(" && ", false, true),
