@@ -1,5 +1,6 @@
 package com.fakie.utils.expression;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -11,7 +12,7 @@ public class None extends AbstractExpression {
     }
 
     private None() {
-        super(Type.NONE, 0);
+        super(Type.NONE, BigInteger.ZERO);
     }
 
     @Override

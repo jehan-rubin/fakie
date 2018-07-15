@@ -1,9 +1,10 @@
 package com.fakie.utils.expression;
 
+import java.math.BigInteger;
 import java.util.Collection;
 
 public interface Expression extends Comparable<Expression> {
-    long id();
+    BigInteger id();
 
     Object eval();
 
@@ -28,7 +29,7 @@ public interface Expression extends Comparable<Expression> {
         if (equals(o)) {
             return 0;
         }
-        return size() > o.size() || (size() == o.size()) && id() > o.id() ? 1 : -1;
+        return size() > o.size() || (size() == o.size()) && id().compareTo(o.id()) > 0 ? 1 : -1;
     }
 
     default <T extends Expression> T cast(Class<T> cls) {
@@ -112,7 +113,7 @@ public interface Expression extends Comparable<Expression> {
     enum Type {
         NONE("None", false, false),
         VAR("", false, false),
-        IS_TRUE("|=", true, false),
+        IS_TRUE("⊨", true, false),
         NOT("¬", true, false),
         OR(" ∨ ", false, true),
         AND(" ∧ ", false, true),

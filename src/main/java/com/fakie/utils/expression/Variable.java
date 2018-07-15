@@ -1,13 +1,17 @@
 package com.fakie.utils.expression;
 
+import java.math.BigInteger;
 import java.util.*;
 
 public class Variable extends AbstractExpression {
     private static final Map<Object, Variable> instances = new HashMap<>();
+    private static final Set<BigInteger> ids = new HashSet<>();
+    public static final Variable False = Variable.of(false);
+    public static final Variable True = Variable.of(true);
     private final Object value;
 
     private Variable(Object value) {
-        super(Type.VAR, instances.size());
+        super(Type.VAR, createId());
         this.value = value;
     }
 
@@ -76,5 +80,14 @@ public class Variable extends AbstractExpression {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    private static BigInteger createId() {
+        BigInteger id = BigInteger.ZERO;
+        while (ids.contains(id)) {
+            id = id.add(BigInteger.ONE);
+        }
+        ids.add(id);
+        return id;
     }
 }

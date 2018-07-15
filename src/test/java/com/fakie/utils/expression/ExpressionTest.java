@@ -8,8 +8,7 @@ public class ExpressionTest {
     @Test
     public void expr1() {
         // (((50 > 43) == true) && (name == name))
-        Expression exp = Expression.empty()
-                .and(Expression.of(50).gt(43)).eq(true).and(Expression.of("name").eq("name"))
+        Expression exp = Expression.of(50).gt(43).eq(true).and(Expression.of("name").eq("name"))
                 .simplify();
         assertEquals(true, exp.eval());
     }
@@ -17,8 +16,7 @@ public class ExpressionTest {
     @Test
     public void expr2() {
         // (((10 > 43) == true) && (name == name))
-        Expression exp = Expression.empty()
-                .and(Expression.of(10).gt(43)).eq(true).and(Expression.of("name").eq("name"))
+        Expression exp = Expression.of(10).gt(43).eq(true).and(Expression.of("name").eq("name"))
                 .simplify();
         assertEquals(false, exp.eval());
     }
@@ -26,8 +24,7 @@ public class ExpressionTest {
     @Test
     public void expr3() {
         // (((50 > 43) == true) && (name == hello))
-        Expression exp = Expression.empty()
-                .and(Expression.of(50).gt(43)).eq(true).and(Expression.of("name").eq("hello"))
+        Expression exp = Expression.of(50).gt(43).eq(true).and(Expression.of("name").eq("hello"))
                 .simplify();
         assertEquals(false, exp.eval());
     }
@@ -35,8 +32,7 @@ public class ExpressionTest {
     @Test
     public void expr4() {
         // (((50 > 43) == true) || (name == hello))
-        Expression exp = Expression.empty()
-                .and(Expression.of(50).gt(43)).eq(true).or(Expression.of("name").eq("hello"))
+        Expression exp = Expression.of(50).gt(43).eq(true).or(Expression.of("name").eq("hello"))
                 .simplify();
         assertEquals(true, exp.eval());
     }
@@ -93,7 +89,7 @@ public class ExpressionTest {
 
     @Test
     public void contrapositive1() {
-        Implication exp = Expression.empty().and(Expression.of("number_of_methods > 50").eq(true))
+        Implication exp = Expression.of("number_of_methods > 50").eq(true)
                 .and(Expression.of("lack_of_cohesion_in_methods > 40").eq(true))
                 .and(Expression.of("label 0 == Class").eq(true))
                 .imply(Expression.of("Code smell = BLOB").eq(true));
@@ -105,7 +101,7 @@ public class ExpressionTest {
 
     @Test
     public void contrapositive2() {
-        Implication exp = Expression.empty().and(Expression.of("number_of_methods > 50").eq(true))
+        Implication exp = Expression.of("number_of_methods > 50").eq(true)
                 .and(Expression.of("lack_of_cohesion_in_methods > 40").eq(true))
                 .and(Expression.of("label 0 == Class").eq(true))
                 .and(Expression.of("name").eq("Activity").or(Expression.of("name").eq("Main")))

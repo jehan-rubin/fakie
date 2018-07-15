@@ -1,18 +1,20 @@
 package com.fakie.utils.expression;
 
+import java.math.BigInteger;
 import java.util.Objects;
 
 abstract class AbstractExpression implements Expression {
+    static final BigInteger TYPE_SIZE = BigInteger.valueOf(Type.size() - 1);
     private final Type type;
-    private final long id;
+    private final BigInteger id;
 
-    AbstractExpression(Type type, long id) {
+    AbstractExpression(Type type, BigInteger id) {
         this.type = type;
-        this.id = id * Type.size() + type.ordinal();
+        this.id = id.multiply(TYPE_SIZE).add(BigInteger.valueOf(type.ordinal()));
     }
 
     @Override
-    public long id() {
+    public BigInteger id() {
         return id;
     }
 

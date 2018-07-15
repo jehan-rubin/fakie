@@ -1,5 +1,6 @@
 package com.fakie.utils.expression;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.Objects;
 public abstract class Operator extends AbstractExpression {
     private final List<Law> laws;
 
-    Operator(Type type, long id, Law... laws) {
+    Operator(Type type, BigInteger id, Law... laws) {
         super(type, id);
         this.laws = new ArrayList<>(Arrays.asList(laws));
     }

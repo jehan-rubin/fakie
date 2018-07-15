@@ -18,9 +18,4 @@ public class IsTrue extends UnaryOperator {
     public IsTrue newInstance(Expression expression) {
         return new IsTrue(expression);
     }
-
-    @Override
-    public String toString() {
-        return getExpression().toString();
-    }
 }

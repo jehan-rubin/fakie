@@ -1,5 +1,7 @@
 package com.fakie.utils.expression;
 
+import com.fakie.utils.FakieUtils;
+
 import java.util.*;
 
 public abstract class BinaryOperator extends Operator {
@@ -7,7 +9,7 @@ public abstract class BinaryOperator extends Operator {
     private final Expression right;
 
     BinaryOperator(Expression.Type type, Expression left, Expression right, Law... laws) {
-        super(type, pairing(left.id(), right.id()), laws);
+        super(type, FakieUtils.pair(left.id(), right.id()), laws);
         this.left = left;
         this.right = right;
     }
@@ -18,10 +20,6 @@ public abstract class BinaryOperator extends Operator {
 
     public Expression getRight() {
         return right;
-    }
-
-    private static long pairing(long a, long b) {
-        return a >= b ? a * a + a + b : a + b * b;
     }
 
     @Override
