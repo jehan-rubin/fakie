@@ -40,7 +40,7 @@ public class PaprikaDetectionParser implements CodeSmellParser {
 
     private CodeSmells parseDirectory(File file) throws FakieInputException {
         Collection<File> files = FileUtils.listFiles(file, EXT, false);
-        CodeSmells codeSmells = new CodeSmells();
+        CodeSmells codeSmells = CodeSmells.createIndex();
         for (File csv : files) {
             codeSmells.addAll(parseFile(csv));
         }
@@ -52,12 +52,12 @@ public class PaprikaDetectionParser implements CodeSmellParser {
         if (name.isPresent()) {
             return parseCSV(file, name.get());
         }
-        return new CodeSmells();
+        return CodeSmells.createIndex();
     }
 
     private CodeSmells parseCSV(File file, String name) throws FakieInputException {
         logger.info("Parsing %s", file);
-        CodeSmells codeSmells = new CodeSmells();
+        CodeSmells codeSmells = CodeSmells.createIndex();
         try (CSVParser csv = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT.withHeader())) {
             Map<String, Integer> headerMap = csv.getHeaderMap();
             for (CSVRecord record : csv) {

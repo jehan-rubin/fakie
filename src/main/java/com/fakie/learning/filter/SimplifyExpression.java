@@ -15,7 +15,7 @@ public class SimplifyExpression implements Filter {
 
     @Override
     public List<Rule> filter(List<Rule> rules) throws LearningException {
-        logger.info("Law the rules (%d)", rules.size());
+        logger.info("Simplify the rules (%d)", rules.size());
         Set<Rule> result = new HashSet<>();
         for (Rule rule : rules) {
             result.add(new Rule(rule.premises().simplify().imply(rule.consequences().simplify()),

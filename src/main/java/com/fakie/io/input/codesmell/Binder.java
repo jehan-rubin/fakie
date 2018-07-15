@@ -19,7 +19,7 @@ public class Binder {
     }
 
     CodeSmells bind() {
-        CodeSmells result = new CodeSmells();
+        CodeSmells result = CodeSmells.createIndex();
         for (CodeSmellBuilder codeSmell : codeSmells) {
             CodeSmell cs = codeSmell.build();
             result.add(cs);

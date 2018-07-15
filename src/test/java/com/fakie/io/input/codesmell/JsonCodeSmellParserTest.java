@@ -18,7 +18,7 @@ public class JsonCodeSmellParserTest {
         assert resource != null : "Could not locate resource folder";
         File file = new File(resource.toURI());
         CodeSmells parse = new JsonCodeSmellParser().parse(file);
-        CodeSmells expected = new CodeSmells();
+        CodeSmells expected = CodeSmells.createIndex();
         expected.add(new CodeSmell(
                 Collections.singletonList("Class"),
                 Collections.singletonMap("name", "Main"),

@@ -8,15 +8,15 @@ import java.util.stream.Collectors;
 public class CodeSmells implements Iterable<CodeSmell> {
     private final List<CodeSmell> data;
 
-    public CodeSmells() {
-        this.data = new ArrayList<>();
+    private CodeSmells() {
+        data = new ArrayList<>();
     }
 
     void add(CodeSmell codeSmell) {
         this.data.add(codeSmell);
     }
 
-    void addAll(CodeSmells codeSmells) {
+    void addAll(Iterable<CodeSmell> codeSmells) {
         for (CodeSmell codeSmell : codeSmells) {
             add(codeSmell);
         }
@@ -30,19 +30,13 @@ public class CodeSmells implements Iterable<CodeSmell> {
         return this.data.stream().map(CodeSmell::getName).collect(Collectors.toSet());
     }
 
-    public CodeSmells groupByName(String name) {
-        CodeSmells group = new CodeSmells();
-        for (CodeSmell codeSmell : this.data) {
-            if (codeSmell.getName().equals(name)) {
-                group.add(codeSmell);
-            }
-        }
-        return group;
-    }
-
     @Override
     public Iterator<CodeSmell> iterator() {
         return data.iterator();
+    }
+
+    public CodeSmells groupByName(String name) {
+        return this;
     }
 
     @Override
@@ -63,5 +57,46 @@ public class CodeSmells implements Iterable<CodeSmell> {
     @Override
     public String toString() {
         return data.toString();
+    }
+
+    static CodeSmells createIndex() {
+        return new Index();
+    }
+
+    private static class Index extends CodeSmells {
+        private final Map<String, CodeSmells> groupedByName;
+
+        Index() {
+            this.groupedByName = new HashMap<>();
+        }
+
+        @Override
+        public void add(CodeSmell codeSmell) {
+            super.add(codeSmell);
+            this.groupedByName.putIfAbsent(codeSmell.getName(), new CodeSmells());
+            this.groupedByName.get(codeSmell.getName()).add(codeSmell);
+        }
+
+        @Override
+        public CodeSmells groupByName(String name) {
+            return groupedByName.getOrDefault(name, new CodeSmells());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            if (!super.equals(o))
+                return false;
+            Index that = (Index) o;
+            return Objects.equals(groupedByName, that.groupedByName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), groupedByName);
+        }
     }
 }
