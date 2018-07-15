@@ -19,6 +19,7 @@ public class FilterNonCodeSmellRule implements Filter {
         List<Rule> filtered = new ArrayList<>();
         for (Rule rule : rules) {
             addRuleIfItContainsACodeSmell(filtered, rule);
+            addRuleIfItContainsACodeSmell(filtered, rule.contrapositive());
         }
         return filtered;
     }
@@ -37,8 +38,8 @@ public class FilterNonCodeSmellRule implements Filter {
     }
 
     private Rule filterFalseCodeSmell(Rule rule) {
-        Expression premises = filterFalseCodeSmell(rule.premises()).simplify();
-        Expression consequences = filterFalseCodeSmell(rule.consequences()).simplify();
+        Expression premises = filterFalseCodeSmell(rule.premises());
+        Expression consequences = filterFalseCodeSmell(rule.consequences());
         return new Rule(premises.imply(consequences), rule.getSupport(), rule.getConfidence());
     }
 
@@ -52,9 +53,7 @@ public class FilterNonCodeSmellRule implements Filter {
                 boolean rightIsTrue = right.eq(true).eval();
                 return !isACodeSmell || rightIsTrue ? expression : Expression.empty();
             }
-            op.setLeft(filterFalseCodeSmell(left));
-            op.setRight(filterFalseCodeSmell(right));
-            return op;
+            return op.newInstance(filterFalseCodeSmell(left), filterFalseCodeSmell(right));
         }
         return expression;
     }

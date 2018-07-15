@@ -3,19 +3,15 @@ package com.fakie.utils.expression;
 import java.util.*;
 
 public abstract class UnaryOperator extends Operator {
-    private Expression expression;
+    private final Expression expression;
 
-    public UnaryOperator(Type type, Expression expression) {
-        super(type);
+    UnaryOperator(Type type, Expression expression, Law... laws) {
+        super(type, expression.id(), laws);
         this.expression = expression;
     }
 
     public Expression getExpression() {
         return expression;
-    }
-
-    public void setExpression(Expression expression) {
-        this.expression = expression;
     }
 
     @Override
@@ -57,14 +53,7 @@ public abstract class UnaryOperator extends Operator {
         return children;
     }
 
-    @Override
-    public Expression simplify() {
-        setExpression(expression.simplify());
-        if (expression.getType() == Type.EMPTY) {
-            return Expression.empty();
-        }
-        return super.simplify();
-    }
+    public abstract UnaryOperator newInstance(Expression expression);
 
     @Override
     public boolean equals(Object o) {
@@ -85,6 +74,6 @@ public abstract class UnaryOperator extends Operator {
 
     @Override
     public String toString() {
-        return "(" + getType() + expression + ")";
+        return getType() + "(" + expression + ")";
     }
 }

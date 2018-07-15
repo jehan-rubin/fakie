@@ -66,6 +66,6 @@ public class Association implements Algorithm {
         }
         double support = associationRule.getTotalSupport() * 1.0 / dataset.numInstances();
         double confidence = associationRule.getPrimaryMetricValue();
-        return new Rule(left.simplify().imply(right.simplify()), support, confidence);
+        return new Rule(left.imply(right), support, confidence);
     }
 }

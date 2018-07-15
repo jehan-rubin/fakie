@@ -31,7 +31,7 @@ public class RemoveNonCodeSmellConsequences implements Filter {
 
     private Rule removeAllNonCodeSmellConsequences(Rule rule) {
         Expression consequences = rule.consequences();
-        Expression result = removeAllNonCodeSmell(consequences).simplify();
+        Expression result = removeAllNonCodeSmell(consequences);
         return new Rule(rule.premises().imply(result), rule.getSupport(), rule.getConfidence());
     }
 
@@ -44,14 +44,10 @@ public class RemoveNonCodeSmellConsequences implements Filter {
                 boolean isACodeSmell = FakieUtils.isACodeSmell(left);
                 return isACodeSmell ? expression : Expression.empty();
             }
-            op.setLeft(removeAllNonCodeSmell(left));
-            op.setRight(removeAllNonCodeSmell(right));
-            return op;
+            return op.newInstance(removeAllNonCodeSmell(left), removeAllNonCodeSmell(right));
         } else if (expression.getType() == Expression.Type.AND) {
             And and = expression.cast(And.class);
-            and.setLeft(removeAllNonCodeSmell(and.getLeft()));
-            and.setRight(removeAllNonCodeSmell(and.getRight()));
-            return and;
+            return and.newInstance(removeAllNonCodeSmell(and.getLeft()), removeAllNonCodeSmell(and.getRight()));
         }
         return expression;
     }

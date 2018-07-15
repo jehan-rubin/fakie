@@ -3,15 +3,15 @@ package com.fakie.utils.expression;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class EmptyExpression extends AbstractExpression {
-    private static final EmptyExpression INSTANCE = new EmptyExpression();
+public class None extends AbstractExpression {
+    private static final None INSTANCE = new None();
 
-    static EmptyExpression instance() {
+    static None instance() {
         return INSTANCE;
     }
 
-    private EmptyExpression() {
-        super(Type.EMPTY);
+    private None() {
+        super(Type.NONE, 0);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class EmptyExpression extends AbstractExpression {
 
     @Override
     public Object eval() {
-        throw new EvalEmptyException();
+        throw new NoneEvalException();
     }
 
     @Override

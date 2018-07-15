@@ -5,10 +5,7 @@ import com.fakie.io.input.dataset.ARFFReader;
 import com.fakie.io.output.graphdumper.GraphToARFF;
 import com.fakie.learning.Orchestrator;
 import com.fakie.learning.Rule;
-import com.fakie.learning.filter.FilterNonCodeSmellRule;
-import com.fakie.learning.filter.FilterRedundantRule;
-import com.fakie.learning.filter.ManyToOne;
-import com.fakie.learning.filter.RemoveNonCodeSmellConsequences;
+import com.fakie.learning.filter.*;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.*;
 import com.fakie.utils.exceptions.FakieException;
@@ -42,6 +39,7 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new FilterNonCodeSmellRule(),
                 new RemoveNonCodeSmellConsequences(),
                 new ManyToOne(),
+                new SimplifyExpression(),
                 new FilterRedundantRule()
         );
     }

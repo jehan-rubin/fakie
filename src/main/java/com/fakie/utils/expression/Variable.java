@@ -1,15 +1,21 @@
 package com.fakie.utils.expression;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 public class Variable extends AbstractExpression {
+    private static final Map<Object, Variable> instances = new HashMap<>();
     private final Object value;
 
-    Variable(Object value) {
-        super(Type.VAR);
+    private Variable(Object value) {
+        super(Type.VAR, instances.size());
         this.value = value;
+    }
+
+    static Variable of(Object value) {
+        if (!instances.containsKey(value)) {
+            instances.put(value, new Variable(value));
+        }
+        return instances.get(value);
     }
 
     @Override

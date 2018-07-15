@@ -29,8 +29,8 @@ public class AssociationTest {
         Algorithm algorithm = new Association(dataset, fpGrowth, fpGrowth);
         List<Rule> rules = algorithm.generateRules();
 
-        Implication implication = Expression.of("CODE_SMELL_BLOB").eq(false)
-                .imply(Expression.of("number_of_methods_greater_than_40").eq(false));
+        Implication implication = Expression.empty().and(Expression.of("CODE_SMELL_BLOB").eq(false))
+                .imply(Expression.empty().and(Expression.of("number_of_methods_greater_than_40").eq(false)));
 
         Rule expectedRule = new Rule(implication, 0.6666666666666666, 0.9230769230769231);
         assertTrue(rules.contains(expectedRule));
@@ -46,8 +46,8 @@ public class AssociationTest {
         Algorithm algorithm = new Association(dataset, apriori, apriori);
         List<Rule> rules = algorithm.generateRules();
 
-        Implication implication = Expression.of("CODE_SMELL_BLOB").eq(false)
-                .imply(Expression.of("number_of_methods_greater_than_40").eq(false));
+        Implication implication = Expression.empty().and(Expression.of("CODE_SMELL_BLOB").eq(false))
+                .imply(Expression.empty().and(Expression.of("number_of_methods_greater_than_40").eq(false)));
 
         Rule expectedRule = new Rule(implication, 0.6666666666666666, 0.9230769230769231);
         assertTrue(rules.contains(expectedRule));

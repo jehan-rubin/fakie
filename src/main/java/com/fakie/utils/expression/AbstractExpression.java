@@ -4,9 +4,16 @@ import java.util.Objects;
 
 abstract class AbstractExpression implements Expression {
     private final Type type;
+    private final long id;
 
-    AbstractExpression(Type type) {
+    AbstractExpression(Type type, long id) {
         this.type = type;
+        this.id = id * Type.size() + type.ordinal();
+    }
+
+    @Override
+    public long id() {
+        return id;
     }
 
     @Override

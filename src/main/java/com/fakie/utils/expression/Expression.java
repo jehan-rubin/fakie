@@ -2,7 +2,9 @@ package com.fakie.utils.expression;
 
 import java.util.Collection;
 
-public interface Expression {
+public interface Expression extends Comparable<Expression> {
+    long id();
+
     Object eval();
 
     Type getType();
@@ -21,16 +23,24 @@ public interface Expression {
 
     Collection<Expression> breadthFirstChildren();
 
+    @Override
+    default int compareTo(Expression o) {
+        if (equals(o)) {
+            return 0;
+        }
+        return size() > o.size() || (size() == o.size()) && id() > o.id() ? 1 : -1;
+    }
+
     default <T extends Expression> T cast(Class<T> cls) {
         return cls.cast(this);
     }
 
-    static EmptyExpression empty() {
-        return EmptyExpression.instance();
+    static None empty() {
+        return None.instance();
     }
 
     static Variable of(Object o) {
-        return new Variable(o);
+        return Variable.of(o);
     }
 
     default Not not() {
@@ -65,6 +75,14 @@ public interface Expression {
         return new GreaterThan(this, other);
     }
 
+    default LessThan lt(Object o) {
+        return lt(Expression.of(o));
+    }
+
+    default LessThan lt(Expression other) {
+        return new LessThan(this, other);
+    }
+
     default Equals eq(Object o) {
         return eq(Expression.of(o));
     }
@@ -92,12 +110,12 @@ public interface Expression {
     Expression simplify();
 
     enum Type {
-        EMPTY("None", false, false),
+        NONE("None", false, false),
         VAR("", false, false),
-        IS_TRUE("", true, false),
-        NOT("!", true, false),
-        OR(" || ", false, true),
-        AND(" && ", false, true),
+        IS_TRUE("|=", true, false),
+        NOT("¬", true, false),
+        OR(" ∨ ", false, true),
+        AND(" ∧ ", false, true),
         GT(" > ", false, true),
         LT(" < ", false, true),
         EQ(" == ", false, true),
@@ -114,6 +132,10 @@ public interface Expression {
             this.binaryOperator = binaryOperator;
         }
 
+        public boolean isNone() {
+            return this == NONE;
+        }
+
         public boolean isVariable() {
             return this == VAR;
         }
@@ -124,6 +146,10 @@ public interface Expression {
 
         public boolean isBinaryOperator() {
             return binaryOperator;
+        }
+
+        public static long size() {
+            return values().length;
         }
 
         @Override

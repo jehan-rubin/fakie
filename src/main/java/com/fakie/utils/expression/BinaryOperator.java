@@ -3,11 +3,11 @@ package com.fakie.utils.expression;
 import java.util.*;
 
 public abstract class BinaryOperator extends Operator {
-    private Expression left;
-    private Expression right;
+    private final Expression left;
+    private final Expression right;
 
-    BinaryOperator(Expression.Type type, Expression left, Expression right) {
-        super(type);
+    BinaryOperator(Expression.Type type, Expression left, Expression right, Law... laws) {
+        super(type, pairing(left.id(), right.id()), laws);
         this.left = left;
         this.right = right;
     }
@@ -16,16 +16,12 @@ public abstract class BinaryOperator extends Operator {
         return left;
     }
 
-    public void setLeft(Expression left) {
-        this.left = left;
-    }
-
     public Expression getRight() {
         return right;
     }
 
-    public void setRight(Expression right) {
-        this.right = right;
+    private static long pairing(long a, long b) {
+        return a >= b ? a * a + a + b : a + b * b;
     }
 
     @Override
@@ -75,17 +71,7 @@ public abstract class BinaryOperator extends Operator {
         return children;
     }
 
-    @Override
-    public Expression simplify() {
-        setLeft(left.simplify());
-        setRight(right.simplify());
-        if (left.getType() == Type.EMPTY) {
-            return right;
-        } else if (right.getType() == Type.EMPTY) {
-            return left;
-        }
-        return super.simplify();
-    }
+    public abstract BinaryOperator newInstance(Expression left, Expression right);
 
     @Override
     public boolean equals(Object o) {
