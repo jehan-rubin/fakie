@@ -5,21 +5,38 @@ import java.util.*;
 
 public class Variable extends AbstractExpression {
     private static final Map<Object, Variable> instances = new HashMap<>();
-    private static final Set<BigInteger> ids = new HashSet<>();
+    private static final Map<BigInteger, Variable> ids = new HashMap<>();
     public static final Variable False = Variable.of(false);
     public static final Variable True = Variable.of(true);
     private final Object value;
+    private final BigInteger valueId;
 
-    private Variable(Object value) {
-        super(Type.VAR, createId());
+    private Variable(Object value, BigInteger id) {
+        super(Type.VAR, id);
         this.value = value;
+        this.valueId = id;
     }
 
     static Variable of(Object value) {
         if (!instances.containsKey(value)) {
-            instances.put(value, new Variable(value));
+            Variable variable = new Variable(value, createId());
+            instances.put(value, variable);
+            ids.put(variable.valueId, variable);
         }
         return instances.get(value);
+    }
+
+    static Variable byId(BigInteger id) {
+        return ids.get(id);
+    }
+
+    static Variable newVariable() {
+        int i = 2;
+        Set<Object> keys = instances.keySet();
+        while (keys.contains(i)) {
+            i += 1;
+        }
+        return Variable.of(i);
     }
 
     @Override
@@ -84,10 +101,10 @@ public class Variable extends AbstractExpression {
 
     private static BigInteger createId() {
         BigInteger id = BigInteger.ZERO;
-        while (ids.contains(id)) {
+        Set<BigInteger> idSet = ids.keySet();
+        while (idSet.contains(id)) {
             id = id.add(BigInteger.ONE);
         }
-        ids.add(id);
         return id;
     }
 }

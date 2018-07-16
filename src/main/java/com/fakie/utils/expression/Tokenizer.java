@@ -36,14 +36,17 @@ public class Tokenizer {
         return generators.get(type).generate(mod[0]);
     }
 
-
     private Expression var(BigInteger id) {
         if (id.equals(BigInteger.ZERO)) {
             return Expression.of(false);
         } else if (id.equals(BigInteger.ONE)) {
             return Expression.of(true);
         }
-        return Expression.of(id.intValue());
+        Variable variable = Variable.byId(id);
+        if (variable != null) {
+            return variable;
+        }
+        return Variable.newVariable();
     }
 
     private Expression isTrue(BigInteger id) {
