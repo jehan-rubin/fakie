@@ -8,6 +8,7 @@ public enum Keyword {
     LOW,
     HIGH,
     SPLIT("%s %s"),
+    ARRAY("%s[%s]"),
     BELOW("%s < %s"),
     ABOVE("%s > %s");
 

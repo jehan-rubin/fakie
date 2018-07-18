@@ -4,6 +4,7 @@ import com.fakie.model.FakieModelException;
 import com.fakie.model.graph.Element;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Property;
+import com.fakie.model.graph.Type;
 import com.fakie.utils.FakieUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +15,6 @@ import weka.core.Instances;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InstancesConverter implements Converter<Instances> {
@@ -40,8 +40,11 @@ public class InstancesConverter implements Converter<Instances> {
     private List<Attribute> createAttributes(Graph graph) {
         List<Attribute> attributes = new ArrayList<>();
         for (String key : graph.keys()) {
-            Set<String> values = graph.values(key).stream().map(Object::toString).collect(Collectors.toSet());
-            Attribute attribute = new Attribute(key, new ArrayList<>(values));
+            List<String> values = graph.values(key).stream()
+                    .map(Object::toString)
+                    .distinct()
+                    .collect(Collectors.toList());
+            Attribute attribute = graph.type(key).isNumber() ? new Attribute(key) : new Attribute(key, values);
             attributes.add(attribute);
         }
         return attributes;
@@ -53,7 +56,13 @@ public class InstancesConverter implements Converter<Instances> {
             DenseInstance instance = new DenseInstance(dataset.numAttributes());
             for (Property property : element) {
                 Attribute attribute = dataset.attribute(property.getKey());
-                instance.setValue(attribute, property.getValue().toString());
+                if (graph.type(property.getKey()) == Type.INTEGER) {
+                    instance.setValue(attribute, property.<Integer>getValue());
+                } else if (graph.type(property.getKey()) == Type.DOUBLE) {
+                    instance.setValue(attribute, property.<Double>getValue());
+                } else {
+                    instance.setValue(attribute, property.getValue().toString());
+                }
             }
             instances.add(instance);
         }

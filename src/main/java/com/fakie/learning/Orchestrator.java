@@ -4,8 +4,8 @@ import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.dataset.DatasetReader;
 import com.fakie.io.output.graphdumper.GraphDumper;
 import com.fakie.learning.filter.Filter;
+import com.fakie.model.FakieModelException;
 import com.fakie.model.graph.Graph;
-import com.fakie.model.processor.ProcessingException;
 import com.fakie.model.processor.Processor;
 import com.fakie.utils.exceptions.FakieException;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +43,7 @@ public abstract class Orchestrator<D> implements Algorithm {
         this.filters = Arrays.asList(filters);
     }
 
-    protected void applyProcessors() throws ProcessingException {
+    protected void applyProcessors() throws FakieModelException {
         for (Processor processor : processors) {
             this.graph = processor.process(graph);
         }

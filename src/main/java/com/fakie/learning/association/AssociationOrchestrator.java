@@ -40,7 +40,8 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new RemoveNonCodeSmellConsequences(),
                 new ManyToOne(),
                 new SimplifyExpression(),
-                new FilterRedundantRule()
+                new FilterRedundantRule(),
+                new RestoreRulesAttributes()
         );
     }
 

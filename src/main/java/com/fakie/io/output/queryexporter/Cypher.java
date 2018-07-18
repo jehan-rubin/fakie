@@ -34,8 +34,8 @@ public class Cypher implements QueryExporter {
     static {
         mapping.put(Expression.Type.EQ, ((op, expression) -> op.EQUALS(expression[0].eval())));
         mapping.put(Expression.Type.NEQ, ((op, expression) -> op.NOT_EQUALS(expression[0].eval())));
-        mapping.put(Expression.Type.GT, ((op, expression) -> op.GT(expression[0].eval())));
-        mapping.put(Expression.Type.LT, ((op, expression) -> op.LT(expression[0].eval())));
+        mapping.put(Expression.Type.GT, ((op, expression) -> op.GTE(expression[0].eval())));
+        mapping.put(Expression.Type.LT, ((op, expression) -> op.LTE(expression[0].eval())));
         mapping.put(Expression.Type.IS_TRUE, ((op, expression) -> op.EQUALS(true)));
         mapping.put(Expression.Type.NOT, ((op, expression) -> op.EQUALS(false)));
 
@@ -107,7 +107,7 @@ public class Cypher implements QueryExporter {
         Concat concat = WHERE.BR_OPEN();
         Concatenator concatenator = concatExpression(n, premises, concat);
         clauses.add(concatenator.BR_CLOSE());
-        clauses.add(RETURN.value(n));
+        clauses.add(RETURN.value(n.property("name")));
         jcQuery.setClauses(clauses.toArray(new IClause[0]));
         return jcQuery;
     }
@@ -132,7 +132,7 @@ public class Cypher implements QueryExporter {
                 BooleanOperation booleanOperation = concat.valueOf(n.property(exp.eval().toString()));
                 return mapping.get(expression.getType()).map(booleanOperation);
             } else {
-                return concatExpression(n, exp, before.get(exp.getType()).apply(concat));
+                return concatExpression(n, exp, before.get(expression.getType()).apply(concat));
             }
         }
         return concat.has(n.property(expression.eval().toString()));

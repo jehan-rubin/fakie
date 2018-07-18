@@ -30,7 +30,7 @@ public class ConvertArraysToNominal implements Processor {
     private void convertArrayToNominal(Vertex vertex, Property property) {
         ArrayList<Object> objects = new ArrayList<>(property.<Collection<Object>>getValue());
         for (int i = 0; i < objects.size(); i++) {
-            vertex.setProperty(Keyword.SPLIT.format(property.getKey(), i), objects.get(i));
+            vertex.setProperty(Keyword.ARRAY.format(property.getKey(), i), objects.get(i));
         }
     }
 }
