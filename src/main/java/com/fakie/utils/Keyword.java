@@ -4,7 +4,7 @@ public enum Keyword {
     SEPARATOR(" "),
     LABEL,
     CODE_SMELL,
-    EQUAL("%s = %s"),
+    EQUAL("%s == %s"),
     LOW,
     HIGH,
     SPLIT("%s %s"),

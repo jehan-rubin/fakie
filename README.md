@@ -417,7 +417,7 @@ The conversion from numeric to boolean uses a threshold system in order to accel
 
 ### Export Rules to Queries
 * Export the rules to Cypher :heavy_check_mark:
-* Convert Fakie rules to allow a reuse by Paprika :x:
+* Convert Fakie rules to allow a reuse by Paprika :heavy_check_mark:
 
 ## Troubleshooting
 
