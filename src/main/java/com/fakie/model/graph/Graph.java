@@ -4,11 +4,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Graph extends AbstractProperties {
+public class Graph extends FastProperties {
     private final List<Vertex> vertices;
     private final List<Edge> edges;
-    private final Map<String, List<Object>> values;
-    private final Map<String, Type> types;
     private final Map<Property, Set<Element>> index;
     private int vertexId = 0;
     private long edgeId = 0;
@@ -16,8 +14,6 @@ public class Graph extends AbstractProperties {
     public Graph() {
         vertices = new ArrayList<>();
         edges = new ArrayList<>();
-        values = new HashMap<>();
-        types = new HashMap<>();
         index = new HashMap<>();
     }
 
@@ -45,6 +41,8 @@ public class Graph extends AbstractProperties {
     public Edge createEdge(Vertex source, Vertex destination, String type) {
         Edge edge = new Edge(edgeId++, this, source, destination, type);
         edges.add(edge);
+        source.addOutputEdge(edge);
+        destination.addInputEdge(edge);
         return edge;
     }
 
@@ -82,29 +80,6 @@ public class Graph extends AbstractProperties {
         Set<Edge> result = new HashSet<>(this.edges);
         result.retainAll(find(key, value));
         return result;
-    }
-
-    @Override
-    public Set<String> keys() {
-        return values.keySet();
-    }
-
-    @Override
-    public Collection<Object> values() {
-        return Stream.of(values.values())
-                .flatMap(Collection::stream)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Object> values(String key) {
-        return values.getOrDefault(key, new ArrayList<>());
-    }
-
-    @Override
-    public Type type(String key) {
-        return types.getOrDefault(key, Type.NONE);
     }
 
     public void union(Graph graph) {
@@ -149,21 +124,5 @@ public class Graph extends AbstractProperties {
         Property property = new Property(this, key, value);
         index.putIfAbsent(property, new HashSet<>());
         index.get(property).add(element);
-    }
-
-    private void addValue(String key, Object value) {
-        values.putIfAbsent(key, new ArrayList<>());
-        values.get(key).add(value);
-    }
-
-    private void addType(String key, Object value) {
-        Type type = Type.valueOf(value);
-        if (types.containsKey(key)) {
-            if (types.get(key) != type) {
-                types.put(key, Type.NONE);
-            }
-        } else {
-            types.put(key, type);
-        }
     }
 }

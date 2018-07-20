@@ -1,6 +1,7 @@
 package com.fakie.utils;
 
 import com.fakie.io.FakieIOException;
+import com.fakie.model.graph.Properties;
 import com.fakie.model.graph.Property;
 import com.fakie.utils.expression.Expression;
 
@@ -45,6 +46,15 @@ public class FakieUtils {
 
     public static boolean isACodeSmell(Expression expression) {
         return expression.getType().isVariable() && FakieUtils.isACodeSmell(expression.eval().toString());
+    }
+
+    public static boolean containsACodeSmell(Properties properties) {
+        for (Property property : properties) {
+            if (isACodeSmell(property)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static BigInteger pair(BigInteger a, BigInteger b) {

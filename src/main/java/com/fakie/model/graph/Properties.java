@@ -2,6 +2,7 @@ package com.fakie.model.graph;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -16,6 +17,12 @@ public interface Properties extends Iterable<Property> {
     default void setProperties(Properties properties) {
         for (Property property : properties) {
             setProperty(property.getKey(), property.getValue());
+        }
+    }
+
+    default void setProperties(Map<String, Object> properties) {
+        for (Map.Entry<String, Object> property : properties.entrySet()) {
+            this.setProperty(property.getKey(), property.getValue());
         }
     }
 

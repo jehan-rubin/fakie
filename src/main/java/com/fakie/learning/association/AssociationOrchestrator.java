@@ -63,8 +63,9 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
     private List<Rule> generateRules(CodeSmells codeSmells, Graph graph) throws FakieException {
         useGraph(graph);
         useProcessors(
-                new RemoveEdges(),
                 new ApplyCodeSmellOnGraph(codeSmells),
+                new KeepOnlyVertexWithCodesmellLabel(),
+                new RemoveEdges(),
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
                 new ConvertNumericToBoolean(),

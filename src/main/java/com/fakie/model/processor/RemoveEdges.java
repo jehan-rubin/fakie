@@ -10,7 +10,7 @@ public class RemoveEdges implements Processor {
 
     @Override
     public Graph process(Graph graph) throws ProcessingException {
-        logger.info("Removing edges from the graph");
+        logger.info("Removing edges from %s", graph);
         Graph result = new Graph();
         for (Vertex vertex : graph.getVertices()) {
             result.createVertex(vertex);

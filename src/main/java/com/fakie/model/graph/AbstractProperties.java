@@ -34,12 +34,6 @@ public abstract class AbstractProperties implements Properties {
         return data.values();
     }
 
-    public void setProperties(Map<String, Object> properties) {
-        for (Map.Entry<String, Object> property : properties.entrySet()) {
-            this.setProperty(property.getKey(), property.getValue());
-        }
-    }
-
     @Override
     public Iterator<Property> iterator() {
         return new HashSet<>(data.entrySet()).stream()

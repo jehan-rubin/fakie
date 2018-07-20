@@ -1,7 +1,8 @@
+
 package com.fakie.model.processor;
 
-import com.fakie.model.graph.Element;
-import com.fakie.model.graph.Graph;
+import com.fakie.model.graph.*;
+import com.fakie.model.graph.Properties;
 import com.fakie.utils.Keyword;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,12 +12,13 @@ import java.util.*;
 public class CodeSmell implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
     private final List<String> labels;
-    private final Map<String, Object> properties;
+    private final Properties properties;
     private final String name;
 
     public CodeSmell(List<String> labels, Map<String, Object> properties, String name) {
         this.labels = new ArrayList<>(labels);
-        this.properties = new HashMap<>(properties);
+        this.properties = new FastProperties();
+        this.properties.setProperties(properties);
         this.name = name.replace(" ", Keyword.SPLIT.toString());
     }
 
@@ -27,8 +29,7 @@ public class CodeSmell implements Processor {
         if (size > 1) {
             logger.debug("Find too many matches (" + size + ") for \'" + name + "\' " + labels + " " + properties);
             return graph;
-        }
-        else if (bestMatches.isEmpty()) {
+        } else if (bestMatches.isEmpty()) {
             logger.debug("Could not find a match for \'" + name + "\' " + labels + " " + properties);
             return graph;
         }
@@ -42,9 +43,17 @@ public class CodeSmell implements Processor {
         return name;
     }
 
+    public List<String> getLabels() {
+        return new ArrayList<>(labels);
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
     private Set<Element> filterElements(Graph graph) {
         Set<Element> elements = null;
-        for (Map.Entry<String, Object> property : properties.entrySet()) {
+        for (Property property : properties) {
             Set<Element> temp;
             switch (graph.type(property.getKey())) {
                 case BOOLEAN:

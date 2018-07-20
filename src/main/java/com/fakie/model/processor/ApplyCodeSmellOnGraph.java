@@ -15,7 +15,7 @@ public class ApplyCodeSmellOnGraph implements Processor {
 
     @Override
     public Graph process(Graph graph) throws ProcessingException {
-        logger.info("Adding code smells to the graph");
+        logger.info("Adding code smells to %s", graph);
         for (CodeSmell codeSmell : codeSmells) {
             graph = codeSmell.process(graph);
         }

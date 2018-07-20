@@ -50,4 +50,9 @@ public class Edge extends Element {
         return source.shortRepresentation() + " --" + type + "[" + getId() + "]-> " +
                 destination.shortRepresentation() + ", properties=" + super.toString();
     }
+
+    public String longRepresentation() {
+        return source.toString() + " --" + type + "[" + getId() + "]-> " +
+                destination.toString() + ", properties=" + super.toString();
+    }
 }
