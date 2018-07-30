@@ -21,7 +21,7 @@ public class PaprikaQuery extends PaprikaCommand {
     @Override
     protected void runPaprika() {
         try {
-            fakie().runPaprikaQuery(db, suffix);
+            fakie().runPaprikaQuery(std(), db, suffix);
         }
         catch (PaprikaException e) {
             logger.error(e);

@@ -1,5 +1,6 @@
 package com.fakie.utils.paprika;
 
+import com.fakie.cli.Std;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.codesmell.CodeSmells;
 import com.fakie.io.input.codesmell.PaprikaDetectionParser;
@@ -31,8 +32,8 @@ public class PaprikaQueryTest {
     }
 
     @Test
-    public void torWithOnlyBlobCodeSmells() throws FakieInputException {
-        new PaprikaAccessor().query(dir.toPath(), dir.toPath().toString().concat("/"));
+    public void torWithOnlyBlobCodeSmells() throws FakieInputException, PaprikaException {
+        new PaprikaAccessor(new Std()).query(dir.toPath(), dir.toPath().toString().concat("/"));
         CodeSmells parse = new PaprikaDetectionParser().parse(dir.toPath().resolve("_BLOB_NO_FUZZY.csv").toFile());
         assertEquals(2, parse.size());
         parse = new PaprikaDetectionParser().parse(dir);
@@ -41,7 +42,7 @@ public class PaprikaQueryTest {
 
     @Test
     public void torFuzzyWithOnlyBlobCodeSmells() throws FakieInputException, PaprikaException {
-        new PaprikaAccessor().fuzzyQuery(dir.toPath(), dir.toPath().toString().concat("/"));
+        new PaprikaAccessor(new Std()).fuzzyQuery(dir.toPath(), dir.toPath().toString().concat("/"));
         CodeSmells parse = new PaprikaDetectionParser().parse(dir.toPath().resolve("_BLOB.csv").toFile());
         assertEquals(4, parse.size());
         parse = new PaprikaDetectionParser().parse(dir);

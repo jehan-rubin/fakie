@@ -11,10 +11,7 @@ public interface GraphDumper {
     default Path dump(Graph graph) throws FakieException {
         Path directory = IOPath.GRAPH_DIRECTORY.asPath();
         Path filename = IOPath.GRAPH_FILENAME.asPath();
-        Path path = FakieUtils.findResource(".").toPath()
-                .resolve(directory)
-                .resolve(FakieUtils.uniqueName())
-                .resolve(filename);
+        Path path = directory.resolve(FakieUtils.uniqueName()).resolve(filename);
         dump(path, graph);
         return path;
     }

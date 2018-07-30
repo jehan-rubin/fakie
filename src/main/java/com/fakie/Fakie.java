@@ -1,5 +1,6 @@
 package com.fakie;
 
+import com.fakie.cli.Std;
 import com.fakie.io.IOPath;
 import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.codesmell.CodeSmells;
@@ -41,21 +42,21 @@ public class Fakie {
         );
     }
 
-    public void runPaprikaAnalyse(File androidJars, File apk, File info, Path db) throws FakieException {
+    public void runPaprikaAnalyse(Std std, File androidJars, File apk, File info, Path db) throws FakieException {
         if (db != null) {
             this.db = db;
         }
         logger.info("Running Paprika analyse on %s", apk);
-        new PaprikaAccessor().analyse(androidJars, apk, info, this.db);
+        new PaprikaAccessor(std).analyse(androidJars, apk, info, this.db);
         logger.info("Successfully analysed the apk in %s", this.db);
     }
 
-    public void runPaprikaQuery(Path db, String suffix) throws PaprikaException {
+    public void runPaprikaQuery(Std std, Path db, String suffix) throws PaprikaException {
         if (db != null) {
             this.db = db;
         }
         logger.info("Running Paprika query on %s", this.db);
-        this.queries = new PaprikaAccessor().fuzzyQuery(this.db, suffix);
+        this.queries = new PaprikaAccessor(std).query(this.db, suffix);
         logger.info("Successfully saved queries in %s", this.queries);
     }
 

@@ -35,7 +35,7 @@ public class Std {
         return stderr;
     }
 
-    private static class NullPrintStream extends PrintStream {
+    public static class NullPrintStream extends PrintStream {
         public NullPrintStream() {
             super(new OutputStream() {
                 @Override

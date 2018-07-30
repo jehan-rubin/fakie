@@ -1,8 +1,8 @@
 package com.fakie.model.processor;
 
-import com.fakie.model.FakieModelException;
 import com.fakie.model.graph.Graph;
+import com.fakie.utils.exceptions.FakieException;
 
 public interface Processor {
-    Graph process(Graph graph) throws FakieModelException;
+    Graph process(Graph graph) throws FakieException;
 }

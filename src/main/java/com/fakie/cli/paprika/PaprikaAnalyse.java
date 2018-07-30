@@ -34,7 +34,7 @@ public class PaprikaAnalyse extends PaprikaCommand {
     @Override
     protected void runPaprika() {
         try {
-            fakie().runPaprikaAnalyse(androidJars, apk, info, db);
+            fakie().runPaprikaAnalyse(std(), androidJars, apk, info, db);
         }
         catch (FakieException e) {
             logger.error(e);

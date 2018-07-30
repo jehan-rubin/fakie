@@ -53,7 +53,8 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
             CodeSmells group = this.codeSmells.groupByName(name);
             try {
                 result.addAll(generateRules(group, new Graph(parent)));
-            } catch (FakieException e) {
+            }
+            catch (FakieException e) {
                 logger.warn(e);
             }
         }
@@ -63,15 +64,17 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
     private List<Rule> generateRules(CodeSmells codeSmells, Graph graph) throws FakieException {
         useGraph(graph);
         useProcessors(
-                new ApplyCodeSmellOnGraph(codeSmells),
-                new KeepOnlyVertexWithCodesmellLabel(),
-                new RemoveEdges(),
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
+                new ApplyCodeSmellOnGraph(codeSmells),
+                new KeepOnlyVertexWithCodesmellLabel(),
+                new OverriddenMethods(),
+                new RemoveEdges(),
                 new ConvertNumericToBoolean(),
                 new ProcessOnlyVerticesWithACodeSmell(),
                 new ConvertNominalToBoolean(),
-                new KeepOnlyBooleanProperties()
+                new KeepOnlyBooleanProperties(),
+                new SequentialAssociation()
         );
         applyProcessors();
         Path datasetPath = dumpGraph();

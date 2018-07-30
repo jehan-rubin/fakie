@@ -1,5 +1,6 @@
 package com.fakie.utils.paprika;
 
+import com.fakie.cli.Std;
 import com.fakie.io.input.graphloader.Neo4j;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Properties;
@@ -16,7 +17,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,7 +41,7 @@ public class PaprikaAnalyseTest {
         info = apkFolder.resolve("info.csv").toFile();
         db = apkFolder.resolve("db");
         android = apkFolder.resolve("android").toFile();
-        paprikaAccessor = new PaprikaAccessor();
+        paprikaAccessor = new PaprikaAccessor(new Std());
 
         if (!android.exists()) {
             cloneAndroidJars();

@@ -4,7 +4,6 @@ import com.fakie.io.input.FakieInputException;
 import com.fakie.io.input.dataset.DatasetReader;
 import com.fakie.io.output.graphdumper.GraphDumper;
 import com.fakie.learning.filter.Filter;
-import com.fakie.model.FakieModelException;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.processor.Processor;
 import com.fakie.utils.exceptions.FakieException;
@@ -12,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,8 +20,8 @@ public abstract class Orchestrator<D> implements Algorithm {
     private Graph graph;
     private GraphDumper graphDumper;
     private DatasetReader<D> datasetReader;
-    private List<Processor> processors;
-    private List<Filter> filters;
+    private List<Processor> processors = new ArrayList<>();
+    private List<Filter> filters = new ArrayList<>();
 
     protected void useGraph(Graph graph) {
         this.graph = graph;
@@ -36,14 +36,14 @@ public abstract class Orchestrator<D> implements Algorithm {
     }
 
     protected void useProcessors(Processor... processors) {
-        this.processors = Arrays.asList(processors);
+        this.processors.addAll(Arrays.asList(processors));
     }
 
     protected void useFilters(Filter... filters) {
-        this.filters = Arrays.asList(filters);
+        this.filters.addAll(Arrays.asList(filters));
     }
 
-    protected void applyProcessors() throws FakieModelException {
+    protected void applyProcessors() throws FakieException {
         for (Processor processor : processors) {
             this.graph = processor.process(graph);
         }
@@ -67,8 +67,7 @@ public abstract class Orchestrator<D> implements Algorithm {
     protected void logGeneratedRules(List<Rule> rules) {
         if (rules.isEmpty()) {
             logger.warn("Could not generate rules from the dataset");
-        }
-        else {
+        } else {
             logger.info("Generated rules (%d)", rules.size());
             for (Rule rule : rules) {
                 logger.debug("\t %s", rule);
@@ -79,8 +78,7 @@ public abstract class Orchestrator<D> implements Algorithm {
     protected void logFilteredRules(List<Rule> rules) {
         if (rules.isEmpty()) {
             logger.warn("No rules left after filtering");
-        }
-        else {
+        } else {
             logger.info("Filtered rules (%d)", rules.size());
             for (Rule rule : rules) {
                 logger.info("\t %s", rule);

@@ -19,8 +19,6 @@
             <groupId>paprika</groupId>
             <artifactId>paprika</artifactId>
             <version>SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/Paprika.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -183,6 +181,29 @@
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <id>install-external</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <file>${basedir}/libs/Paprika.jar</file>
+                            <repositoryLayout>default</repositoryLayout>
+                            <groupId>paprika</groupId>
+                            <artifactId>paprika</artifactId>
+                            <version>SNAPSHOT</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

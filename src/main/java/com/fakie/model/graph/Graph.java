@@ -8,6 +8,7 @@ public class Graph extends FastProperties {
     private final List<Vertex> vertices;
     private final List<Edge> edges;
     private final Map<Property, Set<Element>> index;
+    private final Map<String, Set<Vertex>> labels;
     private int vertexId = 0;
     private long edgeId = 0;
 
@@ -15,6 +16,7 @@ public class Graph extends FastProperties {
         vertices = new ArrayList<>();
         edges = new ArrayList<>();
         index = new HashMap<>();
+        labels = new HashMap<>();
     }
 
     public Graph(Graph graph) {
@@ -29,6 +31,10 @@ public class Graph extends FastProperties {
     public Vertex createVertex(List<String> labels) {
         Vertex vertex = new Vertex(vertexId++, this, labels);
         vertices.add(vertex);
+        for (String label : labels) {
+            this.labels.putIfAbsent(label, new HashSet<>());
+            this.labels.get(label).add(vertex);
+        }
         return vertex;
     }
 
@@ -70,9 +76,29 @@ public class Graph extends FastProperties {
         return new HashSet<>();
     }
 
+    public Set<Vertex> matchAllVertices(Properties properties) {
+        Set<Vertex> result = new HashSet<>(getVertices());
+        for (Property property : properties) {
+            Set<Vertex> match = findVertices(property.getKey(), property.getValue());
+            if (!match.isEmpty()) {
+                result.retainAll(match);
+            }
+        }
+        return result;
+    }
+
     public Set<Vertex> findVertices(String key, Object value) {
         Set<Vertex> result = new HashSet<>(this.vertices);
         result.retainAll(find(key, value));
+        return result;
+    }
+
+    public Set<Vertex> findVerticesByLabel(String label, String... labels) {
+        Set<Vertex> result = this.labels.getOrDefault(label, new HashSet<>());
+        for (String l : labels) {
+            Set<Vertex> temp = this.labels.getOrDefault(l, new HashSet<>());
+            result.retainAll(temp);
+        }
         return result;
     }
 
@@ -93,6 +119,14 @@ public class Graph extends FastProperties {
         }
     }
 
+    public int numberOfVertices() {
+        return vertices.size();
+    }
+
+    public int numberOfEdges() {
+        return edges.size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -111,7 +145,7 @@ public class Graph extends FastProperties {
 
     @Override
     public String toString() {
-        return "Graph{vertices=" + vertices.size() + ", edges=" + edges.size() + "}";
+        return "Graph{vertices=" + numberOfVertices() + ", edges=" + numberOfEdges() + "}";
     }
 
     void setProperty(Element element, String key, Object value) {

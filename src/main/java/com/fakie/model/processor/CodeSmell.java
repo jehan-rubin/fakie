@@ -27,7 +27,7 @@ public class CodeSmell implements Processor {
         Set<Element> bestMatches = filterElements(graph);
         int size = bestMatches.size();
         if (size > 1) {
-            logger.debug("Find too many matches (" + size + ") for \'" + name + "\' " + labels + " " + properties);
+            logger.warn("Find too many matches (" + size + ") for \'" + name + "\' " + labels + " " + properties);
             return graph;
         } else if (bestMatches.isEmpty()) {
             logger.debug("Could not find a match for \'" + name + "\' " + labels + " " + properties);
