@@ -14,6 +14,8 @@ public interface Properties extends Iterable<Property> {
 
     void setProperty(String key, Object value);
 
+    void removeProperty(Property property);
+
     default void setProperties(Properties properties) {
         for (Property property : properties) {
             setProperty(property.getKey(), property.getValue());

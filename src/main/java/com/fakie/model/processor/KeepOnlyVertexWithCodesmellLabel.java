@@ -8,9 +8,8 @@ import com.fakie.utils.FakieUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class KeepOnlyVertexWithCodesmellLabel implements Processor {
@@ -19,12 +18,27 @@ public class KeepOnlyVertexWithCodesmellLabel implements Processor {
     @Override
     public Graph process(Graph graph) throws FakieModelException {
         logger.info("Remove vertices without a codesmell label in %s", graph);
-        Graph result = new Graph();
-        Map<Vertex, Vertex> mapping = new HashMap<>();
         Set<String> labels = findLabelOfCodesmell(graph);
-        addVertices(graph, result, mapping, labels);
-        addEdges(graph, result, mapping);
-        return result;
+        for (Edge edge : graph.getEdges()) {
+            if (!matchLabel(edge.getSource(), labels) && !matchLabel(edge.getDestination(), labels)) {
+                graph.removeEdge(edge);
+            }
+        }
+        for (Vertex vertex : graph.getVertices()) {
+            if (!matchLabel(vertex, labels) && !vertex.hasEdges()) {
+                graph.removeVertex(vertex);
+            }
+        }
+        return graph;
+    }
+
+    private boolean matchLabel(Vertex vertex, Collection<String> labels) {
+        for (String label : vertex.getLabels()) {
+            if (labels.contains(label)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Set<String> findLabelOfCodesmell(Graph graph) {
@@ -35,32 +49,5 @@ public class KeepOnlyVertexWithCodesmellLabel implements Processor {
             }
         }
         return labels;
-    }
-
-    private void addVertices(Graph graph, Graph result, Map<Vertex, Vertex> mapping, Set<String> labels) {
-        for (Vertex vertex : graph.getVertices()) {
-            for (String label : vertex.getLabels()) {
-                if (labels.contains(label)) {
-                    mapping.put(vertex, result.createVertex(vertex));
-                    break;
-                }
-            }
-        }
-    }
-
-    private void addEdges(Graph graph, Graph result, Map<Vertex, Vertex> mapping) {
-        for (Edge edge : graph.getEdges()) {
-            if (!mapping.containsKey(edge.getSource()) && !mapping.containsKey(edge.getDestination())) {
-                continue;
-            } else if (!mapping.containsKey(edge.getDestination())) {
-                mapping.put(edge.getDestination(), result.createVertex(edge.getDestination()));
-            } else if (!mapping.containsKey(edge.getSource())) {
-                mapping.put(edge.getSource(), result.createVertex(edge.getSource()));
-            }
-            Vertex source = mapping.get(edge.getSource());
-            Vertex destination = mapping.get(edge.getDestination());
-            Edge e = result.createEdge(source, destination, edge.getType());
-            e.setProperties(edge);
-        }
     }
 }

@@ -1,7 +1,6 @@
 package com.fakie.model.processor;
 
 import com.fakie.model.graph.Graph;
-import com.fakie.model.graph.Property;
 import com.fakie.model.graph.Vertex;
 import com.fakie.utils.FakieUtils;
 import org.apache.logging.log4j.LogManager;
@@ -13,21 +12,11 @@ public class ProcessOnlyVerticesWithACodeSmell implements Processor {
     @Override
     public Graph process(Graph graph) throws ProcessingException {
         logger.info("Keep only objects in %s with a code smell", graph);
-        Graph result = new Graph();
         for (Vertex vertex : graph.getVertices()) {
-            if (containsACodeSmell(vertex)) {
-                result.createVertex(vertex);
+            if (!FakieUtils.containsACodeSmell(vertex)) {
+                graph.removeVertex(vertex);
             }
         }
-        return result;
-    }
-
-    private boolean containsACodeSmell(Vertex vertex) {
-        for (Property property : vertex) {
-            if (FakieUtils.isACodeSmell(property)) {
-                return true;
-            }
-        }
-        return false;
+        return graph;
     }
 }

@@ -7,24 +7,28 @@ import com.fakie.utils.FakieUtils;
 import com.fakie.utils.Keyword;
 import com.fakie.utils.exceptions.FakieException;
 import com.fakie.utils.paprika.Label;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class OverriddenMethods implements Processor {
+    private static final Logger logger = LogManager.getFormatterLogger();
     @Override
     public Graph process(Graph graph) throws FakieException {
+        logger.info("Compute overridden methods in %s", graph);
         Set<Vertex> vertices = graph.findVerticesByLabel(Label.CLASS.toString());
-        Set<String> overridden = retrieveNames(graph.findVerticesByLabel(Label.METHOD.toString()));
+        Set<Vertex> overridden = graph.findVerticesByLabel(Label.METHOD.toString());
         for (Vertex vertex : vertices) {
             if (FakieUtils.containsACodeSmell(vertex)) {
-                overridden.retainAll(retrieveNames(availableMethods(vertex)));
+                overridden.retainAll(availableMethods(vertex));
             }
         }
         for (Vertex vertex : vertices) {
             if (FakieUtils.containsACodeSmell(vertex)) {
-                Set<String> methods = retrieveNames(methods(vertex));
-                for (String method : overridden) {
+                List<Vertex> methods = methods(vertex);
+                for (Vertex method : overridden) {
                     vertex.setProperty(
                             Keyword.OUTPUT_EDGE.format(Label.CLASS_OWNS_METHOD, method),
                             methods.contains(method));

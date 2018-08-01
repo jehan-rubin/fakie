@@ -1,6 +1,9 @@
 package com.fakie.model.processor;
 
-import com.fakie.model.graph.*;
+import com.fakie.model.graph.Graph;
+import com.fakie.model.graph.Property;
+import com.fakie.model.graph.Type;
+import com.fakie.model.graph.Vertex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,15 +13,13 @@ public class KeepOnlyBooleanProperties implements Processor {
     @Override
     public Graph process(Graph graph) throws ProcessingException {
         logger.info("Keep only boolean properties");
-        Graph result = new Graph();
         for (Vertex vertex : graph.getVertices()) {
-            Vertex v = result.createVertex(vertex.getLabels());
             for (Property property : vertex) {
-                if (property.getType() == Type.BOOLEAN) {
-                    v.setProperty(property.getKey(), property.getValue());
+                if (property.getType() != Type.BOOLEAN) {
+                    vertex.removeProperty(property);
                 }
             }
         }
-        return result;
+        return graph;
     }
 }

@@ -19,6 +19,12 @@ public class Element extends AbstractProperties {
     }
 
     @Override
+    public void removeProperty(Property property) {
+        super.removeProperty(property);
+        graph.removeProperty(this, property);
+    }
+
+    @Override
     public List<Object> values(String key) {
         return graph.values(key);
     }

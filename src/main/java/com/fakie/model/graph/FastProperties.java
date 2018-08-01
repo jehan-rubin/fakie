@@ -41,6 +41,10 @@ public class FastProperties extends AbstractProperties {
         values.get(key).add(value);
     }
 
+    protected void removeValue(String key, Object value) {
+        values.get(key).remove(value);
+    }
+
     protected void addType(String key, Object value) {
         Type type = Type.valueOf(value);
         if (types.containsKey(key)) {

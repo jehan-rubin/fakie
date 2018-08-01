@@ -44,12 +44,40 @@ public class Graph extends FastProperties {
         return v;
     }
 
+    public void removeVertex(Vertex vertex) {
+        if (!vertices.contains(vertex)) {
+            return;
+        }
+        vertices.remove(vertex);
+        for (String label : vertex.getLabels()) {
+            labels.get(label).remove(vertex);
+        }
+        for (Property property : vertex) {
+            removeProperty(property);
+        }
+        for (Edge edge : vertex.edges()) {
+            removeEdge(edge);
+        }
+    }
+
     public Edge createEdge(Vertex source, Vertex destination, String type) {
         Edge edge = new Edge(edgeId++, this, source, destination, type);
         edges.add(edge);
         source.addOutputEdge(edge);
         destination.addInputEdge(edge);
         return edge;
+    }
+
+    public void removeEdge(Edge edge) {
+        if (!edges.contains(edge)) {
+            return;
+        }
+        edges.remove(edge);
+        edge.getSource().removeOutputEdge(edge);
+        edge.getDestination().removeInputEdge(edge);
+        for (Property property : edge) {
+            removeProperty(property);
+        }
     }
 
     public List<Element> getElements() {
@@ -152,6 +180,11 @@ public class Graph extends FastProperties {
         addElement(element, key, value);
         addValue(key, value);
         addType(key, value);
+    }
+
+    void removeProperty(Element element, Property property) {
+        index.get(property).remove(element);
+        removeValue(property.getKey(), property.getValue());
     }
 
     private void addElement(Element element, String key, Object value) {

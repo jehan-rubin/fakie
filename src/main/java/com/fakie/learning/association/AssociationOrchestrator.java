@@ -52,7 +52,7 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
             logger.info("Generating rules for code smell %s", name);
             CodeSmells group = this.codeSmells.groupByName(name);
             try {
-                result.addAll(generateRules(group, new Graph(parent)));
+                result.addAll(generateRules(group, parent));
             }
             catch (FakieException e) {
                 logger.warn(e);

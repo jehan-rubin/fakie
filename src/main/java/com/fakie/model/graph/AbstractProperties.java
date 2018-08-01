@@ -25,6 +25,11 @@ public abstract class AbstractProperties implements Properties {
     }
 
     @Override
+    public void removeProperty(Property property) {
+        data.remove(property.getKey(), property.getValue());
+    }
+
+    @Override
     public Set<String> keys() {
         return data.keySet();
     }

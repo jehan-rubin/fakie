@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Vertex extends Element {
     private final List<String> labels;
@@ -17,8 +19,16 @@ public class Vertex extends Element {
         this.outputs = new ArrayList<>();
     }
 
+    public boolean hasEdges() {
+        return !inputs.isEmpty() || !outputs.isEmpty();
+    }
+
     public void addInputEdge(Edge edge) {
         inputs.add(edge);
+    }
+
+    public void removeInputEdge(Edge edge) {
+        inputs.remove(edge);
     }
 
     public void addInputEdges(Collection<Edge> edges) {
@@ -27,6 +37,10 @@ public class Vertex extends Element {
 
     public void addOutputEdge(Edge edge) {
         outputs.add(edge);
+    }
+
+    public void removeOutputEdge(Edge edge) {
+        outputs.remove(edge);
     }
 
     public void addOutputEdges(Collection<Edge> edges) {
@@ -43,6 +57,10 @@ public class Vertex extends Element {
 
     public List<Edge> outputEdges() {
         return new ArrayList<>(outputs);
+    }
+
+    public List<Edge> edges() {
+        return Stream.of(inputs, outputs).flatMap(List::stream).collect(Collectors.toList());
     }
 
     @Override

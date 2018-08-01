@@ -40,7 +40,7 @@ public class SequentialAssociation implements Processor {
                     }
                 }
             }
-            PreProcessing preProcessing = new PreProcessing(copy, 10000, 0.1, 0.1);
+            PreProcessing preProcessing = new PreProcessing(copy, 100000, 0.1, 0.1);
             List<Rule> rules = preProcessing.generateRules();
             for (Rule rule : rules) {
                 extractProperties(finalProperties, rule.premises());
