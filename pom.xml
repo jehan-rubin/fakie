@@ -14,11 +14,23 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>soot-snapshot</id>
+            <name>soot snapshots</name>
+            <url>https://soot-build.cs.uni-paderborn.de/nexus/repository/soot-snapshot/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
-            <groupId>paprika</groupId>
+            <groupId>com.github.alexandre-clement</groupId>
             <artifactId>paprika</artifactId>
-            <version>SNAPSHOT</version>
+            <version>7131c38d42</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -181,29 +193,6 @@
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>2.5.2</version>
-                <executions>
-                    <execution>
-                        <id>install-external</id>
-                        <phase>clean</phase>
-                        <configuration>
-                            <file>${basedir}/libs/Paprika.jar</file>
-                            <repositoryLayout>default</repositoryLayout>
-                            <groupId>paprika</groupId>
-                            <artifactId>paprika</artifactId>
-                            <version>SNAPSHOT</version>
-                            <packaging>jar</packaging>
-                            <generatePom>true</generatePom>
-                        </configuration>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

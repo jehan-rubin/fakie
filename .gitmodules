@@ -1,0 +1,3 @@
+[submodule "paprika"]
+	path = paprika
+	url = https://github.com/alexandre-clement/paprika
