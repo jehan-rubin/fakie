@@ -14,6 +14,15 @@ public class FastProperties extends AbstractProperties {
     }
 
     @Override
+    public void removeProperty(Property property) {
+        super.removeProperty(property);
+        values.get(property.getKey()).remove(property.getValue());
+        if (values.get(property.getKey()).isEmpty()) {
+            values.remove(property.getKey());
+        }
+    }
+
+    @Override
     public Set<String> keys() {
         return values.keySet();
     }

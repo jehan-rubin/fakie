@@ -41,8 +41,8 @@ public class PaprikaAccessor {
         try {
             String[] arguments = {"query",
                     "-db", db.toString(),
-                    "-r", "ALLAP",
-                    "-c", path.toString()
+                    "-r", "NONFUZZY",
+                    "-c", suffix
             };
             PaprikaLauncher paprikaLauncher = new PaprikaLauncher(arguments, std.out());
             paprikaLauncher.startPaprika();
@@ -50,11 +50,6 @@ public class PaprikaAccessor {
         catch (PaprikaArgException e) {
             throw new PaprikaException(e);
         }
-        return path;
-    }
-
-    public Path fuzzyQuery(Path db, String suffix) throws PaprikaException {
-        Path path = createQueryFolder(suffix);
         return path;
     }
 

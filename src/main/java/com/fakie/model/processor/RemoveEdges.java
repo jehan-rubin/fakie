@@ -12,7 +12,7 @@ public class RemoveEdges implements Processor {
     public Graph process(Graph graph) throws ProcessingException {
         logger.info("Removing edges from %s", graph);
         for (Edge edge : graph.getEdges()) {
-            graph.removeEdge(edge);
+            graph.remove(edge);
         }
         return graph;
     }

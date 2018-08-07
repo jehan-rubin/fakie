@@ -2,6 +2,7 @@ package com.fakie.utils.paprika;
 
 public enum Label {
     NAME("name"),
+    FULL_NAME("full_name"),
     CLASS("Class"),
     METHOD("Method"),
     EXTENDS("EXTENDS"),

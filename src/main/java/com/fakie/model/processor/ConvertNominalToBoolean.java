@@ -16,10 +16,11 @@ public class ConvertNominalToBoolean implements Processor {
         logger.info("Converting %s properties to boolean", graph);
         for (Element element : graph.getElements()) {
             for (Property property : element) {
-                for (Object o : property.values()) {
-                    if (property.getType() == Type.STRING) {
+                if (property.getType() == Type.STRING) {
+                    for (Object o : property.values()) {
                         element.setProperty(Keyword.EQUAL.format(property.getKey(), o), property.getValue().equals(o));
                     }
+                    element.removeProperty(property);
                 }
             }
         }

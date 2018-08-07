@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Element extends AbstractProperties {
     private final long id;
-    private final Graph graph;
+    private Graph graph;
 
     Element(long id, Graph graph) {
         this.id = id;
@@ -14,6 +14,9 @@ public class Element extends AbstractProperties {
 
     @Override
     public void setProperty(String key, Object value) {
+        if (hasProperty(key)) {
+            return;
+        }
         super.setProperty(key, value);
         graph.setProperty(this, key, value);
     }
@@ -42,6 +45,21 @@ public class Element extends AbstractProperties {
         return graph;
     }
 
+    public void attach(Graph graph) {
+        if (!isOrphan()) {
+            graph.remove(this);
+        }
+        this.graph = graph;
+    }
+
+    public void detach() {
+        graph = null;
+    }
+
+    public boolean isOrphan() {
+        return graph == null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -56,6 +74,6 @@ public class Element extends AbstractProperties {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id);
+        return Objects.hash(id);
     }
 }

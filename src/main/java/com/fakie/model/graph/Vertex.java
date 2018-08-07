@@ -64,6 +64,12 @@ public class Vertex extends Element {
     }
 
     @Override
+    public void detach() {
+        getGraph().removeVertex(this);
+        super.detach();
+    }
+
+    @Override
     public String toString() {
         return shortRepresentation() + labels + super.toString();
     }

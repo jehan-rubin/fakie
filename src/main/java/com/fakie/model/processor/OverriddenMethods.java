@@ -10,11 +10,14 @@ import com.fakie.utils.paprika.Label;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class OverriddenMethods implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
+
     @Override
     public Graph process(Graph graph) throws FakieException {
         logger.info("Compute overridden methods in %s", graph);
@@ -22,23 +25,25 @@ public class OverriddenMethods implements Processor {
         Set<Vertex> overridden = graph.findVerticesByLabel(Label.METHOD.toString());
         for (Vertex vertex : vertices) {
             if (FakieUtils.containsACodeSmell(vertex)) {
-                overridden.retainAll(availableMethods(vertex));
+                Set<Vertex> methods = availableMethods(vertex);
+                overridden.retainAll(methods);
             }
         }
         for (Vertex vertex : vertices) {
             if (FakieUtils.containsACodeSmell(vertex)) {
                 List<Vertex> methods = methods(vertex);
                 for (Vertex method : overridden) {
-                    vertex.setProperty(
-                            Keyword.OUTPUT_EDGE.format(Label.CLASS_OWNS_METHOD, method),
-                            methods.contains(method));
+                    String key = Keyword.OUTPUT_EDGE.format(
+                            Label.CLASS_OWNS_METHOD,
+                            method.getProperty(Label.FULL_NAME.toString()));
+                    vertex.setProperty(key, methods.contains(method));
                 }
             }
         }
         return graph;
     }
 
-    private Collection<Vertex> availableMethods(Vertex vertex) {
+    private Set<Vertex> availableMethods(Vertex vertex) {
         Set<Vertex> result = new HashSet<>(methods(vertex));
         for (Edge edge : vertex.outputEdges()) {
             if (edge.getType().equals(Label.EXTENDS.toString()) || edge.getType().equals(Label.IMPLEMENTS.toString())) {
@@ -56,11 +61,5 @@ public class OverriddenMethods implements Processor {
             }
         }
         return result;
-    }
-
-    private Set<String> retrieveNames(Collection<Vertex> vertices) {
-        return vertices.stream()
-                .map(vertex -> vertex.getProperty(Label.NAME.toString()).toString())
-                .collect(Collectors.toSet());
     }
 }

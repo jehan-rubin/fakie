@@ -14,7 +14,7 @@ public class ProcessOnlyVerticesWithACodeSmell implements Processor {
         logger.info("Keep only objects in %s with a code smell", graph);
         for (Vertex vertex : graph.getVertices()) {
             if (!FakieUtils.containsACodeSmell(vertex)) {
-                graph.removeVertex(vertex);
+                graph.remove(vertex);
             }
         }
         return graph;

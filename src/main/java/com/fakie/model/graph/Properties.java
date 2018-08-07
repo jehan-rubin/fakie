@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public interface Properties extends Iterable<Property> {
+    int size();
+
     boolean hasProperty(String key);
 
     Object getProperty(String key);

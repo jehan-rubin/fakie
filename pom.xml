@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.github.alexandre-clement</groupId>
             <artifactId>paprika</artifactId>
-            <version>v3.1</version>
+            <version>1ac545d693</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

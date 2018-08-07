@@ -27,6 +27,12 @@ public class Edge extends Element {
     }
 
     @Override
+    public void detach() {
+        getGraph().removeEdge(this);
+        super.detach();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;

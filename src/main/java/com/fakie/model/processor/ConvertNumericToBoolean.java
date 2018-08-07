@@ -24,6 +24,7 @@ public class ConvertNumericToBoolean implements Processor {
             for (Property property : element) {
                 if (property.getType().isNumber()) {
                     convertNumericToNominal(thresholdMap, element, property);
+                    element.removeProperty(property);
                 }
             }
         }

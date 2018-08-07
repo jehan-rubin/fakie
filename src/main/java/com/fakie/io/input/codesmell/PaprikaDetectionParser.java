@@ -64,11 +64,7 @@ public class PaprikaDetectionParser implements CodeSmellParser {
                 Map<String, Object> properties = new HashMap<>();
                 for (Map.Entry<String, Integer> header : headerMap.entrySet()) {
                     String value = record.get(header.getValue());
-                    if (header.getKey().equals(CSVHeader.FULL_NAME.toString())) {
-                        properties.put(CSVHeader.NAME.toString(), value);
-                    } else {
-                        properties.put(header.getKey(), value);
-                    }
+                    properties.put(header.getKey(), value);
                 }
                 CodeSmell codeSmell = new CodeSmell(new ArrayList<>(), properties, name);
                 codeSmells.add(codeSmell);

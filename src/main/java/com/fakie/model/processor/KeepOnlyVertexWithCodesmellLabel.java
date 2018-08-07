@@ -1,16 +1,13 @@
 package com.fakie.model.processor;
 
 import com.fakie.model.FakieModelException;
-import com.fakie.model.graph.Edge;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
 import com.fakie.utils.FakieUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class KeepOnlyVertexWithCodesmellLabel implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
@@ -19,14 +16,13 @@ public class KeepOnlyVertexWithCodesmellLabel implements Processor {
     public Graph process(Graph graph) throws FakieModelException {
         logger.info("Remove vertices without a codesmell label in %s", graph);
         Set<String> labels = findLabelOfCodesmell(graph);
-        for (Edge edge : graph.getEdges()) {
-            if (!matchLabel(edge.getSource(), labels) && !matchLabel(edge.getDestination(), labels)) {
-                graph.removeEdge(edge);
-            }
+        Map<Vertex, Boolean> matching = new HashMap<>();
+        for (Vertex vertex : graph.getVertices()) {
+            matching.put(vertex, matchLabel(vertex, labels));
         }
         for (Vertex vertex : graph.getVertices()) {
-            if (!matchLabel(vertex, labels) && !vertex.hasEdges()) {
-                graph.removeVertex(vertex);
+            if (!matching.get(vertex)) {
+                graph.remove(vertex);
             }
         }
         return graph;

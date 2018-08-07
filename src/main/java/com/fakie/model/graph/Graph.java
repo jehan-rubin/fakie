@@ -24,6 +24,10 @@ public class Graph extends FastProperties {
         union(graph);
     }
 
+    public boolean contains(Element element) {
+        return getElements().contains(element);
+    }
+
     public Vertex createVertex() {
         return createVertex(new ArrayList<>());
     }
@@ -44,20 +48,30 @@ public class Graph extends FastProperties {
         return v;
     }
 
-    public void removeVertex(Vertex vertex) {
+    public void remove(Element element) {
+        if (!contains(element)) {
+            return;
+        }
+        for (Property property : element) {
+            removeProperty(element, property);
+        }
+        element.detach();
+    }
+
+    void removeVertex(Vertex vertex) {
         if (!vertices.contains(vertex)) {
             return;
         }
-        vertices.remove(vertex);
         for (String label : vertex.getLabels()) {
             labels.get(label).remove(vertex);
-        }
-        for (Property property : vertex) {
-            removeProperty(property);
+            if (labels.get(label).isEmpty()) {
+                labels.remove(label);
+            }
         }
         for (Edge edge : vertex.edges()) {
             removeEdge(edge);
         }
+        vertices.remove(vertex);
     }
 
     public Edge createEdge(Vertex source, Vertex destination, String type) {
@@ -68,16 +82,13 @@ public class Graph extends FastProperties {
         return edge;
     }
 
-    public void removeEdge(Edge edge) {
+    void removeEdge(Edge edge) {
         if (!edges.contains(edge)) {
             return;
         }
         edges.remove(edge);
         edge.getSource().removeOutputEdge(edge);
         edge.getDestination().removeInputEdge(edge);
-        for (Property property : edge) {
-            removeProperty(property);
-        }
     }
 
     public List<Element> getElements() {
@@ -122,7 +133,7 @@ public class Graph extends FastProperties {
     }
 
     public Set<Vertex> findVerticesByLabel(String label, String... labels) {
-        Set<Vertex> result = this.labels.getOrDefault(label, new HashSet<>());
+        Set<Vertex> result = new HashSet<>(this.labels.getOrDefault(label, new HashSet<>()));
         for (String l : labels) {
             Set<Vertex> temp = this.labels.getOrDefault(l, new HashSet<>());
             result.retainAll(temp);
@@ -151,6 +162,11 @@ public class Graph extends FastProperties {
         return vertices.size();
     }
 
+    @Override
+    public int size() {
+        return getElements().stream().mapToInt(Element::size).sum();
+    }
+
     public int numberOfEdges() {
         return edges.size();
     }
@@ -173,7 +189,8 @@ public class Graph extends FastProperties {
 
     @Override
     public String toString() {
-        return "Graph{vertices=" + numberOfVertices() + ", edges=" + numberOfEdges() + "}";
+        return "Graph{vertices=" + numberOfVertices() + ", edges=" + numberOfEdges()
+                + ", size=" + size() + "}";
     }
 
     void setProperty(Element element, String key, Object value) {
@@ -184,7 +201,10 @@ public class Graph extends FastProperties {
 
     void removeProperty(Element element, Property property) {
         index.get(property).remove(element);
-        removeValue(property.getKey(), property.getValue());
+        if (index.get(property).isEmpty()) {
+            index.remove(property);
+        }
+        removeProperty(property);
     }
 
     private void addElement(Element element, String key, Object value) {

@@ -23,8 +23,8 @@ public class Std {
     }
 
     public void disableSystemOutput() {
-        System.setOut(new NullPrintStream());
-        System.setErr(new NullPrintStream());
+        // System.setOut(new NullPrintStream());
+        // System.setErr(new NullPrintStream());
     }
 
     public PrintStream out() {

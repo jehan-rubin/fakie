@@ -10,6 +10,11 @@ public abstract class AbstractProperties implements Properties {
     }
 
     @Override
+    public int size() {
+        return data.size();
+    }
+
+    @Override
     public boolean hasProperty(String key) {
         return data.containsKey(key);
     }
