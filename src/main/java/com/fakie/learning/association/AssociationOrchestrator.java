@@ -67,6 +67,7 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
                 new ApplyCodeSmellOnGraph(codeSmells),
+                new MethodWhiteList(),
                 new OverriddenMethods(),
                 new KeepOnlyVertexWithCodesmellLabel(),
                 new RemoveEdges(),

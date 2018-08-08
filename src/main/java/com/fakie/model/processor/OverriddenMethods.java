@@ -10,10 +10,8 @@ import com.fakie.utils.paprika.Label;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class OverriddenMethods implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
@@ -22,20 +20,18 @@ public class OverriddenMethods implements Processor {
     public Graph process(Graph graph) throws FakieException {
         logger.info("Compute overridden methods in %s", graph);
         Set<Vertex> vertices = graph.findVerticesByLabel(Label.CLASS.toString());
-        Set<Vertex> overridden = graph.findVerticesByLabel(Label.METHOD.toString());
+        Set<String> overridden = retrieveNames(graph.findVerticesByLabel(Label.METHOD.toString()));
         for (Vertex vertex : vertices) {
             if (FakieUtils.containsACodeSmell(vertex)) {
-                Set<Vertex> methods = availableMethods(vertex);
+                Set<String> methods = retrieveNames(availableMethods(vertex));
                 overridden.retainAll(methods);
             }
         }
         for (Vertex vertex : vertices) {
             if (FakieUtils.containsACodeSmell(vertex)) {
-                List<Vertex> methods = methods(vertex);
-                for (Vertex method : overridden) {
-                    String key = Keyword.OUTPUT_EDGE.format(
-                            Label.CLASS_OWNS_METHOD,
-                            method.getProperty(Label.FULL_NAME.toString()));
+                Set<String> methods = retrieveNames(methods(vertex));
+                for (String method : overridden) {
+                    String key = Keyword.OUTPUT_EDGE.format(Label.CLASS_OWNS_METHOD, method);
                     vertex.setProperty(key, methods.contains(method));
                 }
             }
@@ -61,5 +57,11 @@ public class OverriddenMethods implements Processor {
             }
         }
         return result;
+    }
+
+    private Set<String> retrieveNames(Collection<Vertex> vertices) {
+        return vertices.stream()
+                .map(vertex -> vertex.getProperty(Label.NAME.toString()).toString())
+                .collect(Collectors.toSet());
     }
 }
