@@ -107,6 +107,10 @@ public class Graph extends FastProperties {
         return new ArrayList<>(edges);
     }
 
+    public Set<String> labels() {
+        return new HashSet<>(labels.keySet());
+    }
+
     public Set<Element> find(String key, Object value) {
         Property property = new Property(this, key, value);
         if (index.containsKey(property)) {

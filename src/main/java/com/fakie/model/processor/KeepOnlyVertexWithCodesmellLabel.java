@@ -7,7 +7,8 @@ import com.fakie.utils.FakieUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class KeepOnlyVertexWithCodesmellLabel implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
@@ -15,26 +16,14 @@ public class KeepOnlyVertexWithCodesmellLabel implements Processor {
     @Override
     public Graph process(Graph graph) throws FakieModelException {
         logger.info("Remove vertices without a codesmell label in %s", graph);
-        Set<String> labels = findLabelOfCodesmell(graph);
-        Map<Vertex, Boolean> matching = new HashMap<>();
-        for (Vertex vertex : graph.getVertices()) {
-            matching.put(vertex, matchLabel(vertex, labels));
-        }
-        for (Vertex vertex : graph.getVertices()) {
-            if (!matching.get(vertex)) {
+        Set<String> labels = graph.labels();
+        labels.removeAll(findLabelOfCodesmell(graph));
+        for (String label : labels) {
+            for (Vertex vertex : graph.findVerticesByLabel(label)) {
                 graph.remove(vertex);
             }
         }
         return graph;
-    }
-
-    private boolean matchLabel(Vertex vertex, Collection<String> labels) {
-        for (String label : vertex.getLabels()) {
-            if (labels.contains(label)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private Set<String> findLabelOfCodesmell(Graph graph) {
