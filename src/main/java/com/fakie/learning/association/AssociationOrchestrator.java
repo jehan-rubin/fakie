@@ -74,8 +74,8 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new ConvertNumericToBoolean(),
                 new ProcessOnlyVerticesWithACodeSmell(),
                 new ConvertNominalToBoolean(),
-                new KeepOnlyBooleanProperties()
-                // new SequentialAssociation()
+                new KeepOnlyBooleanProperties(),
+                new SequentialAssociation()
         );
         applyProcessors();
         Path datasetPath = dumpGraph();

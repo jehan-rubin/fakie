@@ -37,8 +37,7 @@ public class PreProcessing extends Orchestrator<Instances> {
                 new RemoveNonCodeSmellConsequences(),
                 new ManyToOne(),
                 new SimplifyExpression(),
-                new FilterRedundantRule(),
-                new RestoreRulesAttributes()
+                new FilterRedundantRule()
         );
     }
 

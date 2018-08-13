@@ -1,22 +1,19 @@
 package com.fakie.model.graph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Vertex extends Element {
     private final List<String> labels;
-    private final List<Edge> inputs;
-    private final List<Edge> outputs;
+    private final Map<String, Set<Edge>> inputs;
+    private final Map<String, Set<Edge>> outputs;
 
     Vertex(long id, Graph graph, List<String> labels) {
         super(id, graph);
         this.labels = new ArrayList<>(labels);
-        this.inputs = new ArrayList<>();
-        this.outputs = new ArrayList<>();
+        this.inputs = new HashMap<>();
+        this.outputs = new HashMap<>();
     }
 
     public boolean hasEdges() {
@@ -24,43 +21,65 @@ public class Vertex extends Element {
     }
 
     public void addInputEdge(Edge edge) {
-        inputs.add(edge);
+        inputs.putIfAbsent(edge.getType(), new HashSet<>());
+        inputs.get(edge.getType()).add(edge);
     }
 
     public void removeInputEdge(Edge edge) {
-        inputs.remove(edge);
+        inputs.get(edge.getType()).remove(edge);
     }
 
     public void addInputEdges(Collection<Edge> edges) {
-        inputs.addAll(edges);
+        for (Edge edge : edges) {
+            addInputEdge(edge);
+        }
     }
 
     public void addOutputEdge(Edge edge) {
-        outputs.add(edge);
+        outputs.putIfAbsent(edge.getType(), new HashSet<>());
+        outputs.get(edge.getType()).add(edge);
     }
 
     public void removeOutputEdge(Edge edge) {
-        outputs.remove(edge);
+        outputs.get(edge.getType()).remove(edge);
     }
 
     public void addOutputEdges(Collection<Edge> edges) {
-        outputs.addAll(edges);
+        for (Edge edge : edges) {
+            addOutputEdge(edge);
+        }
     }
 
     public List<String> getLabels() {
         return new ArrayList<>(labels);
     }
 
-    public List<Edge> inputEdges() {
-        return new ArrayList<>(inputs);
+    public Collection<Edge> inputEdges() {
+        return inputs.values().stream().flatMap(Set::stream).collect(Collectors.toList());
     }
 
-    public List<Edge> outputEdges() {
-        return new ArrayList<>(outputs);
+    public Collection<Edge> inputEdges(String... types) {
+        Set<Edge> result = new HashSet<>();
+        for (String type : types) {
+            result.addAll(inputs.getOrDefault(type, new HashSet<>()));
+        }
+        return result;
     }
 
-    public List<Edge> edges() {
-        return Stream.of(inputs, outputs).flatMap(List::stream).collect(Collectors.toList());
+    public Collection<Edge> outputEdges() {
+        return outputs.values().stream().flatMap(Set::stream).collect(Collectors.toList());
+    }
+
+    public Collection<Edge> outputEdges(String... types) {
+        Set<Edge> result = new HashSet<>();
+        for (String type : types) {
+            result.addAll(outputs.getOrDefault(type, new HashSet<>()));
+        }
+        return result;
+    }
+
+    public Collection<Edge> edges() {
+        return Stream.of(inputEdges(), outputEdges()).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     @Override

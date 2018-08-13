@@ -81,7 +81,7 @@ public class Variable extends AbstractExpression {
 
     @Override
     public String toString() {
-        return value.toString();
+        return "'" + value.toString() + "'";
     }
 
     @Override

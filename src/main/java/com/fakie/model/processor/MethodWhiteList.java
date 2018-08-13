@@ -4,7 +4,9 @@ import com.fakie.model.graph.Edge;
 import com.fakie.model.graph.Graph;
 import com.fakie.model.graph.Vertex;
 import com.fakie.utils.exceptions.FakieException;
+import com.fakie.utils.paprika.Key;
 import com.fakie.utils.paprika.Label;
+import com.fakie.utils.paprika.Relationship;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +47,7 @@ public class MethodWhiteList implements Processor {
         logger.info("Keep only white listed methods in %s", graph);
         Set<Vertex> vertices = graph.findVerticesByLabel(Label.CLASS.toString());
         for (Vertex vertex : vertices) {
-            for (Edge edge : vertex.outputEdges()) {
+            for (Edge edge : vertex.outputEdges(Relationship.CLASS_OWNS_METHOD.toString())) {
                 if (!isInWhiteList(edge)) {
                     graph.remove(edge);
                 }
@@ -55,7 +57,6 @@ public class MethodWhiteList implements Processor {
     }
 
     private boolean isInWhiteList(Edge edge) {
-        return !edge.getType().equals(Label.CLASS_OWNS_METHOD.toString()) ||
-                whiteList.contains(edge.getDestination().getProperty(Label.NAME.toString()).toString());
+        return whiteList.contains(edge.getDestination().getProperty(Key.NAME.toString()).toString());
     }
 }

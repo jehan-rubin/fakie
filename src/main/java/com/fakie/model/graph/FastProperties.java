@@ -24,7 +24,7 @@ public class FastProperties extends AbstractProperties {
 
     @Override
     public Set<String> keys() {
-        return values.keySet();
+        return new HashSet<>(values.keySet());
     }
 
     @Override

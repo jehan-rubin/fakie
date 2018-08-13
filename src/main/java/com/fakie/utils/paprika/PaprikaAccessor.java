@@ -41,7 +41,7 @@ public class PaprikaAccessor {
         try {
             String[] arguments = {"query",
                     "-db", db.toString(),
-                    "-r", "NONFUZZY",
+                    "-r", "ALLAP",
                     "-c", suffix
             };
             PaprikaLauncher paprikaLauncher = new PaprikaLauncher(arguments, std.out());
