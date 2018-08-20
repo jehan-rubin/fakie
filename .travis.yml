@@ -3,10 +3,8 @@ sudo: false
 jdk:
   - oraclejdk8
 script: "mvn cobertura:cobertura"
-before_install:
-  - "mvn clean"
 install:
-  - "mvn clean package -DskipTests=true"
+  - "mvn clean && mvn package -DskipTests=true"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 cache:
