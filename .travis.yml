@@ -4,7 +4,7 @@ jdk:
   - oraclejdk8
 script: "mvn cobertura:cobertura"
 before_install:
-  - "export MAVEN_OPTS=-Xss2m"
+  - "export MAVEN_OPTS=-Xss10m"
 install:
   - "mvn clean && mvn package -DskipTests=true --log-file log.txt"
 after_success:
