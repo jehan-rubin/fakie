@@ -6,7 +6,7 @@ script: "mvn cobertura:cobertura"
 before_install:
   - "export MAVEN_OPTS=-Xss2m"
 install:
-  - "mvn clean && mvn package -DskipTests=true"
+  - "mvn clean && mvn package -DskipTests=true --log-file log.txt"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 cache:
