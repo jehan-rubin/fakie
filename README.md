@@ -8,6 +8,7 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 
 # Table of contents
 *   [Getting Started](#getting-started)
+*   [Output](#output)
 *   [Usage](#usage)
 *   [Code Smells](#code-smells-file)
 *   [Overview](#overview)
@@ -22,6 +23,121 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 * Running the test `mvn clean install`
 * Create jar `mvn clean package`
 * Execute `mvn exec:java -Dexec.args="here goes your arguments separated by space"`
+
+# Results
+
+* BLOB Class
+```cypher
+// Confidence : 1.0, Support : 1.0
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_async_task = false AND n.is_broadcast_receiver = false AND n.number_of_methods >= 14.5 AND n.number_of_attributes >= 7.5 AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0)
+RETURN
+     n.name
+```
+
+* Complex Class (CC)
+```cypher 
+// Confidence : 0.9975247524752475, Support : 0.9975247524752475
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_application = false AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0)
+RETURN
+     n.name
+```
+```cypher 
+// Confidence : 1.0, Support : 0.9801980198019802
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.name <> 'com.addi.core.tokens.numbertokens.Int16NumberToken' AND n.parent_name <> 'com.addi.core.tokens.NumberToken' AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
+RETURN
+     n.name
+```
+```cypher 
+// Confidence : 1.0, Support : 1.0
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
+RETURN
+     n.name
+```
+```cypher 
+// Confidence : 1.0, Support : 0.9975247524752475
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.name <> 'com.addi.core.tokens.numbertokens.Int16NumberToken' AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
+RETURN
+     n.name
+```
+* Hashmap Usage (HMU)
+```cypher
+// Confidence : 1.0, Support : 1.0
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n. --CALLS--> <init>#java.util.HashMap = true AND n.is_synchronized = false AND n.is_abstract = false AND NOT n.number_of_parameters >= 5.0)
+RETURN
+     n.name
+```
+```cypher
+// Confidence : 1.0, Support : 0.8823529411764706
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n. --CALLS--> <init>#java.util.HashMap = true AND n.is_init = false AND n.is_synchronized = false AND n.is_abstract = false AND n.full_name <> '<clinit>#com.addi.core.interpreter.GlobalValues' AND n.name <> '<clinit>' AND NOT n.number_of_parameters >= 5.0)
+RETURN
+     n.name
+```
+
+* No Low Memory Resolver (NLMR)
+
+```cypher
+// Confidence : 1.0, Support : 1.0
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n. --CLASS_OWNS_METHOD--> onLowMemory = false AND n.number_of_children >= 0.0)
+RETURN
+     n.name
+```
+
+```cypher
+// Confidence : 1.0, Support : 0.8783783783783784
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n. --CLASS_OWNS_METHOD--> onLowMemory = false AND n.number_of_children >= 0.0 AND NOT n.class_complexity >= 23.5)
+RETURN
+     n.name
+```
+
+* Long Method (LM)
+
+```cypher
+// Confidence : 1.0, Support : 1.0
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_synchronized = false AND n.is_abstract = false)
+RETURN
+     n.name
+```
+
 
 # Usage
 
