@@ -4,7 +4,7 @@ jdk:
   - oraclejdk8
 script: "mvn cobertura:cobertura"
 before_install:
-  - "export MAVEN_OPTS=-Xms1024m -Xmx1G -XX:PermSize=1024m -noverify"
+  - export MAVEN_OPTS="-Xms1024m -Xmx1G -XX:PermSize=1024m -noverify"
 install:
   - "mvn clean && mvn package -DskipTests=true"
 after_success:
