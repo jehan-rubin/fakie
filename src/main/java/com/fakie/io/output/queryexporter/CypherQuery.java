@@ -72,9 +72,11 @@ public class CypherQuery {
         List<IClause> clauses = new ArrayList<>();
         StartPoint start = START.node(n).all();
         clauses.add(start);
-        Concat concat = WHERE.BR_OPEN();
-        Concatenator concatenator = concatExpression(n, rule.premises(), concat);
-        clauses.add(concatenator.BR_CLOSE());
+        if (!rule.premises().getType().isNone()){
+            Concat concat = WHERE.BR_OPEN();
+            Concatenator concatenator = concatExpression(n, rule.premises(), concat);
+            clauses.add(concatenator.BR_CLOSE());
+        }
         clauses.add(RETURN.value(n.property("name")));
         jcQuery.setClauses(clauses.toArray(new IClause[0]));
     }
