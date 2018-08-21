@@ -8,7 +8,7 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 
 # Table of contents
 *   [Getting Started](#getting-started)
-*   [Output](#output)
+*   [Results](#results)
 *   [Usage](#usage)
 *   [Code Smells](#code-smells-file)
 *   [Overview](#overview)
@@ -55,7 +55,7 @@ CYPHER planner=rule
 START
      n = node(*)
 WHERE
-     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.name <> 'com.addi.core.tokens.numbertokens.Int16NumberToken' AND n.parent_name <> 'com.addi.core.tokens.NumberToken' AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
+     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
 RETURN
      n.name
 ```
@@ -75,10 +75,11 @@ CYPHER planner=rule
 START
      n = node(*)
 WHERE
-     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.name <> 'com.addi.core.tokens.numbertokens.Int16NumberToken' AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
+     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
 RETURN
      n.name
 ```
+
 * Hashmap Usage (HMU)
 ```cypher
 // Confidence : 1.0, Support : 1.0
@@ -96,7 +97,7 @@ CYPHER planner=rule
 START
      n = node(*)
 WHERE
-     (n. --CALLS--> <init>#java.util.HashMap = true AND n.is_init = false AND n.is_synchronized = false AND n.is_abstract = false AND n.full_name <> '<clinit>#com.addi.core.interpreter.GlobalValues' AND n.name <> '<clinit>' AND NOT n.number_of_parameters >= 5.0)
+     (n. --CALLS--> <init>#java.util.HashMap = true AND n.is_init = false AND n.is_synchronized = false AND n.is_abstract = false AND n.name <> '<clinit>' AND NOT n.number_of_parameters >= 5.0)
 RETURN
      n.name
 ```
@@ -138,6 +139,67 @@ RETURN
      n.name
 ```
 
+* Swiss Army Knife (SAK)
+
+```cypher
+// Confidence : 1.0, Support : 0.9935567010309279
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.number_of_children >= 0.0)
+RETURN
+     n.name
+```
+
+* Internal Getter Setter (IGS)
+
+```cypher
+// Confidence : 1.0, Support : 0.875
+CYPHER planner=rule
+START
+     n = node(*)
+WHERE
+     (n.is_synchronized = false AND n.is_abstract = false AND n.is_init = false AND NOT n.number_of_parameters >= 11.0 AND NOT n.number_of_instructions >= 35.0)
+RETURN
+     n.name
+```
+
+* Member Ignoring Method (MIM)
+
+```cypher
+// Could not generate rules
+```
+
+* Leaking Inner Class (LIC)
+
+```cypher
+// Could not generate rules
+```
+
+* Unsupported Hardware Acceleration (UHA)
+
+```cypher
+// Could not generate rules
+```
+
+* Heavy Async Task (HAS)
+
+```cypher
+// Could not generate rules
+```
+
+* Heavy Service Start (HSS)
+
+```cypher
+// Could not generate rules
+```
+
+* Heavy Broadcast Receiver (HBR)
+
+```cypher
+// Could not generate rules
+```
 
 # Usage
 

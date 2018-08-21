@@ -17,7 +17,16 @@ import java.util.Set;
 public class CallWhiteList implements Processor {
     private static final Logger logger = LogManager.getFormatterLogger();
     private final Collection<String> whiteList = Arrays.asList(
-            "<init>#java.util.HashMap"
+            "<init>#java.util.HashMap",
+            "drawPicture#android.graphics.Canvas",
+            "drawPosText#android.graphics.Canvas",
+            "drawTextOnPath#android.graphics.Canvas",
+            "drawPath#android.graphics.Canvas",
+            "setLinearText#android.graphics.Paint",
+            "setMaskFilter#android.graphics.Paint",
+            "setPathEffect#android.graphics.Paint",
+            "setRasterizer#android.graphics.Paint",
+            "setSubpixelText#android.graphics.Paint"
     );
 
     @Override
