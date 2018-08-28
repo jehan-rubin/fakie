@@ -13,7 +13,7 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 *   [Code Smells](#code-smells-file)
 *   [Overview](#overview)
 *   [Development](#development)
-*   [Get involved !](#get-involved-!)
+*   [Get involved](#get-involved)
 *   [Troubleshooting](#troubleshooting)
 
 ## Getting Started
@@ -598,7 +598,7 @@ The conversion from numeric to boolean uses a threshold system in order to accel
 * Export the rules to Cypher :heavy_check_mark:
 * Convert Fakie rules to allow a reuse by Paprika :heavy_check_mark:
 
-## Get Involved !
+## Get Involved
 
 ### Add your own attribute generation to Fakie
 
