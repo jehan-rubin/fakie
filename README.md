@@ -554,11 +554,9 @@ Note : Fakie tries to find the vertex that best fit the given labels and propert
 
 ### Embedded Paprika
 * Run Paprika Analyse :heavy_check_mark:
-* Run Paprika Query :x:
+* Run Paprika Query :heavy_check_mark:
     * Run all fuzzy queries :heavy_check_mark:
-    * Run all queries :x:
-    * Run only a specific query :x:
-    * Run a subset of queries :x:
+    * Run all queries :heavy_check_mark:
 * Parse Paprika Query result :heavy_check_mark:
 
 ### Load Graph
@@ -572,7 +570,7 @@ Note : Fakie tries to find the vertex that best fit the given labels and propert
 * Convert vertices nominal properties to boolean :heavy_check_mark:
 * Removing properties with a single value :heavy_check_mark:
 * Process only vertices which contains a code smell :heavy_check_mark:
-* Convert edges properties values to boolean :x:
+* Convert edges properties values to boolean :heavy_check_mark:
 * Resolution of collision among properties :x:
 
 Note: Converting numeric to nominal and then nominal to boolean is not equals to converting numeric to boolean.
@@ -731,7 +729,7 @@ public class AssociationOrchestrator {
 }
 ```
 
-Note: The processors are executed sequentially so the order matter. In our example, if you compute the number of instructions in methods after applying the method white list, the result might be wrong because the non white listed methods as been deleted.
+Note: The processors are executed sequentially so the order matter. In our example, if you compute the number of instructions in methods after applying the method white list, the result might be wrong because the non white listed methods has been deleted.
 
 ### Add your own rule selection to Fakie
 
