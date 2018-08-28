@@ -13,6 +13,7 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 *   [Code Smells](#code-smells-file)
 *   [Overview](#overview)
 *   [Development](#development)
+*   [Get involved !](#get-involved-!)
 *   [Troubleshooting](#troubleshooting)
 
 ## Getting Started
@@ -22,7 +23,7 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 * Compile `mvn clean compile`
 * Running the test `mvn clean install`
 * Create jar `mvn clean package`
-* Execute `mvn exec:java -Dexec.args="here goes your arguments separated by space"`
+* Execute `mvn exec:java -Dexec.args="analyse query generate"`
 
 # Results
 
@@ -596,6 +597,231 @@ The conversion from numeric to boolean uses a threshold system in order to accel
 ### Export Rules to Queries
 * Export the rules to Cypher :heavy_check_mark:
 * Convert Fakie rules to allow a reuse by Paprika :heavy_check_mark:
+
+## Get Involved !
+
+### Add your own attribute generation to Fakie
+
+Generating attribute in Fakie is done by a Processor which takes a Graph in input and return a Graph (it can be the same or a new one).
+
+```java
+package com.fakie.model.processor;
+
+import com.fakie.model.graph.Graph;
+import com.fakie.utils.exceptions.FakieException;
+
+public interface Processor {
+    Graph process(Graph graph) throws FakieException;
+}
+```
+
+So if you want, for instance, generate a new attribute in the classes of the graph which contains the sum of the number of instructions in the methods of each class.
+
+* First, you create a new Processor which implements the Processor interface.
+
+```java
+package com.fakie.model.processor;
+
+import com.fakie.model.graph.Graph;
+import com.fakie.utils.exceptions.FakieException;
+
+public class ComputeNumberOfInstructionsInMethods implements Processor {
+    @Override
+    public Graph process(Graph graph) throws FakieException {
+        return graph;
+    }
+}
+```
+
+* Then you iterate over the class in the graph
+
+```java
+package com.fakie.model.processor;
+
+import com.fakie.model.graph.Graph;
+import com.fakie.model.graph.Vertex;
+import com.fakie.utils.exceptions.FakieException;
+import com.fakie.utils.paprika.Label;
+
+public class ComputeNumberOfInstructionsInMethods implements Processor {
+    @Override
+    public Graph process(Graph graph) throws FakieException {
+        for (Vertex cls : graph.findVerticesByLabel(Label.CLASS.toString())) {
+            processClass(cls);
+        }
+        return graph;
+    }
+
+    private void processClass(Vertex cls) {
+        
+    }
+}
+```
+
+* For each class, you iterate over the methods to get their number of instructions, sum them and add this sum to the class as a property.
+
+```java
+package com.fakie.model.processor;
+
+import com.fakie.model.graph.Edge;
+import com.fakie.model.graph.Graph;
+import com.fakie.model.graph.Vertex;
+import com.fakie.utils.exceptions.FakieException;
+import com.fakie.utils.paprika.Key;
+import com.fakie.utils.paprika.Label;
+import com.fakie.utils.paprika.Relationship;
+
+public class ComputeNumberOfInstructionsInMethods implements Processor {
+    @Override
+    public Graph process(Graph graph) throws FakieException {
+        for (Vertex cls : graph.findVerticesByLabel(Label.CLASS.toString())) {
+            processClass(cls);
+        }
+        return graph;
+    }
+
+    private void processClass(Vertex cls) {
+        int totalNumberOfInstructions = 0;
+        for (Edge classOwnsMethod : cls.outputEdges(Relationship.CLASS_OWNS_METHOD.toString())) {
+            Vertex method = classOwnsMethod.getDestination();
+            Object numberOfInstructions = method.getProperty(Key.NUMBER_OF_INSTRUCTIONS.toString());
+            totalNumberOfInstructions += Integer.valueOf(numberOfInstructions.toString());
+        }
+        cls.setProperty("NumberOfInstructionsInMethods", totalNumberOfInstructions);
+    }
+}
+```
+
+* Finally, add your processor to the orchestrator
+
+```java
+package com.fakie.learning.association;
+
+public class AssociationOrchestrator {
+    // ...
+    private List<Rule> generateRules(CodeSmells codeSmells, Graph graph) throws FakieException {
+        useGraph(graph);
+        useProcessors(
+                new ConvertLabelsToProperties(),
+                new ConvertArraysToNominal(),
+                new ApplyCodeSmellOnGraph(codeSmells),
+                new ComputeNumberOfInstructionsInMethods(), // Here goes your processor
+                new MethodWhiteList(),
+                new OverriddenMethods(),
+                new CallWhiteList(),
+                new Calls(),
+                new KeepOnlyVertexWithCodesmellLabel(),
+                new RemoveEdges(),
+                new ConvertNumericToBoolean(),
+                new ProcessOnlyVerticesWithACodeSmell(),
+                new ConvertNominalToBoolean(),
+                new KeepOnlyBooleanProperties(),
+                new SequentialAssociation()
+        );
+        applyProcessors();
+        Path datasetPath = dumpGraph();
+        Instances dataset = readDataset(datasetPath);
+        Association association = new Association(dataset, associator, associator);
+        List<Rule> rules = association.generateRules();
+        logGeneratedRules(rules);
+        List<Rule> filtered = applyFilters(rules);
+        logFilteredRules(filtered);
+        return filtered;
+    }
+}
+```
+
+Note: The processors are executed sequentially so the order matter. In our example, if you compute the number of instructions in methods after applying the method white list, the result might be wrong because the non white listed methods as been deleted.
+
+### Add your own rule selection to Fakie
+
+Rule selection in Fakie is done by a Filter which takes a list of Rule in input and return a list of Rule (it can be the same or a new one).
+
+```java
+package com.fakie.learning.filter;
+
+import com.fakie.learning.LearningException;
+import com.fakie.learning.Rule;
+
+import java.util.List;
+
+public interface Filter {
+    List<Rule> filter(List<Rule> rules) throws LearningException;
+}
+```
+
+So if you want, for instance, select only the rule with the product confidence * support > 0.5
+
+* First, you create a new Filter which implements the Filter interface.
+
+```java
+package com.fakie.learning.filter;
+
+import com.fakie.learning.LearningException;
+import com.fakie.learning.Rule;
+
+import java.util.List;
+
+public class SupportTimesConfidenceTreshold implements Filter {
+    @Override
+    public List<Rule> filter(List<Rule> rules) throws LearningException {
+        return rules;
+    }
+}
+```
+
+* Then you remove from the list all the rule with more than one premise
+
+```java
+package com.fakie.learning.filter;
+
+import com.fakie.learning.Rule;
+import com.fakie.utils.expression.Expression;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SupportTimesConfidenceTreshold implements Filter {
+    @Override
+    public List<Rule> filter(List<Rule> rules) {
+        List<Rule> filtered = new ArrayList<>();
+        for (Rule rule : rules) {
+          if (rule.getSupport() * rule.getConfidence() > 0.5) {
+            filtered.add(rule);
+          }
+        }
+        return filtered;
+    }
+}
+```
+
+* Finally, add your filter to the orchestrator
+
+```java
+package com.fakie.learning.association;
+
+public class AssociationOrchestrator {
+    // ...
+    private List<Rule> generateRules(CodeSmells codeSmells, Graph graph) throws FakieException {
+        useGraph(graph);
+        useProcessors(
+          // ...
+        );
+        useFilters(
+          new SupportTimesConfidenceTreshold() // Here goes your filter
+        );
+        applyProcessors();
+        Path datasetPath = dumpGraph();
+        Instances dataset = readDataset(datasetPath);
+        Association association = new Association(dataset, associator, associator);
+        List<Rule> rules = association.generateRules();
+        logGeneratedRules(rules);
+        List<Rule> filtered = applyFilters(rules);
+        logFilteredRules(filtered);
+        return filtered;
+    }
+}
+```
 
 ## Troubleshooting
 
