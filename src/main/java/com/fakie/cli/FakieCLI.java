@@ -5,6 +5,7 @@ import com.fakie.Fakie;
 import com.fakie.cli.dataset.LoadNeo4jDatabase;
 import com.fakie.cli.macro.Generate;
 import com.fakie.cli.paprika.PaprikaAnalyse;
+import com.fakie.cli.paprika.PaprikaCustomQuery;
 import com.fakie.cli.paprika.PaprikaQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,7 @@ import java.util.List;
         subcommands = {
                 PaprikaAnalyse.class,
                 PaprikaQuery.class,
+                PaprikaCustomQuery.class,
                 LoadNeo4jDatabase.class,
                 Generate.class
         })

@@ -18,6 +18,7 @@ public class FPGrowthAlgorithm implements Algorithm {
         fpGrowth.setNumRulesToFind(n);
         fpGrowth.setMinMetric(support);
         fpGrowth.setLowerBoundMinSupport(support);
+        fpGrowth.setPositiveIndex(0);
         orchestrator = new AssociationOrchestrator<>(graph, codeSmells, fpGrowth);
     }
 

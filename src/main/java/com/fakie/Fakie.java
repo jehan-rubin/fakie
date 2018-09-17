@@ -60,6 +60,15 @@ public class Fakie {
         logger.info("Successfully saved queries in %s", this.queries);
     }
 
+    public void runPaprikaCustomQuery(Std std, Path db, String suffix, String query) throws PaprikaException{
+        if (db != null) {
+            this.db = db;
+        }
+        logger.info("Running Paprika custom query on %s", this.db);
+        this.queries = new PaprikaAccessor(std).customQuery(this.db, suffix, query);
+        logger.info("Successfully saved queries in %s", this.queries);
+    }
+
     public void loadGraphFromNeo4jDatabase(Path db) throws FakieInputException {
         if (db != null) {
             this.db = db;

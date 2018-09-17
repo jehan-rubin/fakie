@@ -18,6 +18,7 @@ public class KeepOnlyVertexWithCodesmellLabel implements Processor {
         logger.info("Remove vertices without a codesmell label in %s", graph);
         Set<String> labels = graph.labels();
         labels.removeAll(findLabelOfCodesmell(graph));
+        Graph test = new Graph();
         for (String label : labels) {
             for (Vertex vertex : graph.findVerticesByLabel(label)) {
                 graph.remove(vertex);

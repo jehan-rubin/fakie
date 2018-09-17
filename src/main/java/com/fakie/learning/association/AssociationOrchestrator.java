@@ -67,6 +67,8 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
                 new ApplyCodeSmellOnGraph(codeSmells),
+                new NatureOfParentClass(),
+                new UseTreeParser(),
                 new MethodWhiteList(),
                 new OverriddenMethods(),
                 new CallWhiteList(),
@@ -76,8 +78,8 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new ConvertNumericToBoolean(),
                 new ProcessOnlyVerticesWithACodeSmell(),
                 new ConvertNominalToBoolean(),
-                new KeepOnlyBooleanProperties(),
-                new SequentialAssociation()
+                new KeepOnlyBooleanProperties()
+               // new SequentialAssociation()
         );
         applyProcessors();
         Path datasetPath = dumpGraph();

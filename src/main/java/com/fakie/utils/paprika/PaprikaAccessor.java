@@ -53,6 +53,23 @@ public class PaprikaAccessor {
         return path;
     }
 
+    public Path customQuery(Path db, String suffix, String query) throws PaprikaException{
+        Path path = createQueryFolder(suffix);
+        try {
+            String[] arguments = {"query",
+                    "-db", db.toString(),
+                    "-r", query,
+                    "-c", suffix
+            };
+            PaprikaLauncher paprikaLauncher = new PaprikaLauncher(arguments, std.out());
+            paprikaLauncher.startPaprika();
+        }
+        catch (PaprikaArgException e) {
+            throw new PaprikaException(e);
+        }
+        return path;
+    }
+
     private Path createQueryFolder(String suffix) throws PaprikaException {
         Path path = Paths.get(suffix.concat(Keyword.CODE_SMELL.toString())).toAbsolutePath().getParent();
         File file = path.toFile();
