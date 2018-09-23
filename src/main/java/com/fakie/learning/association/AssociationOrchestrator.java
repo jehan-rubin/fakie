@@ -74,6 +74,7 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new CallWhiteList(),
                 new Calls(),
                 new KeepOnlyVertexWithCodesmellLabel(),
+                new Implement(),
                 new RemoveEdges(),
                 new ConvertNumericToBoolean(),
                 new ProcessOnlyVerticesWithACodeSmell(),
