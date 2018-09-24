@@ -18,7 +18,9 @@ import java.util.Set;
 public class InterfaceWhiteList implements Processor{
     private static final Logger logger = LogManager.getFormatterLogger();
     private final Collection<String> whiteList = Arrays.asList(
-            "test"
+            "java.io.Closeable",
+            "org.wordpress.android.ui.themes.ThemePreviewFragment$ThemePreviewFragmentCallback",
+            "org.wordpress.android.ui.themes.ThemePreviewFragment"
     );
 
     @Override
@@ -39,7 +41,8 @@ public class InterfaceWhiteList implements Processor{
     }
 
     private boolean isInWhiteList(Edge edge) {
-        return whiteList.contains(edge.getDestination().getProperty(Key.FULL_NAME.toString()).toString());
+        System.out.println(whiteList.contains(edge.getDestination().getProperty(Key.NAME.toString()).toString()));
+        return whiteList.contains(edge.getDestination().getProperty(Key.NAME.toString()).toString());
     }
 
     private Set<String> findLabelOfCodesmell(Graph graph) {
