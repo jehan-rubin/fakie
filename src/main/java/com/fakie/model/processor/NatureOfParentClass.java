@@ -22,7 +22,6 @@ public class NatureOfParentClass implements Processor {
     private void addNatureOfClassMethod(Vertex cls){
         Object is_async_task = cls.getProperty("is_async_task");
         Object is_broadcast_receiver = cls.getProperty("is_broadcast_receiver");
-
         Object is_content_provider = cls.getProperty("is_content_provider");
         Object is_service = cls.getProperty("is_service");
         Object is_view = cls.getProperty("is_view");
@@ -36,7 +35,6 @@ public class NatureOfParentClass implements Processor {
 
         for(Edge classOwnsMethod : cls.outputEdges(Relationship.CLASS_OWNS_METHOD.toString())){
             Vertex method = classOwnsMethod.getDestination();
-            System.out.println(is_activity.getClass());
             if((boolean)is_async_task == true){
                 method.setProperty("natureOfParentClassIs_async_task", is_async_task.toString());
             }else if((boolean)is_broadcast_receiver == true){

@@ -29,8 +29,8 @@ public class CallWhiteList implements Processor {
             "setPathEffect#android.graphics.Paint",
             "setRasterizer#android.graphics.Paint",
             "setSubpixelText#android.graphics.Paint",
-            "acquire#android.os.PowerManager.WakeLock",
-            "release#android.os.PowerManager.WakeLock"
+            "acquire#android.os.PowerManager$WakeLock",
+            "release#android.os.PowerManager$WakeLock"
     );
 
     @Override

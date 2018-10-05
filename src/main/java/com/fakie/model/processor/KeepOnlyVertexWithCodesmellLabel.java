@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class KeepOnlyVertexWithCodesmellLabel implements Processor {
@@ -18,10 +19,9 @@ public class KeepOnlyVertexWithCodesmellLabel implements Processor {
         logger.info("Remove vertices without a codesmell label in %s", graph);
         Set<String> labels = graph.labels();
         labels.removeAll(findLabelOfCodesmell(graph));
-        Graph test = new Graph();
         for (String label : labels) {
             for (Vertex vertex : graph.findVerticesByLabel(label)) {
-                graph.remove(vertex);
+               graph.remove(vertex);
             }
         }
         return graph;
