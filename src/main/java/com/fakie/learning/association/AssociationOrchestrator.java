@@ -92,6 +92,6 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
         logGeneratedRules(rules);
         List<Rule> filtered = applyFilters(rules);
         logFilteredRules(filtered);
-        return filtered;
+        return rules;
     }
 }
