@@ -40,7 +40,7 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new RemoveNonCodeSmellConsequences(),
                 new ManyToOne(),
                 new SimplifyExpression(),
-                new FilterRedundantRule(),
+               // new FilterRedundantRule(),
                 new RestoreRulesAttributes()
         );
     }
@@ -92,6 +92,6 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
         logGeneratedRules(rules);
         List<Rule> filtered = applyFilters(rules);
         logFilteredRules(filtered);
-        return rules;
+        return filtered;
     }
 }
