@@ -4,11 +4,9 @@
 [![codecov](https://codecov.io/gh/alexandre-clement/fakie/branch/master/graph/badge.svg)](https://codecov.io/gh/alexandre-clement/fakie)
 
 Mining Mobile Apps to Learn Design Patterns and Code Smells.  
-Fakie is a tool to automatically generate the Antipattern Queries from the Graph DB for [Paprika](https://github.com/alexandre-clement/paprika).  
-
+Fakie is a tool to automatically generate the Antipattern Queries from the Graph DB.
 # Table of contents
 *   [Getting Started](#getting-started)
-*   [Results](#results)
 *   [Usage](#usage)
 *   [Code Smells](#code-smells-file)
 *   [Overview](#overview)
@@ -25,201 +23,16 @@ Fakie is a tool to automatically generate the Antipattern Queries from the Graph
 * Create jar `mvn clean package`
 * Execute `mvn exec:java -Dexec.args="analyse query generate"`
 
-# Results
-
-* BLOB Class
-```cypher
-// Confidence : 1.0, Support : 1.0
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_async_task = false AND n.is_broadcast_receiver = false AND n.number_of_methods >= 14.5 AND n.number_of_attributes >= 7.5 AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0)
-RETURN
-     n.name
-```
-
-* Complex Class (CC)
-```cypher 
-// Confidence : 0.9975247524752475, Support : 0.9975247524752475
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_application = false AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0)
-RETURN
-     n.name
-```
-```cypher 
-// Confidence : 1.0, Support : 0.9801980198019802
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
-RETURN
-     n.name
-```
-```cypher 
-// Confidence : 1.0, Support : 1.0
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
-RETURN
-     n.name
-```
-```cypher 
-// Confidence : 1.0, Support : 0.9975247524752475
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.is_interface = false AND n.npath_complexity >= 2557.0 AND n.number_of_children >= 0.0 AND n.class_complexity >= 23.5)
-RETURN
-     n.name
-```
-
-* Hashmap Usage (HMU)
-```cypher
-// Confidence : 1.0, Support : 1.0
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n. --CALLS--> <init>#java.util.HashMap = true AND n.is_synchronized = false AND n.is_abstract = false AND NOT n.number_of_parameters >= 5.0)
-RETURN
-     n.name
-```
-```cypher
-// Confidence : 1.0, Support : 0.8823529411764706
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n. --CALLS--> <init>#java.util.HashMap = true AND n.is_init = false AND n.is_synchronized = false AND n.is_abstract = false AND n.name <> '<clinit>' AND NOT n.number_of_parameters >= 5.0)
-RETURN
-     n.name
-```
-
-* No Low Memory Resolver (NLMR)
-
-```cypher
-// Confidence : 1.0, Support : 1.0
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n. --CLASS_OWNS_METHOD--> onLowMemory = false AND n.number_of_children >= 0.0)
-RETURN
-     n.name
-```
-
-```cypher
-// Confidence : 1.0, Support : 0.8783783783783784
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n. --CLASS_OWNS_METHOD--> onLowMemory = false AND n.number_of_children >= 0.0 AND NOT n.class_complexity >= 23.5)
-RETURN
-     n.name
-```
-
-* Long Method (LM)
-
-```cypher
-// Confidence : 1.0, Support : 1.0
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_synchronized = false AND n.is_abstract = false)
-RETURN
-     n.name
-```
-
-* Swiss Army Knife (SAK)
-
-```cypher
-// Confidence : 1.0, Support : 0.9935567010309279
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_async_task = false AND n.is_application = false AND n. --CLASS_OWNS_METHOD--> onTrimMemory = false AND n.number_of_children >= 0.0)
-RETURN
-     n.name
-```
-
-* Internal Getter Setter (IGS)
-
-```cypher
-// Confidence : 1.0, Support : 0.875
-CYPHER planner=rule
-START
-     n = node(*)
-WHERE
-     (n.is_synchronized = false AND n.is_abstract = false AND n.is_init = false AND NOT n.number_of_parameters >= 11.0 AND NOT n.number_of_instructions >= 35.0)
-RETURN
-     n.name
-```
-
-* Member Ignoring Method (MIM)
-
-```cypher
-// Could not generate rules
-```
-
-* Leaking Inner Class (LIC)
-
-```cypher
-// Could not generate rules
-```
-
-* Unsupported Hardware Acceleration (UHA)
-
-```cypher
-// Could not generate rules
-```
-
-* Heavy Async Task (HAS)
-
-```cypher
-// Could not generate rules
-```
-
-* Heavy Service Start (HSS)
-
-```cypher
-// Could not generate rules
-```
-
-* Heavy Broadcast Receiver (HBR)
-
-```cypher
-// Could not generate rules
-```
-
-# Usage
 
 ## Running Fakie Phases
 
 * [**Analyse**](#analyse) : Use Paprika to analyse android apk and generate a database.
 * [**Query**](#query) : Use the queries available in Paprika to detect the code smells in the database.
-* [**Generate**](#generate) : Generate a new set of queries for Paprika from the database and the code smells detected by Paprika
+* [**Generate**](#generate) : Generate tules from identified code smell
     * [**Load Graph**](#graph-loader) : Load the Paprika database as a graph
     * [**Apply Learning Algorithm**](#learning-algorithm) : Apply a learning algorithm on the graph to generate rules
     * [**Export Rules as Queries**](#query-exporter) : Export the generated rules as queries for Paprika
 
-An interesting thing to note is that phases may be executed in sequence.
-```
-fakie analyse query generate
-```
-Moreover, phases which needs an input will take by default the output of the previous phases.  
-For instances, the `query` in our example will take the database generated by the `analyse` phase in input.  
-This behaviour can be overridden with the options of the command.
 
 ## Help and Version
 
