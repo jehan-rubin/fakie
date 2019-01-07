@@ -175,7 +175,7 @@ But you can specify each of this path by using the options of the `query` comman
 
 ## Generate
 
-Generate a new set of queries for Paprika from the database and the code smells detected by Paprika
+Generate a new set of queries for code smells detection. Fakie needs exemples to generate rules for detection.
 
 ```
 Usage: fakie generate [-hV] [-db=<db>] [-f=<codesmell>] [-n=<n>] [-o=<output>]
@@ -187,8 +187,7 @@ generate Cypher queries
 
 Options:
   -db, --database=<db>       Path to the Neo4j database
-  -f, --file=<codesmell>     Path to the file containing the code smells in the
-                               database
+  -f, --file=<codesmell>     Path to the file containing the code smells location in APK.
   -h, --help                 Show this help message and exit.
   -n, --nb-rules=<n>         Number of rules to find
                                Default: 10000
