@@ -64,7 +64,7 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
     private List<Rule> generateRules(CodeSmells codeSmells, Graph graph) throws FakieException {
         useGraph(graph);
         useProcessors(
-                new ConvertLabelsToProperties(),
+                //new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
                 new ApplyCodeSmellOnGraph(codeSmells),
                 new NatureOfParentClass(),
@@ -80,7 +80,7 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new RemoveEdges(),
                 new ConvertNumericToBoolean(),
                 new ProcessOnlyVerticesWithACodeSmell(),
-                new ConvertNominalToBoolean(),
+                //new ConvertNominalToBoolean(),
                 new KeepOnlyBooleanProperties()
                // new SequentialAssociation()
         );
