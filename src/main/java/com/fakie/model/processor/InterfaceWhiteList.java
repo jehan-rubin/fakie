@@ -41,7 +41,6 @@ public class InterfaceWhiteList implements Processor{
     }
 
     private boolean isInWhiteList(Edge edge) {
-        System.out.println(whiteList.contains(edge.getDestination().getProperty(Key.NAME.toString()).toString()));
         return whiteList.contains(edge.getDestination().getProperty(Key.NAME.toString()).toString());
     }
 

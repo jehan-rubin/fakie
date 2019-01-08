@@ -43,7 +43,6 @@ public class OwnCloseableObject implements Processor {
                 Vertex callMethod = methodCall.getDestination();
                 String full_name = (String)callMethod.getProperty("full_name");
                 for(String closeable_object : closeableClassList){
-                    System.out.println(closeable_object);
                     if(full_name.equals("<init>#"+closeable_object)){
                         flag = "true";
                     }
