@@ -67,6 +67,7 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new ConvertLabelsToProperties(),
                 new ConvertArraysToNominal(),
                 new DeleteName(),
+                new ConvertNumericToBoolean(),
                 new ApplyCodeSmellOnGraph(codeSmells),
                 new NatureOfParentClass(),
                // new OwnCloseableObject(),
@@ -79,7 +80,6 @@ public class AssociationOrchestrator<T extends Associator & AssociationRulesProd
                 new Implement(),
                 new KeepOnlyVertexWithCodesmellLabel(),
                 new RemoveEdges(),
-                new ConvertNumericToBoolean(),
                 new ProcessOnlyVerticesWithACodeSmell(),
                 new ConvertNominalToBoolean(),
                 new KeepOnlyBooleanProperties()
